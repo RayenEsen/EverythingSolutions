@@ -1,7 +1,31 @@
 <div class="page-container" style="background-color: #ffa50024;">
-    <div class="card" >
+    <div class="card">
         <div class="logo-container">
             <img src="https://i.ibb.co/wFrPPJQQ/download.png" alt="Financial Manager Logo">
+        </div>
+
+        <!-- Login Section -->
+        <div class="form-section" *ngIf="!companyVisible && !BankVisible && !AccountVisible">
+            <h2 class="section-title">Connexion</h2>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email" class="large-label">Email</label>
+                    <input pInputText type="text" pSize="large" placeholder="Entrer votre email" [(ngModel)]="loginRequest.email" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password" class="large-label">Mot de passe</label>
+                    <input pInputText type="password" pSize="large" placeholder="Entrer votre mot de passe" [(ngModel)]="loginRequest.password" />
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between;">
+                <p-button label="S'inscrire" icon="pi pi-user-plus" severity="warn" (click)="showCompanyForm()"></p-button>
+                <p-button label="Se connecter" icon="pi pi-sign-in" severity="warn" (click)="Login()"></p-button>
+            </div>
         </div>
 
         <!-- Informations sur l'entreprise -->
@@ -93,6 +117,13 @@
                 <p-button label="Enregistrer" icon="pi pi-sign-in" severity="warn" (click)="Register()"></p-button>
             </div>
         </div>
+        
+    <!-- Modernized "First time here?" text link -->
+    <div class="text-center" style="margin-top: 20px;">
+        <span class="first-time-text" (click)="showLoginSection()">First time here? <strong>Login</strong></span>
+    </div>
 
     </div>
+
 </div>
+<p-toast />
