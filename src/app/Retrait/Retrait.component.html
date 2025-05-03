@@ -1,3 +1,4 @@
+<p-toast />
 <div class="card">
   <div style="text-align: center; margin-bottom: 30px;">
     <h2 >Liste des Retraites</h2>
@@ -248,8 +249,7 @@
               </div>
             </div>
             
-
-            <div class="mb-3" *ngIf="selectedBank?.adresses?.length">
+            <div class="mb-3" *ngIf="selectedBank?.nom">
               <label for="address-autocomplete" class="form-label d-block mb-2">Adresse Banque</label>
               
               <p-autocomplete 

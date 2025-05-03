@@ -24,6 +24,8 @@ import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocompl
 import { Adresse } from '../shared/adresse';
 import { Fournisseur } from '../shared/Fournisseur';
 import { AddRetraiteDTO } from '../DTO/AddRetrait';
+import { FournisseurService } from '../Services/Fournisseurs.service';
+import { BanquesService } from '../Services/Banques.service';
 
 @Component({
   selector: 'app-Retrait',
@@ -35,7 +37,7 @@ import { AddRetraiteDTO } from '../DTO/AddRetrait';
 export class RetraitComponent implements OnInit {
   todayDate: string | undefined;
 
-  constructor(private messageService: MessageService, private router: Router,  ) { }
+  constructor(private ServiceB : BanquesService,private ServiceF: FournisseurService, private messageService: MessageService, private router: Router,  ) { }
 
 
   items: MenuItem[] | undefined;
@@ -163,218 +165,7 @@ export class RetraitComponent implements OnInit {
 
 
 
-  banquesData: Banque[] = [
-    {
-      id: 1,
-      nom: 'Banque Internationale Arabe de Tunisie (BIAT)',
-      adresses: [
-        new Adresse({
-          id: 101,
-          rue: '70-72 Avenue Habib Bourguiba',
-          codePostal: '1000',
-          ville: 'Tunis',
-          pays: 'Tunisie',
-          estSiegeSocial: true
-        }),
-        new Adresse({
-          id: 102,
-          rue: 'Centre Urbain Nord',
-          codePostal: '1080',
-          ville: 'Tunis',
-          pays: 'Tunisie',
-          estSiegeSocial: false
-        }),
-        new Adresse({
-          id: 103,
-          rue: 'Avenue de l\'UMA',
-          codePostal: '1053',
-          ville: 'Les Berges du Lac',
-          pays: 'Tunisie',
-          estSiegeSocial: false
-        })
-      ]
-    },
-    {
-      id: 2,
-      nom: 'Banque de Tunisie (BTE)',
-      adresses: [
-        new Adresse({
-          id: 201,
-          rue: '3 Rue Hédi Nouira',
-          codePostal: '1001',
-          ville: 'Tunis',
-          pays: 'Tunisie',
-          estSiegeSocial: true
-        }),
-        new Adresse({
-          id: 202,
-          rue: 'Rue du Lac Ontario',
-          codePostal: '1053',
-          ville: 'Les Berges du Lac',
-          pays: 'Tunisie',
-          estSiegeSocial: false
-        })
-      ]
-    },
-    {
-      id: 3,
-      nom: 'Société Tunisienne de Banque (STB)',
-      adresses: [
-        new Adresse({
-          id: 301,
-          rue: '3 Avenue Mohamed V',
-          codePostal: '1002',
-          ville: 'Tunis',
-          pays: 'Tunisie',
-          estSiegeSocial: true
-        }),
-        new Adresse({
-          id: 302,
-          rue: 'Avenue Habib Bourguiba',
-          codePostal: '3000',
-          ville: 'Sfax',
-          pays: 'Tunisie',
-          estSiegeSocial: false
-        })
-      ]
-    },
-    {
-      id: 4,
-      nom: 'Amen Bank',
-      adresses: [
-        new Adresse({
-          id: 401,
-          rue: '1 Rue de la Monnaie',
-          codePostal: '1000',
-          ville: 'Tunis',
-          pays: 'Tunisie',
-          estSiegeSocial: true
-        }),
-        new Adresse({
-          id: 402,
-          rue: 'Avenue Taieb Mhiri',
-          codePostal: '4000',
-          ville: 'Sousse',
-          pays: 'Tunisie',
-          estSiegeSocial: false
-        })
-      ]
-    },
-    // ... (other banks in same format)
-    {
-      id: 12,
-      nom: 'Banque de Financement des Petites et Moyennes Entreprises (BFPME)',
-      adresses: [
-        new Adresse({
-          id: 1201,
-          rue: 'Rue du Lac Tanganyika',
-          codePostal: '1053',
-          ville: 'Les Berges du Lac',
-          pays: 'Tunisie',
-          estSiegeSocial: true
-        }),
-        new Adresse({
-          id: 1202,
-          rue: 'Zone Industrielle Charguia 1',
-          codePostal: '2035',
-          ville: 'Tunis',
-          pays: 'Tunisie',
-          estSiegeSocial: false
-        })
-      ]
-    }
-  ];
-
-
-
-  fournisseursData: Fournisseur[] = [
-    {
-      id: 1,
-      nom: 'SARL Tunisie Matériaux',
-      email: 'contact@tunisiemateriaux.tn',
-      telephone: '(+216) 70 250 000',
-      adresse: 'Zone Industrielle Charguia 1, 2035 Tunis'
-    },
-    {
-      id: 2,
-      nom: 'STEG Industries',
-      email: 'commercial@stegind.com.tn',
-      telephone: '(+216) 71 340 123',
-      adresse: 'Rue du Lac Turkana, Les Berges du Lac, 1053 Tunis'
-    },
-    {
-      id: 3,
-      nom: 'Poulina Group',
-      email: 'fournisseurs@poulina.com.tn',
-      telephone: '(+216) 70 010 203',
-      adresse: 'Rue du Lac de Constance, Les Berges du Lac, 1053 Tunis'
-    },
-    {
-      id: 4,
-      nom: 'SOTUMAT (Tunisian Building Materials)',
-      email: 'ventes@sotumat.tn',
-      telephone: '(+216) 73 450 678',
-      adresse: 'Route de Raoued, 2080 Ariana'
-    },
-    {
-      id: 5,
-      nom: 'Ulysse Hyper Distribution',
-      email: 'pro@ulysse.tn',
-      telephone: '(+216) 36 000 111',
-      adresse: 'Avenue de lUMA, 1053 Tunis'
-    },
-    {
-      id: 6,
-      nom: 'Magasin Général',
-      email: 'fournisseurs@magasingeneral.tn',
-      telephone: '(+216) 71 789 456',
-      adresse: 'Avenue Habib Bourguiba, 1001 Tunis'
-    },
-    {
-      id: 7,
-      nom: 'SOTETEL',
-      email: 'achats@sotetel.com.tn',
-      telephone: '(+216) 70 860 860',
-      adresse: 'Rue du Lac Biwa, Les Berges du Lac, 1053 Tunis'
-    },
-    {
-      id: 8,
-      nom: 'Promo Plomberie',
-      email: 'promoplomberie@gmail.com',
-      telephone: '(+216) 98 765 432',
-      adresse: 'Rue dAlger, 1000 Tunis'
-    },
-    {
-      id: 9,
-      nom: 'Tunisie Telecom Pro',
-      email: 'pro@tunisietelecom.tn',
-      telephone: '(+216) 80 100 100',
-      adresse: 'Centre Urbain Nord, 1080 Tunis'
-    },
-    {
-      id: 10,
-      nom: 'Ennakl Automobiles',
-      email: 'pieces@ennakl.com.tn',
-      telephone: '(+216) 71 951 951',
-      adresse: 'Route de lAéroport, 2035 Tunis'
-    },
-    {
-      id: 11,
-      nom: 'SOMOCER (Céramique Tunisienne)',
-      email: 'commercial@somocer.com.tn',
-      telephone: '(+216) 72 280 280',
-      adresse: 'Zone Industrielle Mghira, 2013 Ben Arous'
-    },
-    {
-      id: 12,
-      nom: 'GEPAC (Générale des Papiers et Cartons)',
-      email: 'gepac.sfax@planet.tn',
-      telephone: '(+216) 74 400 400',
-      adresse: 'Route de Tunis km 2.5, 3018 Sfax'
-    }
-  ];
-
-
+ 
 
   
   /* Dummy Testing data */
@@ -383,9 +174,29 @@ export class RetraitComponent implements OnInit {
 
 
   loading: boolean = false;
-
-
+  fournisseursData: Fournisseur[]  = [];
+  banquesData: Banque[] = [];
   ngOnInit() {
+        // Fetch fournisseurs data
+        this.ServiceF.getAll().subscribe(
+          (data) => {
+            this.fournisseursData = data;
+            this.messageService.add({severity: 'success', summary: 'Données chargées', detail: 'Liste des fournisseurs chargée avec succès!'});
+          },
+          (error) => {
+            this.messageService.add({severity: 'error', summary: 'Erreur', detail: 'Impossible de charger les fournisseurs!'});
+          }
+        );
+
+        this.ServiceB.getAll().subscribe(
+          (data: Banque[]) => {
+            this.banquesData = data; // Assign the data to banques array
+            console.log('Banques fetched successfully:', this.banquesData);
+          },
+          (error) => {
+            console.error('Error fetching banques data:', error);
+          }
+        );
     const today = new Date();
     this.todayDate = today.toISOString().split('T')[0]; // 'yyyy-MM-dd'
     this.items = [
@@ -432,7 +243,16 @@ showRibError = false;
 
 validateForm(montantInput: any, chequeInput: HTMLInputElement) {
 
-
+  console.log(
+    "Numéro de Chèque:", this.AddRetrait.numeroCheque, 
+    "Date:", this.todayDate, 
+    "Montant:", this.AddRetrait.montant, 
+    "Fournisseur:", this.selectedFournisseur, 
+    "Banque:", this.selectedBank, 
+    "Adresse:", this.selectedAddress, 
+    "RIB:", this.AddRetrait.rib
+  );
+  
   // Reset errors
   this.showMontantError = false;
   this.showChequeError = false;
@@ -473,7 +293,7 @@ validateForm(montantInput: any, chequeInput: HTMLInputElement) {
   }
 
   // Validate RIB
-  if (!this.AddRetrait.rib || this.AddRetrait.rib.trim() === '') {
+  if (!this.AddRetrait.rib ) {
     this.showRibError = true;
   }
 
@@ -494,7 +314,7 @@ validateForm(montantInput: any, chequeInput: HTMLInputElement) {
       fournisseurId: this.selectedFournisseur?.id || 0,
       banqueId: this.selectedBank?.id || 0,
       banqueAdresseId: this.selectedAddress?.id || 0,
-      rib: this.AddRetrait.rib.trim()
+      rib: this.AddRetrait.rib
     };
     
     this.submitForm(formData);
@@ -502,8 +322,11 @@ validateForm(montantInput: any, chequeInput: HTMLInputElement) {
 }
 
 submitForm(data: any) {
-  console.log('Form submitted:', data);
-  // Add your form submission logic here
+  this.messageService.add({
+    severity: 'success',
+    summary: 'Succès',
+    detail: 'Retraite ajoutée avec succès !'
+  });
   this.AddRetraitInfo = false;
 }
 
