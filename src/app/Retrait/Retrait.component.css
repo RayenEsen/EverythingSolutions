@@ -1,0 +1,104 @@
+
+ .p-tag-info {
+  background: #4a6ced; /* Original color */
+  color: var(--p-tag-info-color); /* Original color */
+  border-radius: 4px; /* Even smaller rounded corners */
+  padding: 0.15rem 0.5rem; /* Very small padding */
+  font-size: 0.75rem; /* Smallest font size */
+  font-weight: 500; /* Slightly bolder text */
+  box-shadow: none; /* Remove shadow for a cleaner look */
+  transition: background 0.2s ease; /* Smooth transition */
+}
+
+/* Hover effect */
+ .p-tag-info:hover {
+  background: #5f7deb; /* Slightly darker blue on hover */
+}
+.hover-blue:hover {
+  color: #007bff; /* Bootstrap primary blue or pick any blue shade */
+  cursor: pointer;
+}
+
+
+
+
+.card {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  width: 95%;
+  max-width: 1700px;
+  margin: 18vh auto 10vh auto; /* Top and bottom spacing */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effect */
+.card:hover {
+  transform: scale(1.01);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    width: 95%;
+    padding: 1.5rem;
+  }
+}
+
+
+
+
+/* Add these to your component's CSS */
+.compact-fournisseur-item {
+  padding: 6px 8px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.85rem;
+}
+
+.compact-fournisseur-name {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+}
+
+.compact-fournisseur-contact {
+  color: #6c757d;
+  font-size: 0.8rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.compact-fournisseur-address {
+  color: #495057;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  padding: 2px 0;
+}
+
+.compact-fournisseur-id {
+  font-size: 0.75rem;
+  color: #adb5bd;
+  background-color: #f8f9fa;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: 8px;
+}
+
+.small-icon {
+  font-size: 0.75rem;
+  margin-right: 3px;
+}
+
+.small-text {
+  font-size: 0.85rem;
+}
+
+/* Make the dropdown input smaller */
+.p-autocomplete-input {
+  padding: 0.375rem 0.75rem !important;
+  font-size: 0.9rem !important;
+}

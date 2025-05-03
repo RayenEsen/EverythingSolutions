@@ -4,8 +4,8 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
-import { provideHttpClient } from '@angular/common/http'; // ✅ Add this import
-import Aura from '@primeng/themes/aura';
+import { provideHttpClient } from '@angular/common/http';
+import Lara from '@primeng/themes/lara';
 
 // PrimeNG modules
 import { ButtonModule } from 'primeng/button';
@@ -16,15 +16,17 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    provideHttpClient(), // ✅ Add this line
-    importProvidersFrom(
-      ButtonModule,
-      InputTextModule
-    ),
+    provideHttpClient(),
+    importProvidersFrom(ButtonModule, InputTextModule),
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
-        preset: Aura
+        preset: Lara,
+        options: {
+          prefix: 'p',
+          darkModeSelector: 'system',
+          cssLayer: false
+        }
       }
     })
   ]

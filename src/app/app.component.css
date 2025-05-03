@@ -14,3 +14,7 @@ html, body {
     flex: 1; /* This makes the content expand to fill available space */
   }
   
+  .custom-bg {
+    background-color: #fbf8f8;
+  }
+  

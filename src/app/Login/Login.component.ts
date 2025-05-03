@@ -6,52 +6,68 @@ import { FormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 import { Entreprise } from '../shared/Entreprise';
 import { AuthService } from '../shared/Auth.service';
 import { LoginRequest } from '../DTO/LoginRequest';
+import { RegisterRequest } from '../DTO/RegisterRequest';
+import { Banque } from '../shared/Banque';
+import { BanquesService } from '../Services/Banques.service';
+
 
 @Component({
   standalone: true,
   selector: 'app-login',
   templateUrl: './Login.component.html',
   styleUrls: ['./Login.component.css'],
-  imports: [CommonModule, ButtonModule, InputTextModule, FormsModule, ToastModule],
+  imports: [CommonModule, ButtonModule, InputTextModule, FormsModule, ToastModule , AutoCompleteModule],
   providers: [MessageService]
 })
 export class LoginComponent implements OnInit {
 
-  constructor(public ServiceA: AuthService, private messageService: MessageService, private router: Router) {}
+  constructor(public ServiceA: AuthService, private messageService: MessageService, private router: Router , private banquesService: BanquesService) {}
 
-  ngOnInit() {}
+  banquesList: Banque[] = [];
+  selectedBanques: Banque[] = [];
+  filteredBanques: Banque[] = [];
+
+  ngOnInit(): void {
+    this.banquesService.getAll().subscribe({
+      next: (banques: Banque[]) => {
+        this.banquesList = banques;
+      },
+      error: (error) => {
+        console.error('Error fetching banques:', error);
+      }
+    });
+  }
 
   entreprise = new Entreprise();
+  registerDto: RegisterRequest = new RegisterRequest();
+
+
   confirmPassword = '';
   companyVisible = true;
-  BankVisible = false;
   AccountVisible = false;
   loginRequest = new LoginRequest();
 
   emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-  passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+  passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
+  // Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character
+  // and be at least 8 characters long
+  // Example: "Password1!"
 
   showCompanyForm() {
     this.companyVisible = true;
-    this.BankVisible = false;
     this.AccountVisible = false;
   }
-
-  showBankForm() {
-    this.companyVisible = false;
-    this.BankVisible = true;
-    this.AccountVisible = false;
-  }
-
+  
   showAccountForm() {
     this.companyVisible = false;
-    this.BankVisible = false;
     this.AccountVisible = true;
   }
+  
 
   Login() {
     if (!this.loginRequest.email) {
@@ -107,7 +123,7 @@ export class LoginComponent implements OnInit {
   }
 
   Register() {
-    if (!this.entreprise.email) {
+    if (!this.registerDto.email) {
       this.messageService.add({
         severity: 'error',
         summary: 'Email manquant',
@@ -116,8 +132,8 @@ export class LoginComponent implements OnInit {
       });
       return;
     }
-
-    if (!this.emailPattern.test(this.entreprise.email)) {
+  
+    if (!this.emailPattern.test(this.registerDto.email)) {
       this.messageService.add({
         severity: 'error',
         summary: 'Email invalide',
@@ -126,8 +142,8 @@ export class LoginComponent implements OnInit {
       });
       return;
     }
-
-    if (!this.entreprise.password) {
+  
+    if (!this.registerDto.password) {
       this.messageService.add({
         severity: 'error',
         summary: 'Mot de passe manquant',
@@ -136,8 +152,8 @@ export class LoginComponent implements OnInit {
       });
       return;
     }
-
-    if (!this.passwordPattern.test(this.entreprise.password)) {
+  
+    if (!this.passwordPattern.test(this.registerDto.password)) {
       this.messageService.add({
         severity: 'error',
         summary: 'Mot de passe faible',
@@ -146,8 +162,8 @@ export class LoginComponent implements OnInit {
       });
       return;
     }
-
-    if (this.entreprise.password !== this.confirmPassword) {
+  
+    if (this.registerDto.password !== this.confirmPassword) {
       this.messageService.add({
         severity: 'error',
         summary: 'Les mots de passe ne correspondent pas',
@@ -156,8 +172,11 @@ export class LoginComponent implements OnInit {
       });
       return;
     }
-
-    this.ServiceA.register(this.entreprise).subscribe(
+  
+    // Optionally copy confirmPassword into the DTO (if your backend expects it)
+    this.registerDto.confirmPassword = this.confirmPassword;
+  
+    this.ServiceA.register(this.registerDto).subscribe(
       (response) => {
         console.log("Inscription réussie", response);
         this.showLoginSection();
@@ -173,12 +192,13 @@ export class LoginComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erreur',
-          detail: error.message || 'Échec de l’inscription',
+          detail: error.error || 'Échec de l’inscription',
           life: 3000
         });
       }
     );
   }
+  
 
   onSubmit(): boolean {
     if (!this.entreprise.email) {
@@ -236,7 +256,15 @@ export class LoginComponent implements OnInit {
 
   showLoginSection() {
     this.companyVisible = false;
-    this.BankVisible = false;
     this.AccountVisible = false;
   }
+
+
+  filterBanques(event: any) {
+    const query = event.query.toLowerCase();
+    this.filteredBanques = this.banquesList.filter(banque =>
+      banque.nom.toLowerCase().includes(query)
+    );
+  }
+
 }

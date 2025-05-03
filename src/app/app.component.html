@@ -1,4 +1,4 @@
-<div class="page-container">
+<div [ngClass]="{ 'custom-bg': !isLoginPage }" class="page-container">
   <app-Navbar *ngIf="isLoggedIn"></app-Navbar>
 
   <div class="content-wrap">

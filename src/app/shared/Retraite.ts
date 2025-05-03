@@ -4,21 +4,27 @@ import { Banque } from "./Banque";
 
 export class Retraite {
   id: number = 0;
-  montant: number = 0;
-  numeroCheque: string = '';
-  dateEcheance: Date = new Date();
+  montant: number | null = null;
+  numeroCheque: string | null = null;
+  dateEcheance: Date | null = null;
 
+  // One-to-many relationship with Entreprise
   entrepriseId: number = 0;
-  entreprise?: Entreprise;
+  entreprise: Entreprise = new Entreprise();
 
-  fournisseurs: Fournisseur[] = [];
-  banques: Banque[] = [];
+  // One-to-one relationships
+  banqueId: number | null = null;
+  banque: Banque | null = null;
 
+  fournisseurId: number | null = null;
+  fournisseur: Fournisseur | null = null;
+
+  // Helper methods
   getFormattedEcheance(): string {
-    return this.dateEcheance.toLocaleDateString();
+    return this.dateEcheance ? this.dateEcheance.toLocaleDateString() : 'N/A';
   }
 
   getTotalMontant(): string {
-    return `${this.montant.toFixed(2)} TND`;
+    return this.montant ? `${this.montant.toFixed(2)} TND` : '0.00 TND';
   }
 }

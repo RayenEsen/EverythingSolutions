@@ -44,7 +44,13 @@
 .logo-container img {
   height: 140px;
   width: auto;
+  transition: transform 0.3s ease; /* Smooth transition effect */
 }
+
+.logo-container img:hover {
+  transform: scale(1.01); /* Slightly increase size on hover */
+}
+
 
 /* Form sections styling */
 .form-section {

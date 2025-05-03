@@ -1,0 +1,336 @@
+<div class="card">
+  <div style="text-align: center; margin-bottom: 30px;">
+    <h2 >Liste des Retraites</h2>
+    <p>Voici la liste des retraits effectués avec leurs détails, y compris les montants, les dates d'échéance, les entreprises associées, les fournisseurs, et les banques impliquées.</p>
+  </div>
+ 
+
+<div class="d-flex align-items-center justify-content-between p-2 bg-light text-dark border rounded mb-3">
+  <p-menubar [model]="items" />
+  <p-iconfield class="d-flex align-items-center">
+    <p-inputicon styleClass="pi pi-search" />
+    <input type="text" pInputText placeholder="Search" class="form-control" />
+  </p-iconfield>
+</div>
+
+  <p-contextMenu #cm [model]="items2" [appendTo]="'body'"></p-contextMenu>
+
+  <!-- Table -->
+  <p-table 
+    #dt1 
+    [value]="retraitesLightData" 
+    dataKey="id" 
+    [rows]="10" 
+    [rowsPerPageOptions]="[10, 25, 50]" 
+    [loading]="loading" 
+    [paginator]="true" 
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
+    [filterDelay]="0" 
+    selectionMode="single"
+    [contextMenu]="cm"
+    [(contextMenuSelection)]="selectedRetrait" 
+
+    [globalFilterFields]="['numeroCheque', 'entreprise.nom']">
+    
+
+
+    <ng-template #header>
+      <tr>
+        <th style="width: 1rem">
+            <p-tableHeaderCheckbox pReorderableColumn class="printable"/>
+        </th>
+        
+        <th style="width: 15rem">
+            Numéro
+            <p-columnFilter type="text" field="numeroCheque" display="menu" class="ml-auto"/>
+        </th>
+        
+        <th style="width: 15rem">
+            Montant
+            <p-columnFilter type="numeric" field="montant" display="menu" class="ml-auto"/>
+        </th>
+        
+        <th style="width: 25rem">
+            Date d'échéance
+            <p-columnFilter type="date" field="dateEcheance" display="menu" class="ml-auto"/>
+        </th>
+        
+        <th style="width: 25rem">
+            Fournisseurs
+            <p-columnFilter type="text" field="fournisseurs.nom" display="menu" class="ml-auto"/>
+        </th>
+        
+        <th style="width: 25rem">
+            Fournisseurs Adr
+            <p-columnFilter type="text" field="fournisseurs.adresse" display="menu" class="ml-auto"/>
+        </th>
+        
+        <th style="width: 25rem">
+            Banques
+            <p-columnFilter type="text" field="banques.nom" display="menu" class="ml-auto"/>
+        </th>
+        
+        <th style="width: 25rem">
+            Banques Adr
+            <p-columnFilter type="text" field="banques.adresse" display="menu" class="ml-auto"/>
+        </th>
+        
+        <th>
+            Telecharger
+        </th>
+    </tr>
+    </ng-template>
+
+    <ng-template #body let-ret>
+      <tr style="cursor: pointer;"  [pContextMenuRow]="ret">
+        <td >
+          <p-tableCheckbox pReorderableRowHandle class="printable"/>
+        </td>
+        <td>{{ ret.numeroCheque }}</td>
+        <td>{{ ret.montant | number:'1.2-2' }} TND</td>
+        <td>{{ getFormattedEcheance(ret.dateEcheance) }}</td>
+          <td>
+            <p-tag [severity]="'info'" [value]=" ret.fournisseurNom  || 'N/A'"></p-tag>
+          </td>
+          <td>{{ ret.fournisseurAdresse || 'N/A' }}</td>
+
+          <td>
+            <p-tag [severity]="'info'" [value]="ret.banqueNom || 'N/A'"></p-tag>
+          </td>
+          
+          <td>{{ ret.banqueAdresse || 'N/A' }}</td>
+        <td style="width: 7%; text-align: center;">
+          <i class="pi pi-download hover-blue" style="font-size: 1.25rem;"></i>
+        </td>
+        
+      </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="6" style="text-align: center;">
+          <iframe src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie" width="200" height="200" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          <div>Aucune retraite trouvée.</div>
+        </td>
+      </tr>
+    </ng-template>
+    
+  </p-table>
+</div>
+
+
+
+<p-drawer [(visible)]="AddRetraitInfo" header="Ajouter un Nouveau Retrait" position="right" [style]="{width: '450px'}">
+  <div class="p-4">
+    <!-- Form without reactive forms -->
+    <div>
+
+
+      <!-- Numéro de Chèque Field -->
+      <div class="mb-3">
+        <label for="cheque" class="form-label">Numéro de Chèque</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="cheque"
+          #chequeInput
+          [(ngModel)]="AddRetrait.numeroCheque"
+          placeholder="Ex: CHK123456">
+        <div *ngIf="showChequeError" class="text-danger small mt-1">Le numéro de chèque est requis</div>
+      </div>
+
+      <div class="mb-4">
+        <label for="echeance" class="form-label d-block mb-2">Date d'Échéance</label>
+        <div class="w-100 d-block">
+            <input 
+            type="date" 
+            class="form-control" 
+            id="cheque"
+            #chequeInput
+            placeholder="Ex: CHK123456"
+            [(ngModel)]="todayDate"
+            [readonly]="true"
+            >
+        </div>
+        <div *ngIf="showDateError" class="text-danger small mt-1">
+          Veuillez sélectionner une date valide
+        </div>
+      </div>
+
+            <!-- Montant Field -->
+            <div class="mb-3">
+              <label for="montant" class="form-label">Montant (TND)</label>
+              <p-inputNumber 
+                id="montant" 
+                #montantInput
+                [(ngModel)]="AddRetrait.montant"
+                mode="currency" 
+                placeholder="0.00 TND" 
+                currency="TND" 
+                locale="fr-FR"
+                [min]="0"
+                class="w-100"
+                inputStyleClass="form-control"
+                [showButtons]="true">
+              </p-inputNumber>
+              <div *ngIf="showMontantError" class="text-danger small mt-1">Veuillez entrer un montant valide</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="fournisseur-autocomplete" class="form-label d-block mb-2">Fournisseur</label>
+            
+              <p-autocomplete 
+                id="fournisseur-autocomplete"
+                inputId="fournisseur-input"
+                [(ngModel)]="selectedFournisseur"
+                [suggestions]="filteredFournisseurs"
+                (completeMethod)="filterFournisseurs($event)"
+                field="nom"
+                [dropdown]="true"
+                placeholder="Sélectionner un fournisseur"
+                [inputStyle]="{ 'width':'100%' }"
+                [scrollHeight]="'250px'"
+                [panelStyle]="{ 'min-width':'300px', 'white-space':'normal' }"
+                [style]="{ 'width':'100%' }"
+                class="d-block w-100"
+              >
+            
+                <!-- Full-detail item template -->
+                <ng-template let-fournisseur pTemplate="item">
+                  <div class="d-flex flex-column p-2" style="white-space: normal;">
+                    <div><strong>{{ fournisseur.nom }}</strong></div>
+                    <div class="small text-muted mt-1">
+                      <i class="pi pi-phone me-1"></i>{{ fournisseur.telephone }}
+                      <i class="pi pi-envelope ms-3 me-1"></i>{{ fournisseur.email }}
+                    </div>
+                    <div class="small text-muted mt-1">
+                      <i class="pi pi-map-marker me-1"></i>{{ fournisseur.adresse }}
+                    </div>
+                  </div>
+                </ng-template>
+            
+              </p-autocomplete>
+            
+              <div *ngIf="showFournisseurError" class="text-danger small mt-1">
+                Veuillez sélectionner un fournisseur valide
+              </div>
+            </div>
+            
+            
+            
+
+            <div class="mb-3">
+              <label for="bank-autocomplete" class="form-label d-block mb-2">Nom Banque</label>
+              
+              <p-autocomplete 
+                id="bank-autocomplete"
+                [(ngModel)]="selectedBank"
+                [suggestions]="filteredBanks"
+                (completeMethod)="filterBanks($event)"
+                field="nom"
+                [dropdown]="true"
+                placeholder="Sélectionner une banque"
+                [inputStyle]="{'width':'100%'}"
+                [scrollHeight]="'250px'"
+                [panelStyle]="{'min-width':'300px', 'white-space':'normal'}"
+                [style]="{'width':'100%'}"
+                class="d-block w-100">
+                
+                <ng-template let-bank pTemplate="item">
+                  <div class="bank-item" style="white-space: normal; padding: 8px;">
+                    {{bank.nom}}
+                  </div>
+                </ng-template>
+                
+              </p-autocomplete>
+            
+              <div *ngIf="showBankError" class="text-danger small mt-1">
+                Veuillez sélectionner une banque valide
+              </div>
+            </div>
+            
+
+            <div class="mb-3" *ngIf="selectedBank?.adresses?.length">
+              <label for="address-autocomplete" class="form-label d-block mb-2">Adresse Banque</label>
+              
+              <p-autocomplete 
+                id="address-autocomplete"
+                [(ngModel)]="selectedAddress"
+                [suggestions]="filteredAddresses"
+                (completeMethod)="filterAddresses($event)"
+                field="formattedAddress"
+                [dropdown]="true"
+                placeholder="Sélectionner une adresse"
+                [inputStyle]="{'width':'100%'}"
+                [style]="{'width':'100%'}"
+                [scrollHeight]="'250px'"
+                [panelStyle]="{'min-width':'300px', 'white-space':'normal'}"
+                class="d-block w-100">
+                
+                <!-- Dropdown item template -->
+                <ng-template let-address pTemplate="item">
+                  <div class="address-item" style="white-space: normal; padding: 8px;">
+                    {{formatAdresse(address)}}
+                    <div *ngIf="address.estSiegeSocial" class="badge bg-primary mt-1">Siège Social</div>
+                  </div>
+                </ng-template>
+                
+                <!-- Selected item display template -->
+                <ng-template let-address pTemplate="selectedItem">
+                  <span *ngIf="address">
+                    {{formatAdresse(address)}}
+                  </span>
+                </ng-template>
+              </p-autocomplete>
+            
+              <div *ngIf="showAddressError" class="text-danger small mt-1">
+                Veuillez sélectionner une adresse valide
+              </div>
+            </div>
+            
+
+
+            <div class="mb-3">
+              <label for="rib" class="form-label">RIB</label>
+              <p-inputNumber 
+                id="rib" 
+                #ribInput
+                [(ngModel)]="AddRetrait.rib"
+                mode="decimal" 
+                placeholder="Ex: 123456789" 
+                locale="fr-FR"
+                [min]="0"
+                class="w-100"
+                inputStyleClass="form-control">
+              </p-inputNumber>
+              <div *ngIf="showRibError" class="text-danger small mt-1">
+                Veuillez saisir un RIB valide
+              </div>
+            </div>
+            
+
+
+
+
+
+
+
+      <!-- Action Buttons -->
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary"
+          (click)="AddRetraitInfo = false">
+          <i class="pi pi-times me-2"></i>Annuler
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-primary"
+          (click)="validateForm(montantInput, chequeInput)">
+          <i class="pi pi-check me-2"></i>Enregistrer
+        </button>
+      </div>
+
+      
+    </div>
+  </div>
+</p-drawer>
