@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Management System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <input type="checkbox" id="menu-toggle">
+      <label for="menu-toggle" class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+
+      <a href="#" class="logo">
+        <img src="https://i.ibb.co/wFrPPJQQ/download.png" alt="Financial Manager Logo">
+      </a>
+      
+      <ul class="main-menu">
+        <li><a href="#"><i class="fas fa-tachometer-alt"></i> Tableau de bord</a></li>
+        
+        <li class="menu-dropdown">
+          <a href="#"><i class="fas fa-money-check"></i> Retrait  <i class="fas fa-chevron-down dropdown-arrow"></i></a>
+          <ul class="submenu">
+            <li><a href="#"><i class="fas fa-plus-circle"></i> Créer Retrait</a></li>
+            <li><a href="#"><i class="fas fa-list"></i> Liste Retrait</a></li>
+          </ul>
+        </li>
+        
+        <li class="menu-dropdown">
+          <a href="#"><i class="fas fa-truck"></i> Fournisseurs <i class="fas fa-chevron-down dropdown-arrow"></i></a>
+          <ul class="submenu">
+            <li><a href="#"><i class="fas fa-user-plus"></i> Ajouter Fournisseurs</a></li>
+            <li><a href="#"><i class="fas fa-users"></i> Liste Fournisseurs</a></li>
+          </ul>
+        </li>
+        
+        <li class="menu-dropdown">
+          <a href="#"><i class="fas fa-university"></i> Banques <i class="fas fa-chevron-down dropdown-arrow"></i></a>
+          <ul class="submenu">
+            <li><a href="#"><i class="fas fa-plus"></i> Ajouter Banques</a></li>
+            <li><a href="#"><i class="fas fa-list"></i> Liste Banques</a></li>
+          </ul>
+        </li>
+        
+      </ul>
+      
+      <div class="user-actions">
+        <a href="#" class="quick-action-button">
+          <i class="fas fa-plus"></i> Nouveaux Retrait
+        </a>
+        <div class="user-menu">
+          <img src="https://i.ibb.co/5GzXkw3/user-avatar.png" alt="User" class="user-avatar">
+          <span class="username">Entreprise</span>
+          <i class="fas fa-chevron-down user-arrow"></i>
+          <ul class="user-dropdown">
+            <li><a href="#"><i class="fas fa-user-cog"></i> Profile</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Paramétre</a></li>
+            <li><a href="#"><i class="fas fa-sign-out-alt"></i> Déconnecter </a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+  
+  <script src="script.js"></script>
+</body>
+</html>

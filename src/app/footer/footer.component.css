@@ -1,0 +1,22 @@
+.footer {
+    background-color: #4a6ced; /* Dark background for the footer */
+    color: #fff; /* White text color */
+    padding: 20px; /* Padding for spacing */
+    position: relative; /* Optional: position relative for better control */
+    bottom: 0; /* Stick it to the bottom */
+    width: 100%; /* Full width */
+}
+
+.copyrights {
+    text-align: center; /* Center the text */
+    font-size: 14px; /* Slightly smaller text */
+}
+
+.copyrights a {
+    color: #ff8f00;; /* Light blue color for the email link */
+    text-decoration: none; /* Remove underline */
+}
+
+.copyrights a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
