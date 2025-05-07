@@ -21,23 +21,29 @@ import { FormsModule } from '@angular/forms';
 import { RetraiteLightDto } from '../DTO/RetraiteLightDto';
 import { Banque } from '../shared/Banque';
 import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
-import { Adresse } from '../shared/adresse';
+import { Adresse } from '../shared/Adresse';
 import { Fournisseur } from '../shared/Fournisseur';
 import { AddRetraiteDTO } from '../DTO/AddRetrait';
 import { FournisseurService } from '../Services/Fournisseurs.service';
 import { BanquesService } from '../Services/Banques.service';
+import { RetraitesService } from '../Services/Trait.service';
+import {AuthService} from '../shared/Auth.service';
+import { DialogModule } from 'primeng/dialog';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-Retrait',
   templateUrl: './Retrait.component.html',
   styleUrls: ['./Retrait.component.css'],
-  imports: [AutoCompleteModule , FormsModule,DatePickerModule,InputNumberModule,DrawerModule, ContextMenuModule, MenubarModule  , ToastModule , CommonModule, Menubar, TableModule, ButtonModule, InputTextModule, IconFieldModule, InputIconModule, TagModule],
-  providers: [MessageService],
+  imports: [ ConfirmDialog , SplitButtonModule , DialogModule, AutoCompleteModule , FormsModule,DatePickerModule,InputNumberModule,DrawerModule, ContextMenuModule, MenubarModule  , ToastModule , CommonModule, Menubar, TableModule, ButtonModule, InputTextModule, IconFieldModule, InputIconModule, TagModule],
+  providers: [ConfirmationService , MessageService],
 })
 export class RetraitComponent implements OnInit {
   todayDate: string | undefined;
 
-  constructor(private ServiceB : BanquesService,private ServiceF: FournisseurService, private messageService: MessageService, private router: Router,  ) { }
+  constructor(private confirmationService: ConfirmationService ,private ServiceA : AuthService,private ServiceR : RetraitesService,private ServiceB : BanquesService,private ServiceF: FournisseurService, private messageService: MessageService, private router: Router,  ) { }
 
 
   items: MenuItem[] | undefined;
@@ -47,8 +53,10 @@ export class RetraitComponent implements OnInit {
 
   items2: any[] = [
     { label: 'Voir Retraite', icon: 'pi pi-eye',  },
-    { label: 'Supprimer', icon: 'pi pi-trash', },
+    { label: 'Supprimer', icon: 'pi pi-trash',  command: () => this.DeleteRetrait()},
   ];
+
+  items4: any[] = [];
 
   selectedRetrait? : Retraite;
   selectedBank: Banque | null = null;
@@ -60,106 +68,7 @@ export class RetraitComponent implements OnInit {
   /*Dummy Testing data*/
 
   retraitesLightData: RetraiteLightDto[] = [
-    {
-      id: 1,
-      montant: 18500.750,
-      numeroCheque: 'CHQ2023-1542',
-      dateEcheance: new Date('2023-11-30'),
-      entrepriseNom: 'SOGETRANS SARL',
-      banqueNom: 'Banque Zitouna',
-      banqueAdresse: 'Les Berges du Lac, Tunis',
-      fournisseurNom: 'Tunisie Télécom',
-      getFormattedEcheance: function (): string {
-        throw new Error('Function not implemented.');
-      },
-      getMontantFormatted: function (): string {
-        throw new Error('Function not implemented.');
-      },
-      fournisseurAdresse: 'Sfax',
-      getFournisseurComplete: function (): string {
-        throw new Error('Function not implemented.');
-      }
-    },
-    {
-      id: 2,
-      montant: 32450.000,
-      numeroCheque: 'CHQ2023-1789',
-      dateEcheance: new Date('2023-12-15'),
-      entrepriseNom: 'Amen Invest',
-      banqueNom: 'Amen Bank',
-      banqueAdresse: 'Rue de la Monnaie, Tunis',
-      fournisseurNom: 'STEG',
-      getFormattedEcheance: function (): string {
-        throw new Error('Function not implemented.');
-      },
-      getMontantFormatted: function (): string {
-        throw new Error('Function not implemented.');
-      },
-      fournisseurAdresse: 'Sfax',
-      getFournisseurComplete: function (): string {
-        throw new Error('Function not implemented.');
-      }
-    },
-    {
-      id: 3,
-      montant: 12780.500,
-      numeroCheque: 'CHQ2023-2015',
-      dateEcheance: new Date('2024-01-20'),
-      entrepriseNom: 'Poulina Group',
-      banqueNom: 'BIAT',
-      banqueAdresse: 'Avenue Habib Bourguiba, Tunis',
-      fournisseurNom: 'SOTETEL',
-      getFormattedEcheance: function (): string {
-        throw new Error('Function not implemented.');
-      },
-      getMontantFormatted: function (): string {
-        throw new Error('Function not implemented.');
-      },
-      fournisseurAdresse: 'Sfax',
-      getFournisseurComplete: function (): string {
-        throw new Error('Function not implemented.');
-      }
-    },
-    {
-      id: 4,
-      montant: 8500.250,
-      numeroCheque: 'CHQ2023-2256',
-      dateEcheance: new Date('2024-02-10'),
-      entrepriseNom: 'Ulysse Travel',
-      banqueNom: 'Banque de Tunisie',
-      banqueAdresse: 'Rue Hédi Nouira, Tunis',
-      fournisseurNom: 'Tunisair',
-      getFormattedEcheance: function (): string {
-        throw new Error('Function not implemented.');
-      },
-      getMontantFormatted: function (): string {
-        throw new Error('Function not implemented.');
-      },
-      fournisseurAdresse: 'Sfax',
-      getFournisseurComplete: function (): string {
-        throw new Error('Function not implemented.');
-      }
-    },
-    {
-      id: 5,
-      montant: 42000.000,
-      numeroCheque: 'CHQ2023-2498',
-      dateEcheance: new Date('2024-03-05'),
-      entrepriseNom: 'Magasin Général',
-      banqueNom: 'Société Tunisienne de Banque',
-      banqueAdresse: 'Avenue Mohamed V, Tunis',
-      fournisseurNom: 'Carrefour Tunisie',
-      getFormattedEcheance: function (): string {
-        throw new Error('Function not implemented.');
-      },
-      getMontantFormatted: function (): string {
-        throw new Error('Function not implemented.');
-      },
-      fournisseurAdresse: 'Sfax',
-      getFournisseurComplete: function (): string {
-        throw new Error('Function not implemented.');
-      }
-    }
+    
   ];
 
 
@@ -177,11 +86,22 @@ export class RetraitComponent implements OnInit {
   fournisseursData: Fournisseur[]  = [];
   banquesData: Banque[] = [];
   ngOnInit() {
+    this.ServiceR.getRetraites().subscribe({
+      next: (retraites) => {
+        console.log('Retraites:', retraites);
+        // Do something with retraites, like storing them in a local variable
+        this.retraitesLightData = retraites;
+      },
+      error: (err) => {
+        console.error('Error fetching retraites:', err);
+        // Optionally show an error message to the user
+      }
+    });
+    
         // Fetch fournisseurs data
         this.ServiceF.getAll().subscribe(
           (data) => {
             this.fournisseursData = data;
-            this.messageService.add({severity: 'success', summary: 'Données chargées', detail: 'Liste des fournisseurs chargée avec succès!'});
           },
           (error) => {
             this.messageService.add({severity: 'error', summary: 'Erreur', detail: 'Impossible de charger les fournisseurs!'});
@@ -197,40 +117,70 @@ export class RetraitComponent implements OnInit {
             console.error('Error fetching banques data:', error);
           }
         );
+
+
     const today = new Date();
     this.todayDate = today.toISOString().split('T')[0]; // 'yyyy-MM-dd'
     this.items = [
-      {label: 'Ajouter', icon: 'pi pi-plus', command: () => this.toggleAddRetraitInfo()}, 
-      { label: 'Importer', icon: 'pi pi-file-import'  }, 
       {
-        label: 'Exporter',
-        icon: 'pi pi-file-excel', 
+        label: 'Manager Traite',
+        icon: 'pi pi-folder',
         items: [
-          { label: 'Excel', icon: 'pi pi-file-excel', },
-          { label: 'PDF', icon: 'pi pi-file-pdf',  },
+          {
+            label: 'Ajouter',
+            icon: 'pi pi-plus',
+            command: () => this.toggleAddRetraitInfo()
+          },
+          {
+            label: 'Supprimer',
+            icon: 'pi pi-trash'
+          }
         ]
       },
-      { label: 'Supprimer', icon: 'pi pi-file-excel' , },
-      { label: 'Imprimer', icon: 'pi pi-print' ,  } ,
-      { label: 'Sauvegarder', icon: 'pi pi-save' , } ,
+      {
+        label: 'Manager Fournisseur',
+        icon: 'pi pi-users',
+        items: [
+          { label: 'Ajouter', icon: 'pi pi-user-plus', command: () => this.toggleAddFournisseurInfo() },
+          { label: 'Voir', icon: 'pi pi-eye', command: () => this.toggleDialog() }
+        ]
+      },
+      {
+        label: 'Manager Banque',
+        icon: 'pi pi-building',
+        items: [
+          { label: 'Ajouter', icon: 'pi pi-plus-circle', command: () => this.toggleAddBanqueInfo() },
+          { label: 'Voir', icon: 'pi pi-eye', command: () => this.toggleDialogBanque() }
+        ]
+      }
     ];
+    
+
 }
 
-  // Function to format date
-  getFormattedEcheance(date: Date): string {
-    const options: Intl.DateTimeFormatOptions = {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    };
-    return new Intl.DateTimeFormat('fr-FR', options).format(date);
-  }
+getFormattedEcheance(date: any): string {
+  if (!date) return 'N/A';
+
+  const parsedDate = new Date(date);
+  if (isNaN(parsedDate.getTime())) return 'Date invalide';
+
+  const options: Intl.DateTimeFormatOptions = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  };
+  return new Intl.DateTimeFormat('fr-FR', options).format(parsedDate);
+}
+
 
   toggleAddRetraitInfo() {
     this.AddRetraitInfo = !this.AddRetraitInfo;
   }
 
   selectedDate: Date = new Date(); // Defaults to today
+  
+
+
   
  // Error flags
 showMontantError = false;
@@ -241,10 +191,10 @@ showBankError = false;
 showAddressError = false;
 showRibError = false;
 
-validateForm(montantInput: any, chequeInput: HTMLInputElement) {
+validateForm() {
 
   console.log(
-    "Numéro de Chèque:", this.AddRetrait.numeroCheque, 
+    "Numéro de Chèque:", this.AddRetrait.NumCheque, 
     "Date:", this.todayDate, 
     "Montant:", this.AddRetrait.montant, 
     "Fournisseur:", this.selectedFournisseur, 
@@ -263,12 +213,12 @@ validateForm(montantInput: any, chequeInput: HTMLInputElement) {
   this.showRibError = false;
 
   // Validate amount
-  if (!montantInput.value || parseFloat(montantInput.value) <= 0) {
+  if (this.AddRetrait.montant === undefined || this.AddRetrait.montant <= 0) {
     this.showMontantError = true;
   }
 
   // Validate cheque number
-  if (!chequeInput.value || chequeInput.value.trim() === '') {
+  if (!this.AddRetrait.NumCheque || this.AddRetrait.NumCheque.trim() === '') {
     this.showChequeError = true;
   }
 
@@ -308,25 +258,39 @@ validateForm(montantInput: any, chequeInput: HTMLInputElement) {
     !this.showRibError
   ) {
     const formData: AddRetraiteDTO = {
-      numeroCheque: chequeInput.value.trim(),
+      NumCheque: this.AddRetrait.NumCheque.trim(),
       dateEcheance: new Date(this.todayDate || ''),
-      montant: parseFloat(montantInput.value),
+      montant: parseFloat(this.AddRetrait.montant.toString()),
       fournisseurId: this.selectedFournisseur?.id || 0,
       banqueId: this.selectedBank?.id || 0,
-      banqueAdresseId: this.selectedAddress?.id || 0,
-      rib: this.AddRetrait.rib
+      adresseId: this.selectedAddress?.id || 0,
+      rib: String(this.AddRetrait.rib),
+      entrepriseId: this.ServiceA.getDecodedToken()?.id || 0, // Get the entrepriseId from the token
     };
+    
     
     this.submitForm(formData);
   }
 }
 
 submitForm(data: any) {
-  this.messageService.add({
-    severity: 'success',
-    summary: 'Succès',
-    detail: 'Retraite ajoutée avec succès !'
-  });
+
+   // Call the service to create the Retraite
+   this.ServiceR.createRetraite(data).subscribe(
+    (response) => {
+      // Show success message
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: 'Retraite ajoutée avec succès !'
+      });
+
+      // Reset or close the form
+      this.AddRetraitInfo = false;
+    },
+
+  );
+
   this.AddRetraitInfo = false;
 }
 
@@ -374,5 +338,254 @@ submitForm(data: any) {
     );
   }
   
+
+  DeleteRetrait() {
+    if (this.selectedRetrait?.id !== undefined) {
+      this.ServiceR.deleteRetraite(this.selectedRetrait.id).subscribe({
+      next: () => {
+        console.log('Retraite deleted successfully.');
+      },
+      error: err => {
+        console.error('Error deleting retraite:', err);
+    }
+  }
+      );
+    }
+  }
+
+
+  AddBanqueInfo: boolean = false;
+  toggleAddBanqueInfo() {
+    this.AddBanqueInfo = !this.AddBanqueInfo;
+  }
+  AddFournisseurInfo: boolean = false;
+  toggleAddFournisseurInfo() {
+    this.AddFournisseurInfo = !this.AddFournisseurInfo;
+  }
+
+
+FournisseurAjouter : Fournisseur = new Fournisseur();
+banque : Banque = new Banque();
+
+addAdresse() {
+
+  this.banque.adresses.push({
+    rue: '',
+    codePostal: '',
+    ville: '',
+    pays: '',
+    estSiegeSocial: false,
+    id: 0,
+    formattedAddress: ''
+  });
+}
+
+removeAdresse(index: number) {
+  this.banque.adresses?.splice(index, 1);
+}
+
+
+AddBanque() {
+  console.log(this.banque);
+  this.ServiceB.create(this.banque).subscribe(
+    (response) => {
+      // Ajout à la liste
+      this.banquesData.push(response);
+
+      // Message de succès
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: 'Banque ajoutée avec succès !'
+      });
+
+      // Réinitialiser le formulaire
+      this.banque = {
+        id: 0, // Add the missing 'id' property
+        nom: '',
+        adresses: [
+          {
+            rue: '',
+            codePostal: '',
+            ville: '',
+            pays: '',
+            estSiegeSocial: false,
+            id: 0,
+            formattedAddress: ''
+          }
+        ]
+      };
+
+      // Fermer le drawer
+      this.AddBanqueInfo = false;
+    },
+    (error) => {
+      console.error('Error adding banque:', error);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erreur',
+        detail: 'Erreur lors de l\'ajout de la banque.'
+      });
+    }
+  );
+}
+
+
+showNomBanqueError = false;
+showAdresseErrorList: boolean[] = [];
+showNoAdresseError = false; // Nouveau flag
+
+validateBanqueForm(): boolean {
+  this.showNomBanqueError = !this.banque.nom?.trim();
+  this.showAdresseErrorList = [];
+  this.showNoAdresseError = this.banque.adresses.length === 0;
+
+  let allAdressesValid = true;
+
+  this.banque.adresses.forEach((adresse, index) => {
+    const isInvalid = !adresse.rue?.trim() || !adresse.codePostal?.trim() || !adresse.ville?.trim() || !adresse.pays?.trim();
+    this.showAdresseErrorList[index] = isInvalid;
+    if (isInvalid) allAdressesValid = false;
+  });
+
+  return !this.showNomBanqueError && !this.showNoAdresseError && allAdressesValid;
+}
+
+onSaveBanque() {
+  if (this.validateBanqueForm()) {
+    this.AddBanque();
+  }
+}
+
+
+showFournisseurErrors = {
+  nom: false,
+  email: false,
+  telephone: false,
+  adresse: false
+};
+validateFournisseurForm(): boolean {
+  const f = this.FournisseurAjouter;
+
+  this.showFournisseurErrors.nom = !f.nom?.trim();
+  this.showFournisseurErrors.email = !f.email?.trim();
+  this.showFournisseurErrors.telephone = !f.telephone?.trim();
+  this.showFournisseurErrors.adresse = !f.adresse?.trim();
+
+  return !(this.showFournisseurErrors.nom || this.showFournisseurErrors.email || this.showFournisseurErrors.telephone || this.showFournisseurErrors.adresse);
+}
+onSaveFournisseur() {
+  if (this.validateFournisseurForm()) {
+    this.AddFournisseur();
+  }
+}
+AddFournisseur() {
   
+  this.ServiceF.create(this.FournisseurAjouter).subscribe(
+    (response) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: 'Fournisseur ajouté avec succès !'
+      });
+
+      this.fournisseursData.push(this.FournisseurAjouter); // Ajouter le nouveau à la liste
+      this.FournisseurAjouter = {
+        id: 0,
+        nom: '',
+        email: '',
+        telephone: '',
+        adresse: ''
+      }; // Réinitialiser le formulaire
+      this.AddFournisseurInfo = false;
+    },
+    (error) => {
+      console.error('Erreur lors de l\'ajout du fournisseur:', error);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erreur',
+        detail: 'Erreur lors de l\'ajout du fournisseur.'
+      });
+    }
+  );
+}
+
+dialogVisible: boolean = false;
+toggleDialog() {
+  this.dialogVisible = !this.dialogVisible; 
+}
+
+dialogVisibleBanque: boolean = false;
+toggleDialogBanque() {
+  this.dialogVisibleBanque = !this.dialogVisibleBanque; 
+}
+
+item5: MenuItem[] = [];
+
+openMenu(event: Event, fournisseur: Fournisseur, menu: any) {
+  this.item5 = [
+    {
+      label: 'Modifier',
+      icon: 'pi pi-pencil',
+    },
+    {
+      label: 'Supprimer',
+      icon: 'pi pi-trash',
+      command: () => this.onDeleteFournisseur(fournisseur)
+    }
+  ];
+  menu.toggle(event);
+}
+
+selectedFournisseurToDelete: Fournisseur | null = null;
+ConfirmFournisseurDialog: boolean = false;
+confirmDeleteFournisseur(fournisseur: Fournisseur) {
+  this.selectedFournisseur = fournisseur;
+  this.ConfirmFournisseurDialog = true;
+  this.confirmationService.confirm({
+    message: `Êtes-vous sûr de vouloir supprimer le fournisseur ${fournisseur.nom} ?`,
+    header: 'Confirmation de suppression',
+    icon: 'pi pi-exclamation-triangle',
+    accept: () => this.onDeleteFournisseur(fournisseur)
+  });
+}
+
+
+
+onDeleteFournisseur(fournisseur: Fournisseur) {
+  this.ConfirmFournisseurDialog = true
+  this.confirmationService.confirm({
+    message: `Êtes-vous sûr de vouloir supprimer le fournisseur ${fournisseur.nom}?`,
+    header: 'Confirmation de suppression',
+    icon: 'pi pi-exclamation-triangle',
+    acceptButtonStyleClass: 'p-button-danger p-button-raised',
+    rejectButtonStyleClass: 'p-button-text p-button-raised',
+    acceptIcon: 'pi pi-trash',
+    rejectIcon: 'pi pi-times',
+    acceptLabel: 'Supprimer',
+    rejectLabel: 'Annuler',
+    accept: () => {
+      this.ServiceF.delete(fournisseur.id).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Succès',
+            detail: 'Fournisseur supprimé avec succès'
+          });
+          // Remove from local array to update UI immediately
+          this.fournisseursData = this.fournisseursData.filter(f => f.id !== fournisseur.id);
+        },
+        error: (error) => {
+          console.error('Erreur lors de la suppression du fournisseur', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'Impossible de supprimer le fournisseur'
+          });
+        }
+      });
+    }
+  });
+}
+
 }

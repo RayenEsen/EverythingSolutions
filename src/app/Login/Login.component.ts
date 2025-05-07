@@ -123,6 +123,18 @@ export class LoginComponent implements OnInit {
   }
 
   Register() {
+    // Check if the user is already logged in
+    if (this.ServiceA.isAuthenticated()) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Déjà inscrit',
+        detail: 'Vous êtes déjà inscrit et connecté.',
+        life: 3000
+      });
+      return;
+    }
+  
+    // Validate email
     if (!this.registerDto.email) {
       this.messageService.add({
         severity: 'error',
@@ -143,6 +155,7 @@ export class LoginComponent implements OnInit {
       return;
     }
   
+    // Validate password
     if (!this.registerDto.password) {
       this.messageService.add({
         severity: 'error',
@@ -163,6 +176,7 @@ export class LoginComponent implements OnInit {
       return;
     }
   
+    // Check if passwords match
     if (this.registerDto.password !== this.confirmPassword) {
       this.messageService.add({
         severity: 'error',
@@ -176,6 +190,7 @@ export class LoginComponent implements OnInit {
     // Optionally copy confirmPassword into the DTO (if your backend expects it)
     this.registerDto.confirmPassword = this.confirmPassword;
   
+    // Proceed with registration
     this.ServiceA.register(this.registerDto).subscribe(
       (response) => {
         console.log("Inscription réussie", response);

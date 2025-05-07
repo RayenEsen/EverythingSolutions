@@ -6,6 +6,8 @@ import { tap } from 'rxjs/operators';
 import { LoginRequest } from '../DTO/LoginRequest';
 import { LoginResponse } from '../DTO/LoginResponse';
 import { RegisterRequest } from '../DTO/RegisterRequest';
+import { jwtDecode } from 'jwt-decode';
+import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -23,10 +25,14 @@ export class AuthService {
     const token = this.getToken();
     return !!token && token.trim() !== '';
   }
-
   register(data: RegisterRequest): Observable<any> {
+    if (this.isAuthenticated()) {
+      return throwError(() => new Error('User already registered'));
+    }
+  
     return this.http.post(`${this.baseUrl}/Register`, data);
   }
+  
 
   login(data: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.baseUrl}/Login`, data).pipe(
@@ -69,7 +75,53 @@ export class AuthService {
       headers: this.getHeaders()
     });
   }
+
+  getDecodedToken(): { 
+    id: number; 
+    NomSociete: string; 
+    email: string; 
+    [key: string]: any 
+  } | null {
+    const token = this.getToken();
+    if (!token) return null;
+  
+    try {
+      const decoded: any = jwtDecode(token);
+      
+      // Extract ID from multiple possible claims
+      const id = +decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || 
+                 +decoded['EntrepriseId'] || 
+                 +decoded['nameid'] || 
+                 0;
+      
+      // Extract name from multiple possible claims
+      const nomSociete = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || 
+                        decoded['NomSociete'] || 
+                        decoded['unique_name'] || 
+                        '';
+      
+      // Extract email from multiple possible claims
+      const email = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] || 
+                   decoded['email'] || 
+                   '';
+  
+      return {
+        id,
+        NomSociete: nomSociete,
+        email,
+        ...decoded
+      };
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
+
 }
+
+
+
 // Note: The `tap` operator is used to perform side effects (like updating the BehaviorSubject) without modifying the observable stream.
 // The `BehaviorSubject` is used to keep track of the login state and can be subscribed to in components to react to changes.
 // The `isLoggedIn$` observable can be used in components to check if the user is logged in.

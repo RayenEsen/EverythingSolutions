@@ -1,18 +1,24 @@
 <p-toast />
 <div class="card">
   <div style="text-align: center; margin-bottom: 30px;">
-    <h2 >Liste des Retraites</h2>
-    <p>Voici la liste des retraits effectués avec leurs détails, y compris les montants, les dates d'échéance, les entreprises associées, les fournisseurs, et les banques impliquées.</p>
+    <h2 >Liste des Traites</h2>
+    <p>Voici la liste des Traites effectués avec leurs détails, y compris les montants, les dates d'échéance, les entreprises associées, les fournisseurs, et les banques impliquées.</p>
   </div>
  
 
 <div class="d-flex align-items-center justify-content-between p-2 bg-light text-dark border rounded mb-3">
   <p-menubar [model]="items" />
+  
   <p-iconfield class="d-flex align-items-center">
     <p-inputicon styleClass="pi pi-search" />
     <input type="text" pInputText placeholder="Search" class="form-control" />
   </p-iconfield>
+  
 </div>
+
+
+  
+
 
   <p-contextMenu #cm [model]="items2" [appendTo]="'body'"></p-contextMenu>
 
@@ -30,7 +36,6 @@
     selectionMode="single"
     [contextMenu]="cm"
     [(contextMenuSelection)]="selectedRetrait" 
-
     [globalFilterFields]="['numeroCheque', 'entreprise.nom']">
     
 
@@ -46,7 +51,7 @@
             <p-columnFilter type="text" field="numeroCheque" display="menu" class="ml-auto"/>
         </th>
         
-        <th style="width: 15rem">
+        <th style="width: 16rem">
             Montant
             <p-columnFilter type="numeric" field="montant" display="menu" class="ml-auto"/>
         </th>
@@ -106,21 +111,31 @@
         
       </tr>
     </ng-template>
-    <ng-template #emptymessage>
-      <tr>
-        <td colspan="6" style="text-align: center;">
-          <iframe src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie" width="200" height="200" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-          <div>Aucune retraite trouvée.</div>
-        </td>
-      </tr>
-    </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="100%" style="text-align: center; width: 100%;">
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+              <iframe 
+                src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie" 
+                width="200" 
+                height="200" 
+                frameborder="0" 
+                allow="autoplay; encrypted-media" 
+                allowfullscreen>
+              </iframe>
+              <div>Aucune Traite trouvée.</div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    
     
   </p-table>
 </div>
 
 
 
-<p-drawer [(visible)]="AddRetraitInfo" header="Ajouter un Nouveau Retrait" position="right" [style]="{width: '450px'}">
+<p-drawer [(visible)]="AddRetraitInfo" header="Ajouter un Nouveau Traite" position="right" [style]="{width: '450px'}">
   <div class="p-4">
     <!-- Form without reactive forms -->
     <div>
@@ -134,7 +149,7 @@
           class="form-control" 
           id="cheque"
           #chequeInput
-          [(ngModel)]="AddRetrait.numeroCheque"
+          [(ngModel)]="AddRetrait.NumCheque"
           placeholder="Ex: CHK123456">
         <div *ngIf="showChequeError" class="text-danger small mt-1">Le numéro de chèque est requis</div>
       </div>
@@ -295,7 +310,6 @@
                 id="rib" 
                 #ribInput
                 [(ngModel)]="AddRetrait.rib"
-                mode="decimal" 
                 placeholder="Ex: 123456789" 
                 locale="fr-FR"
                 [min]="0"
@@ -315,7 +329,7 @@
 
 
       <!-- Action Buttons -->
-      <div class="d-flex justify-content-end gap-2 mt-4">
+      <div class="d-flex justify-content-end gap-2 p-3 bg-light" style="position: absolute; bottom: 0; left: 0; width: 100%;">
         <button 
           type="button" 
           class="btn btn-outline-secondary"
@@ -325,7 +339,7 @@
         <button 
           type="button" 
           class="btn btn-primary"
-          (click)="validateForm(montantInput, chequeInput)">
+          (click)="validateForm()">
           <i class="pi pi-check me-2"></i>Enregistrer
         </button>
       </div>
@@ -334,3 +348,322 @@
     </div>
   </div>
 </p-drawer>
+
+
+
+<p-drawer [(visible)]="AddBanqueInfo" header="Ajouter un Nouveau Banque" position="right" [style]="{width: '450px'}">
+  <div class="p-4 d-flex flex-column" style="height: 100%; position: relative;">
+    <!-- Form without reactive forms -->
+    <div style="flex-grow: 1; overflow-y: auto; padding-bottom: 60px;"> 
+      <div class="mb-3">
+        <label class="form-label">Nom du Banque</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="banque.nom"
+          name="banqueNom"
+          placeholder="Ex: Banque Nationale">
+        <div *ngIf="showNomBanqueError" class="text-danger small mt-1">
+          Le nom de la banque est requis
+        </div>
+      </div>
+      <div *ngIf="showNoAdresseError" class="text-danger small mb-3">
+        Vous devez ajouter au moins une adresse.
+      </div>
+
+      <!-- Adresses -->
+      <div *ngFor="let adresse of banque.adresses; let i = index" class="border p-3 mb-3 rounded position-relative">
+        <h6>Adresse {{ i + 1 }}</h6>
+        <div class="mb-2">
+          <label class="form-label">Rue</label>
+          <input type="text" class="form-control" [(ngModel)]="adresse.rue" name="rue{{i}}" placeholder="Ex: Rue de Paris">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Code Postal</label>
+          <input type="text" class="form-control" [(ngModel)]="adresse.codePostal" name="codePostal{{i}}" placeholder="Ex: 75000">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Ville</label>
+          <input type="text" class="form-control" [(ngModel)]="adresse.ville" name="ville{{i}}" placeholder="Ex: Paris">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Pays</label>
+          <input type="text" class="form-control" [(ngModel)]="adresse.pays" name="pays{{i}}" placeholder="Ex: France">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Est Siège Social</label>
+          <select class="form-control" [(ngModel)]="adresse.estSiegeSocial" name="siegeSocial{{i}}">
+            <option [ngValue]="true">Oui</option>
+            <option [ngValue]="false">Non</option>
+          </select>
+        </div>
+        <div *ngIf="showAdresseErrorList[i]" class="text-danger small mt-1">
+          Tous les champs de l'adresse {{ i + 1 }} sont requis
+        </div>
+
+        <!-- Supprimer adresse -->
+        <button 
+          type="button" 
+          class="btn btn-danger btn-sm mt-2"
+          (click)="removeAdresse(i)">
+          <i class="pi pi-trash me-1"></i> Supprimer l'adresse
+        </button>
+      </div>
+
+      <!-- Button to Add More Addresses -->
+      <button type="button" class="btn btn-primary" (click)="addAdresse()">
+        Ajouter une adresse
+      </button>
+    </div>
+
+    <!-- Action Buttons at Bottom -->
+    <div class="d-flex justify-content-end gap-2 p-3 bg-light" style="position: absolute; bottom: 0; left: 0; width: 100%;">
+      <button type="button" class="btn btn-outline-secondary" (click)="AddBanqueInfo = false">
+        <i class="pi pi-times me-2"></i>Annuler
+      </button>
+      <button type="button" class="btn btn-primary" (click)="onSaveBanque()">
+        <i class="pi pi-check me-2"></i>Enregistrer
+      </button>
+    </div>
+  </div>
+</p-drawer>
+
+
+
+
+<p-drawer [(visible)]="AddFournisseurInfo" header="Ajouter un Nouveau Fournisseur" position="right" [style]="{width: '450px'}">
+  <div class="p-4">
+    <div>
+      <div class="mb-3">
+        <label class="form-label">Nom du Fournisseur</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="FournisseurAjouter.nom"
+          name="fournisseurNom"
+          placeholder="Ex: Société ABC">
+        <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.nom">
+          Le nom du fournisseur est requis
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Email du Fournisseur</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="FournisseurAjouter.email"
+          name="fournisseurEmail"
+          placeholder="Ex: contact@abc.com">
+        <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.email">
+          L'email du fournisseur est requis
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Téléphone du Fournisseur</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="FournisseurAjouter.telephone"
+          name="fournisseurTelephone"
+          placeholder="Ex: +216 99 999 999">
+        <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.telephone">
+          Le téléphone du fournisseur est requis
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Adresse du Fournisseur</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="FournisseurAjouter.adresse"
+          name="fournisseurAdresse"
+          placeholder="Ex: 12 Rue de Tunis">
+        <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.adresse">
+          L'adresse du fournisseur est requise
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="d-flex justify-content-end gap-2 p-3 bg-light" style="position: absolute; bottom: 0; left: 0; width: 100%;">
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary"
+          (click)="AddFournisseurInfo = false">
+          <i class="pi pi-times me-2"></i>Annuler
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-primary"
+          (click)="onSaveFournisseur()">
+          <i class="pi pi-check me-2"></i>Enregistrer
+        </button>
+      </div>
+    </div>
+  </div>
+</p-drawer>
+
+
+<p-dialog
+  header="Liste des Fournisseurs"
+  [resizable]="false"
+  [modal]="true"
+  [maximizable]="true"
+  appendTo="body"
+  [(visible)]="dialogVisible"
+  [style]="{ width: '75vw' }"
+  [contentStyle]="{ height: '300px' }"
+>
+  <p-table
+    [value]="fournisseursData"
+    [scrollable]="true"
+    scrollHeight="flex"
+    [tableStyle]="{ 'min-width': '55rem' }"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nom</th>
+        <th>Email</th>
+        <th>Téléphone</th>
+        <th>Adresse</th>
+        <th>Outils</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-fournisseur>
+      <tr>
+        <td>{{ fournisseur.nom }}</td>
+        <td>{{ fournisseur.email }}</td>
+        <td>{{ fournisseur.telephone }}</td>
+        <td>{{ fournisseur.adresse }}</td>
+        <td>
+          <button
+          pButton
+          icon="pi pi-pencil"
+          class="p-button-sm p-button-rounded p-button-text p-button-secondary"
+          title="Modifier"
+        ></button>
+        <button
+          pButton
+          icon="pi pi-trash"
+          class="p-button-sm p-button-rounded p-button-text p-button-danger"
+          (click)="onDeleteFournisseur(fournisseur);"
+          title="Supprimer"
+        ></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="100%" style="text-align: center; width: 100%;">
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+            <iframe 
+              src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie"
+              width="200"
+              height="200"
+              frameborder="0"
+              allow="autoplay; encrypted-media"
+              allowfullscreen>
+            </iframe>
+            <div>Aucun Fournisseur trouvé.</div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  
+  <ng-template pTemplate="footer">
+    <p-button label="Fermer" icon="pi pi-times" (onClick)="dialogVisible = false" />
+  </ng-template>
+</p-dialog>
+
+
+<p-dialog
+  header="Liste des Banques"
+  [resizable]="false"
+  [modal]="true"
+  [maximizable]="true"
+  appendTo="body"
+  [(visible)]="dialogVisibleBanque"
+  [style]="{ width: '75vw' }"
+  [contentStyle]="{ height: '300px' }"
+>
+<p-dialog
+  header="Liste des Banques"
+  [resizable]="false"
+  [modal]="true"
+  [maximizable]="true"
+  appendTo="body"
+  [(visible)]="dialogVisibleBanque"
+  [style]="{ width: '75vw' }"
+  [contentStyle]="{ height: '300px' }"
+>
+  <p-table
+    [value]="banquesData"
+    [scrollable]="true"
+    scrollHeight="flex"
+    [tableStyle]="{ 'min-width': '60rem' }"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nom</th>
+        <th>Adresses</th>
+        <th>Outils</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-banque>
+      <tr>
+        <td>{{ banque.nom }}</td>
+        <td>
+          <div class="d-flex flex-column gap-1">
+            <div *ngFor="let adresse of banque.adresses" class="small text-secondary border-start ps-2">
+              {{ adresse.rue }}, {{ adresse.codePostal }} {{ adresse.ville }}, {{ adresse.pays }}
+              <span *ngIf="adresse.estSiegeSocial" class="badge bg-success ms-1">Siège</span>
+            </div>
+          </div>
+        </td>
+        <td>
+          <button
+            pButton
+            icon="pi pi-pencil"
+            class="p-button-sm p-button-rounded p-button-text p-button-secondary"
+            title="Modifier"
+          ></button>
+          <button
+            pButton
+            icon="pi pi-trash"
+            class="p-button-sm p-button-rounded p-button-text p-button-danger"
+            title="Supprimer"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="100%" style="text-align: center; width: 100%;">
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+            <iframe
+              src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie"
+              width="200"
+              height="200"
+              frameborder="0"
+              allow="autoplay; encrypted-media"
+              allowfullscreen>
+            </iframe>
+            <div>Aucune Banque trouvée.</div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  
+  <ng-template pTemplate="footer">
+    <p-button label="Fermer" icon="pi pi-times" (onClick)="dialogVisibleBanque = false" />
+  </ng-template>
+</p-dialog>
+
+<div  *ngIf="ConfirmFournisseurDialog" >
+  <p-toast />
+  <p-confirmdialog />
+</div>
