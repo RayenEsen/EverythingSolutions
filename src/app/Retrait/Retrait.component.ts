@@ -52,7 +52,7 @@ export class RetraitComponent implements OnInit {
 
 
   items2: any[] = [
-    { label: 'Voir Retraite', icon: 'pi pi-eye',  },
+    { label: 'Voir Retraite', icon: 'pi pi-eye',  command: () => this.NavigateToRetraiteDetails(this.selectedRetrait!)},
     { label: 'Supprimer', icon: 'pi pi-trash',  command: () => this.DeleteRetrait()},
   ];
 
@@ -80,12 +80,8 @@ export class RetraitComponent implements OnInit {
   /* Dummy Testing data */
 
 
-
-
-  loading: boolean = false;
-  fournisseursData: Fournisseur[]  = [];
-  banquesData: Banque[] = [];
-  ngOnInit() {
+  loadTraites()
+  {
     this.ServiceR.getRetraites().subscribe({
       next: (retraites) => {
         console.log('Retraites:', retraites);
@@ -97,7 +93,14 @@ export class RetraitComponent implements OnInit {
         // Optionally show an error message to the user
       }
     });
-    
+  }
+
+  loading: boolean = false;
+  fournisseursData: Fournisseur[]  = [];
+  banquesData: Banque[] = [];
+  ngOnInit() {
+
+    this.loadTraites();
         // Fetch fournisseurs data
         this.ServiceF.getAll().subscribe(
           (data) => {
@@ -489,7 +492,7 @@ AddFournisseur() {
         detail: 'Fournisseur ajouté avec succès !'
       });
 
-      this.fournisseursData.push(this.FournisseurAjouter); // Ajouter le nouveau à la liste
+      this.fournisseursData.push(response); // Ajouter le nouveau à la liste
       this.FournisseurAjouter = {
         id: 0,
         nom: '',
@@ -531,7 +534,7 @@ openMenu(event: Event, fournisseur: Fournisseur, menu: any) {
     {
       label: 'Supprimer',
       icon: 'pi pi-trash',
-      command: () => this.onDeleteFournisseur(fournisseur)
+      command: () => this.confirmDeleteFournisseur(fournisseur)
     }
   ];
   menu.toggle(event);
@@ -539,23 +542,11 @@ openMenu(event: Event, fournisseur: Fournisseur, menu: any) {
 
 selectedFournisseurToDelete: Fournisseur | null = null;
 ConfirmFournisseurDialog: boolean = false;
+// Pour les fournisseurs
 confirmDeleteFournisseur(fournisseur: Fournisseur) {
-  this.selectedFournisseur = fournisseur;
-  this.ConfirmFournisseurDialog = true;
+  this.selectedFournisseurToDelete = fournisseur;
   this.confirmationService.confirm({
     message: `Êtes-vous sûr de vouloir supprimer le fournisseur ${fournisseur.nom} ?`,
-    header: 'Confirmation de suppression',
-    icon: 'pi pi-exclamation-triangle',
-    accept: () => this.onDeleteFournisseur(fournisseur)
-  });
-}
-
-
-
-onDeleteFournisseur(fournisseur: Fournisseur) {
-  this.ConfirmFournisseurDialog = true
-  this.confirmationService.confirm({
-    message: `Êtes-vous sûr de vouloir supprimer le fournisseur ${fournisseur.nom}?`,
     header: 'Confirmation de suppression',
     icon: 'pi pi-exclamation-triangle',
     acceptButtonStyleClass: 'p-button-danger p-button-raised',
@@ -567,12 +558,12 @@ onDeleteFournisseur(fournisseur: Fournisseur) {
     accept: () => {
       this.ServiceF.delete(fournisseur.id).subscribe({
         next: () => {
+          this.loadTraites(); // Reload the list of retraites
           this.messageService.add({
             severity: 'success',
             summary: 'Succès',
             detail: 'Fournisseur supprimé avec succès'
           });
-          // Remove from local array to update UI immediately
           this.fournisseursData = this.fournisseursData.filter(f => f.id !== fournisseur.id);
         },
         error: (error) => {
@@ -587,5 +578,55 @@ onDeleteFournisseur(fournisseur: Fournisseur) {
     }
   });
 }
+// La méthode onDeleteFournisseur n'est plus nécessaire car nous gérons tout dans confirmDeleteFournisseur
+
+
+// Déclaration des propriétés
+ConfirmBanqueDialog: boolean = false;
+selectedBanqueToDelete: Banque | null = null;
+
+// Pour les banques
+confirmDeleteBanque(banque: Banque) {
+  this.selectedBanqueToDelete = banque;
+  // Ne pas définir ConfirmBanqueDialog = true ici
+  this.confirmationService.confirm({
+    message: `Êtes-vous sûr de vouloir supprimer la banque ${banque.nom} ?`,
+    header: 'Confirmation de suppression',
+    icon: 'pi pi-exclamation-triangle',
+    acceptButtonStyleClass: 'p-button-danger p-button-raised',
+    rejectButtonStyleClass: 'p-button-text p-button-raised',
+    acceptIcon: 'pi pi-trash',
+    rejectIcon: 'pi pi-times',
+    acceptLabel: 'Supprimer',
+    rejectLabel: 'Annuler',
+    accept: () => {
+      this.ServiceB.delete(banque.id).subscribe({
+        next: () => {
+          this.loadTraites(); // Reload the list of retraites
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Succès',
+            detail: 'Banque supprimée avec succès'
+          });
+          // Remove from local array to update UI immediately
+          this.banquesData = this.banquesData.filter(b => b.id !== banque.id);
+        },
+        error: (error) => {
+          console.error('Erreur lors de la suppression de la banque', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'Impossible de supprimer la banque'
+          });
+        }
+      });
+    }
+  });
+}
+
+ NavigateToRetraiteDetails(retrait: Retraite) {
+  this.router.navigate(['/RetraitDetails', retrait.id]);
+
+ }
 
 }

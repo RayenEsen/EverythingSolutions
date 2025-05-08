@@ -33,6 +33,15 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/Register`, data);
   }
   
+  resendVerification(email: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/ResendVerification`, { email }, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'  // Correct content type for JSON payload
+      })
+    });
+  }
+  
+  
 
   login(data: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.baseUrl}/Login`, data).pipe(

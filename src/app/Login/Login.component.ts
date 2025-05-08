@@ -194,7 +194,9 @@ export class LoginComponent implements OnInit {
     this.ServiceA.register(this.registerDto).subscribe(
       (response) => {
         console.log("Inscription réussie", response);
-        this.showLoginSection();
+        this.ShowRegisterSection = false;
+        this.AccountVisible = false
+        this.ShowVerificationSection = true;
         this.messageService.add({
           severity: 'success',
           summary: 'Inscription réussie',
@@ -272,7 +274,17 @@ export class LoginComponent implements OnInit {
   showLoginSection() {
     this.companyVisible = false;
     this.AccountVisible = false;
+    this.ShowLoginSection = true;
+    this.ShowRegisterSection = false;
   }
+  
+  showRegisterSection() {
+    this.companyVisible = true;
+    this.ShowLoginSection = false;
+    this.ShowRegisterSection = true;
+  }
+  ShowLoginSection = false;
+  ShowRegisterSection = true;
 
 
   filterBanques(event: any) {
@@ -280,6 +292,26 @@ export class LoginComponent implements OnInit {
     this.filteredBanques = this.banquesList.filter(banque =>
       banque.nom.toLowerCase().includes(query)
     );
+  }
+
+  ShowVerificationSection = false;
+  verificationCode = '';
+  resendDisabled = false;
+
+
+
+
+  
+  resendCode() {
+    this.resendDisabled = true;
+    this.ServiceA.resendVerification(this.registerDto.email).subscribe({
+      next: () => {
+        setTimeout(() => this.resendDisabled = false, 30000); // re-enable after 30 sec
+      },
+      error: () => {
+        this.resendDisabled = false;
+      }
+    });
   }
 
 }

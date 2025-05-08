@@ -5,7 +5,7 @@ import { AuthGuard } from './Guards/auth.guard';
 import { LoginGuard } from './Guards/login.guard';
 import { BanqueComponent } from './Banque/Banque.component';
 import { RetraitComponent } from './Retrait/Retrait.component';
-
+import { PrintTraiteComponent } from './PrintTraite/PrintTraite.component';
 export const routes: Routes = [
 
   {
@@ -25,5 +25,12 @@ export const routes: Routes = [
     component: RetraitComponent,
     title: 'Retrait',
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'RetraitDetails/:id',
+    component: PrintTraiteComponent,
+    title: 'Détails Retrait',
+    canActivate: [AuthGuard]
   }
+
 ];

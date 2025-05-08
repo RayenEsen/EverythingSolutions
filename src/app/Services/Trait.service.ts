@@ -58,6 +58,21 @@ export class RetraitesService {
     return this.http.delete<any>(`${this.baseUrl}/${id}`, { headers });
   }
   
+
+    getRetraiteById(id: number): Observable<RetraiteLightDto> {
+      const token = localStorage.getItem('jwtToken');
+  
+      if (!token) {
+        throw new Error('No JWT token found in localStorage');
+      }
+  
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json'
+      });
+  
+      return this.http.get<RetraiteLightDto>(`${this.baseUrl}/${id}`, { headers });
+    }
   
   
 }

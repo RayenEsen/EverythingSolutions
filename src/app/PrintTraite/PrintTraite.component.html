@@ -1,0 +1,119 @@
+<div class="print-container">
+  <div class="modern-card" *ngIf="retraiteDetails; else loading">
+    <div class="print-header">
+      <div class="bank-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#4f46e5" width="48px" height="48px">
+          <path d="M12 2L2 7v10h20V7L12 2zm0 5.5l7.5 3.5H12V7.5zm0 5.5h7.5v3.5L12 18v-5zM4.5 11.5L12 8v3.5H4.5zm0 5.5H12v3.5l-7.5-3.5z"/>
+        </svg>
+      </div>
+      <div class="document-meta">
+        <div class="document-title">TRAITE BANCAIRE</div>
+        <div class="document-number">N° {{ retraiteDetails?.numeroCheque }}</div>
+      </div>
+    </div>
+
+    <div class="watermark-background"></div>
+
+    <div class="document-body">
+      <div class="amount-section">
+        <div class="amount-label">Montant</div>
+        <div class="amount-value">{{ retraiteDetails?.montant }} TND</div>
+      </div>
+
+      <div class="divider">
+        <div class="divider-line"></div>
+        <div class="divider-text">Détails de paiement</div>
+        <div class="divider-line"></div>
+      </div>
+
+      <div class="details-grid">
+        <div class="detail-item">
+          <span class="detail-label">Date d'Échéance</span>
+          <span class="detail-value">{{ retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">RIB</span>
+          <span class="detail-value">{{ retraiteDetails?.rib }}</span>
+        </div>
+      </div>
+
+      <div class="parties-section">
+        <div class="party-card">
+          <div class="party-header">Fournisseur</div>
+          <div class="party-name">{{ retraiteDetails?.fournisseurNom }}</div>
+          <div class="party-address">{{ retraiteDetails?.fournisseurAdresse }}</div>
+        </div>
+
+        <div class="party-card">
+          <div class="party-header">Banque</div>
+          <div class="party-name">{{ retraiteDetails?.banqueNom }}</div>
+          <div class="party-address">{{ retraiteDetails?.banqueAdresse }}</div>
+        </div>
+      </div>
+
+      <div class="security-features">
+        <div class="security-item">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#10b981" width="20px" height="20px">
+            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+          </svg>
+          Document sécurisé
+        </div>
+        <div class="security-item">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#3b82f6" width="20px" height="20px">
+            <path d="M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5zm-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-2zm-3-4h8v2H8z"/>
+          </svg>
+          {{ retraiteDetails?.numeroCheque }}
+        </div>
+      </div>
+
+      <div class="issuer-section">
+        <div class="issuer-stamp">Imprimer</div>
+        <div class="issuer-details">
+          <div class="issuer-name">{{ retraiteDetails?.entrepriseNom }}</div>
+          <div class="issuer-date">Émis le: {{ today | date:'dd/MM/yyyy' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="loading-container">
+    <div class="loading-spinner">
+      <div class="spinner-circle"></div>
+      <div class="spinner-circle"></div>
+      <div class="spinner-circle"></div>
+    </div>
+    <div class="loading-text">Préparation du document...</div>
+  </div>
+</ng-template>
+
+
+
+
+<div class="print-container">
+  <div class="modern-card"  style="padding: 40px;">
+    <div class="cheque-container">
+      <div class="text amount-text" style="
+          display: flex;
+          text-align: center;
+          align-items: center;
+          justify-content: center;">
+        
+        <p style="margin-right: 50px; font-weight: 500">{{retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}</p> 
+        <p style="font-weight: 500">{{retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}</p> 
+
+      </div>
+      <div style="text-align: center; display: flex;align-items: center;justify-content: center; padding-bottom: 20px;">
+        <p style="margin-top: 30px;padding-left: 200px;font-size: larger;font-weight: 500">{{ formatRIB(retraiteDetails?.rib) }}</p>  
+        <p style="font-weight: 500;font-size: large;padding-left: 140px;"> {{ formatMontant(retraiteDetails?.montant) }}</p>
+      </div>
+      <div style="display: flex;justify-content: space-around;">
+        <p>{{retraiteDetails?.banqueNom}}</p>
+        <p >{{retraiteDetails?.banqueNom}}</p>
+        <p style="font-weight: 500;font-size: large;padding-left: 140px;"> {{ formatMontant(retraiteDetails?.montant) }}</p>
+      </div>
+
+    </div>
+  </div>
+</div>

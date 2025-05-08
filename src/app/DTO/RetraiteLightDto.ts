@@ -9,6 +9,7 @@ export class RetraiteLightDto {
   banqueAdresse: string = '';          // Bank address
   fournisseurNom: string = '';         // Supplier name
   fournisseurAdresse: string = '';     // Supplier address
+  rib: string = '';     //
 
   // Helper methods
   getFormattedEcheance(): string {

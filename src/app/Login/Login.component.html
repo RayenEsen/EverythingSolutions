@@ -5,7 +5,7 @@
         </div>
 
         <!-- Login Section -->
-        <div class="form-section" *ngIf="!companyVisible  && !AccountVisible">
+        <div class="form-section" *ngIf="!companyVisible  && !AccountVisible && ShowLoginSection">
             <h2 class="section-title">Connexion</h2>
 
             <div class="form-row">
@@ -29,7 +29,7 @@
         </div>
 
         <!-- Informations sur l'entreprise -->
-        <div class="form-section" *ngIf="companyVisible">
+        <div class="form-section" *ngIf="companyVisible && !AccountVisible && ShowRegisterSection">
             <h2 class="section-title">Informations sur l'entreprise</h2>
             
             <div class="form-row">
@@ -89,11 +89,39 @@
                 <p-button label="Enregistrer" icon="pi pi-sign-in" severity="warn" (click)="Register()"></p-button>
             </div>
         </div>
-        
-    <!-- Modernized "First time here?" text link -->
-    <div class="text-center" style="margin-top: 20px;">
-        <span class="first-time-text" (click)="showLoginSection()">First time here? <strong>Login</strong></span>
+
+        <!-- Vérification de l'email -->
+<div class="form-section" *ngIf="ShowVerificationSection">
+    <h2 class="section-title">Vérification de l'email</h2>
+    <p>Un code de vérification a été envoyé à votre email.</p>
+
+    <!-- 
+    <div class="form-row">
+        <div class="form-group">
+            <label for="verificationCode" class="large-label">Code de vérification</label>
+            <input pInputText type="text" pSize="large" placeholder="Entrer le code" [(ngModel)]="verificationCode" />
+        </div>
     </div>
+    -->
+
+
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <p-button label="Renvoyer le code" icon="pi pi-refresh" severity="secondary" (click)="resendCode()" [disabled]="resendDisabled"></p-button>
+    </div>
+
+    
+</div>
+
+        
+        <div class="text-center mt-4">
+            <span class="first-time-text" (click)="showRegisterSection()" *ngIf="ShowLoginSection">
+              First time here? <strong>Register</strong>
+            </span>
+            <span class="first-time-text" (click)="showLoginSection()" *ngIf="ShowRegisterSection">
+              Already have an account? <strong>Login</strong>
+            </span>
+          </div>
+          
 
     </div>
 

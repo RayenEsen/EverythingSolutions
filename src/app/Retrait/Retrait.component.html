@@ -517,18 +517,39 @@
   [contentStyle]="{ height: '300px' }"
 >
   <p-table
+    #dt
     [value]="fournisseursData"
+    dataKey="id"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="loading"
+    [paginator]="true"
     [scrollable]="true"
     scrollHeight="flex"
     [tableStyle]="{ 'min-width': '55rem' }"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [filterDelay]="0"
+    [globalFilterFields]="['nom', 'email', 'telephone', 'adresse']"
   >
     <ng-template pTemplate="header">
       <tr>
-        <th>Nom</th>
-        <th>Email</th>
-        <th>Téléphone</th>
-        <th>Adresse</th>
-        <th>Outils</th>
+        <th style="width: 15rem">
+          Nom
+          <p-columnFilter type="text" field="nom" display="menu" class="ml-auto"/>
+        </th>
+        <th style="width: 20rem">
+          Email
+          <p-columnFilter type="text" field="email" display="menu" class="ml-auto"/>
+        </th>
+        <th style="width: 15rem">
+          Téléphone
+          <p-columnFilter type="text" field="telephone" display="menu" class="ml-auto"/>
+        </th>
+        <th style="width: 25rem">
+          Adresse
+          <p-columnFilter type="text" field="adresse" display="menu" class="ml-auto"/>
+        </th>
+        <th style="width: 10rem">Outils</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-fournisseur>
@@ -539,18 +560,18 @@
         <td>{{ fournisseur.adresse }}</td>
         <td>
           <button
-          pButton
-          icon="pi pi-pencil"
-          class="p-button-sm p-button-rounded p-button-text p-button-secondary"
-          title="Modifier"
-        ></button>
-        <button
-          pButton
-          icon="pi pi-trash"
-          class="p-button-sm p-button-rounded p-button-text p-button-danger"
-          (click)="onDeleteFournisseur(fournisseur);"
-          title="Supprimer"
-        ></button>
+            pButton
+            icon="pi pi-pencil"
+            class="p-button-sm p-button-rounded p-button-text p-button-secondary"
+            title="Modifier"
+          ></button>
+          <button
+            pButton
+            icon="pi pi-trash"
+            class="p-button-sm p-button-rounded p-button-text p-button-danger"
+            (click)="confirmDeleteFournisseur(fournisseur);"
+            title="Supprimer"
+          ></button>
         </td>
       </tr>
     </ng-template>
@@ -558,8 +579,8 @@
       <tr>
         <td colspan="100%" style="text-align: center; width: 100%;">
           <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
-            <iframe 
-              src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie"
+            <iframe
+              src="https://lottie.host/embed/9001f2fe-ee47-47a4-bc9b-a4f3899d0d13/CoC7Gm9nvK.lottie"
               width="200"
               height="200"
               frameborder="0"
@@ -578,17 +599,6 @@
   </ng-template>
 </p-dialog>
 
-
-<p-dialog
-  header="Liste des Banques"
-  [resizable]="false"
-  [modal]="true"
-  [maximizable]="true"
-  appendTo="body"
-  [(visible)]="dialogVisibleBanque"
-  [style]="{ width: '75vw' }"
-  [contentStyle]="{ height: '300px' }"
->
 <p-dialog
   header="Liste des Banques"
   [resizable]="false"
@@ -600,16 +610,30 @@
   [contentStyle]="{ height: '300px' }"
 >
   <p-table
+    #dtBanque
     [value]="banquesData"
+    dataKey="id"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [paginator]="true"
     [scrollable]="true"
     scrollHeight="flex"
     [tableStyle]="{ 'min-width': '60rem' }"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [filterDelay]="0"
+    [globalFilterFields]="['nom', 'adresses.rue', 'adresses.ville', 'adresses.pays']"
   >
     <ng-template pTemplate="header">
       <tr>
-        <th>Nom</th>
-        <th>Adresses</th>
-        <th>Outils</th>
+        <th style="width: 20rem">
+          Nom
+          <p-columnFilter type="text" field="nom" display="menu" class="ml-auto"/>
+        </th>
+        <th style="width: 45rem">
+          Adresses
+          <p-columnFilter type="text" field="adresses.ville" display="menu" class="ml-auto"/>
+        </th>
+        <th style="width: 10rem">Outils</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-banque>
@@ -634,6 +658,7 @@
             pButton
             icon="pi pi-trash"
             class="p-button-sm p-button-rounded p-button-text p-button-danger"
+            (click)="confirmDeleteBanque(banque);"
             title="Supprimer"
           ></button>
         </td>
@@ -644,7 +669,7 @@
         <td colspan="100%" style="text-align: center; width: 100%;">
           <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
             <iframe
-              src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie"
+              src="https://lottie.host/embed/9001f2fe-ee47-47a4-bc9b-a4f3899d0d13/CoC7Gm9nvK.lottie"
               width="200"
               height="200"
               frameborder="0"
@@ -663,7 +688,5 @@
   </ng-template>
 </p-dialog>
 
-<div  *ngIf="ConfirmFournisseurDialog" >
-  <p-toast />
-  <p-confirmdialog />
-</div>
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
