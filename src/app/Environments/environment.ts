@@ -1,4 +1,4 @@
 export const environment = {
-    apiBaseURL: 'https://localhost:7152/api' // ⛔️ enleve le "s"
-  };
-  
+  production: true,
+  apiBaseURL: 'http://148.113.196.127:8000/api' // ✅ no "s", uses HTTP
+};

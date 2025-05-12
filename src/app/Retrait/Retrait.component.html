@@ -143,7 +143,7 @@
 
       <!-- Numéro de Chèque Field -->
       <div class="mb-3">
-        <label for="cheque" class="form-label">Numéro de Chèque</label>
+        <label for="cheque" class="form-label" style="color: #223167;">Numéro de Traite</label>
         <input 
           type="text" 
           class="form-control" 
@@ -193,8 +193,8 @@
 
             <div class="mb-3">
               <label for="fournisseur-autocomplete" class="form-label d-block mb-2">Fournisseur</label>
-            
-              <p-autocomplete 
+              <div style="display: flex;">
+                             <p-autocomplete 
                 id="fournisseur-autocomplete"
                 inputId="fournisseur-input"
                 [(ngModel)]="selectedFournisseur"
@@ -209,6 +209,7 @@
                 [style]="{ 'width':'100%' }"
                 class="d-block w-100"
               >
+
             
                 <!-- Full-detail item template -->
                 <ng-template let-fournisseur pTemplate="item">
@@ -225,6 +226,10 @@
                 </ng-template>
             
               </p-autocomplete>
+              <button type="button"  pButton icon="pi pi-plus" class="p-button-rounded p-button"   severity="secondary" [text]="true" (click)="toggleAddFournisseurInfo()"></button> 
+              </div>
+
+
             
               <div *ngIf="showFournisseurError" class="text-danger small mt-1">
                 Veuillez sélectionner un fournisseur valide
@@ -236,7 +241,7 @@
 
             <div class="mb-3">
               <label for="bank-autocomplete" class="form-label d-block mb-2">Nom Banque</label>
-              
+              <div style="display: flex;">
               <p-autocomplete 
                 id="bank-autocomplete"
                 [(ngModel)]="selectedBank"
@@ -258,6 +263,10 @@
                 </ng-template>
                 
               </p-autocomplete>
+                  <button type="button" pButton icon="pi pi-plus" class="p-button-rounded p-button"   severity="secondary" [text]="true" (click)="toggleAddBanqueInfo()"></button>
+              </div>
+
+
             
               <div *ngIf="showBankError" class="text-danger small mt-1">
                 Veuillez sélectionner une banque valide
@@ -285,7 +294,6 @@
                 <ng-template let-address pTemplate="item">
                   <div class="address-item" style="white-space: normal; padding: 8px;">
                     {{formatAdresse(address)}}
-                    <div *ngIf="address.estSiegeSocial" class="badge bg-primary mt-1">Siège Social</div>
                   </div>
                 </ng-template>
                 
@@ -390,13 +398,7 @@
           <label class="form-label">Pays</label>
           <input type="text" class="form-control" [(ngModel)]="adresse.pays" name="pays{{i}}" placeholder="Ex: France">
         </div>
-        <div class="mb-2">
-          <label class="form-label">Est Siège Social</label>
-          <select class="form-control" [(ngModel)]="adresse.estSiegeSocial" name="siegeSocial{{i}}">
-            <option [ngValue]="true">Oui</option>
-            <option [ngValue]="false">Non</option>
-          </select>
-        </div>
+
         <div *ngIf="showAdresseErrorList[i]" class="text-danger small mt-1">
           Tous les champs de l'adresse {{ i + 1 }} sont requis
         </div>
@@ -643,7 +645,6 @@
           <div class="d-flex flex-column gap-1">
             <div *ngFor="let adresse of banque.adresses" class="small text-secondary border-start ps-2">
               {{ adresse.rue }}, {{ adresse.codePostal }} {{ adresse.ville }}, {{ adresse.pays }}
-              <span *ngIf="adresse.estSiegeSocial" class="badge bg-success ms-1">Siège</span>
             </div>
           </div>
         </td>

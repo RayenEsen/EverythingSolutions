@@ -6,6 +6,7 @@ import { LoginGuard } from './Guards/login.guard';
 import { BanqueComponent } from './Banque/Banque.component';
 import { RetraitComponent } from './Retrait/Retrait.component';
 import { PrintTraiteComponent } from './PrintTraite/PrintTraite.component';
+import { ResetPasswordComponent } from './ResetPassword/ResetPassword.component';
 export const routes: Routes = [
 
   {
@@ -31,6 +32,12 @@ export const routes: Routes = [
     component: PrintTraiteComponent,
     title: 'Détails Retrait',
     canActivate: [AuthGuard]
+  },
+
+    {
+    path: 'reset-password',
+    component: ResetPasswordComponent,
+    title: 'Réinitialiser le mot de passe'
   }
 
 ];

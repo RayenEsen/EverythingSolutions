@@ -1,4 +1,4 @@
-<div class="print-container">
+<div class="print-container display-none" >
   <div class="modern-card" *ngIf="retraiteDetails; else loading">
     <div class="print-header">
       <div class="bank-logo">
@@ -66,18 +66,19 @@
         </div>
       </div>
 
-      <div class="issuer-section">
-        <div class="issuer-stamp">Imprimer</div>
-        <div class="issuer-details">
-          <div class="issuer-name">{{ retraiteDetails?.entrepriseNom }}</div>
-          <div class="issuer-date">Émis le: {{ today | date:'dd/MM/yyyy' }}</div>
-        </div>
-      </div>
+<div class="issuer-section">
+  <div class="issuer-stamp" (click)="printRetraiteDetails()">Imprimer</div>
+  <div class="issuer-details">
+    <div class="issuer-name">{{ retraiteDetails?.entrepriseNom }}</div>
+    <div class="issuer-date">Émis le: {{ today | date:'dd/MM/yyyy' }}</div>
+  </div>
+</div>
+
     </div>
   </div>
 </div>
 
-<ng-template #loading>
+<ng-template #loading class="no-print">
   <div class="loading-container">
     <div class="loading-spinner">
       <div class="spinner-circle"></div>
@@ -91,29 +92,54 @@
 
 
 
-<div class="print-container">
-  <div class="modern-card"  style="padding: 40px;">
-    <div class="cheque-container">
-      <div class="text amount-text" style="
-          display: flex;
-          text-align: center;
-          align-items: center;
-          justify-content: center;">
-        
-        <p style="margin-right: 50px; font-weight: 500">{{retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}</p> 
-        <p style="font-weight: 500">{{retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}</p> 
+  <div class="print-container print-only" >
+    <div class="modern-card"  style="width: max-content;padding: 84px;">
+      <div class="cheque-container">
+        <div class="text amount-text" style="
+            display: flex;
+            text-align: center;
+            gap: 50px;
+            align-items: center;
+            justify-content: center;">
+            
+          <p style="font-weight: 500 " >{{retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}</p>   
+          <div style="margin-right: 50px; font-weight: 500 ; margin-top: -42px;    text-align: justify;">
+          <p>{{retraiteDetails?.banqueVille}}</p>
+          <p>{{retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}</p>
+          </div> 
+
+        </div>
+        <div style="text-align: center; display: flex;align-items: center;justify-content: center; padding-bottom: 20px;">
+          <p style="margin-top: 30px;padding-left: 200px;font-size: larger;font-weight: 500">{{ formatRIB(retraiteDetails?.rib) }}</p>  
+          <p style="font-weight: 500;font-size: large;padding-left: 140px;"> {{ formatMontant(retraiteDetails?.montant) }}</p>
+        </div>
+        <div style="display: flex;justify-content: space-around;">
+          <p>{{retraiteDetails?.banqueNom}}</p>
+          <p >{{retraiteDetails?.banqueNom}}</p>
+          <p style="font-weight: 500;font-size: large;padding-left: 140px;"> {{ formatMontant(retraiteDetails?.montant) }}</p>
+        </div>
+
+        <div>
+        <p style="font-weight: 500; text-align: center; justify-content: center;">
+          {{ retraiteDetails?.getMontantEnLettres() }}
+        </p>
+        </div>
+        <div style="display: flex; gap: 50px;">
+          <p>{{ retraiteDetails?.banqueAdresse }}</p>
+          <p>{{ retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}</p>
+          <p>{{ retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}</p>
+        </div>
+
+        <div style="display: flex; justify-content: space-between;">
+          <p style="font-size: normal;font-weight: 500">{{ formatRIB(retraiteDetails?.rib) }}</p>  
+                  <p style="padding-left: 10px;">{{retraiteDetails?.banqueNom}}</p>
+        </div>
+        <div style="text-align: center;">
+          <p>{{retraiteDetails?.entrepriseNom}}</p>
+          <p>{{retraiteDetails?.entrepriseAdresse}}</p>
+        </div>
+
 
       </div>
-      <div style="text-align: center; display: flex;align-items: center;justify-content: center; padding-bottom: 20px;">
-        <p style="margin-top: 30px;padding-left: 200px;font-size: larger;font-weight: 500">{{ formatRIB(retraiteDetails?.rib) }}</p>  
-        <p style="font-weight: 500;font-size: large;padding-left: 140px;"> {{ formatMontant(retraiteDetails?.montant) }}</p>
-      </div>
-      <div style="display: flex;justify-content: space-around;">
-        <p>{{retraiteDetails?.banqueNom}}</p>
-        <p >{{retraiteDetails?.banqueNom}}</p>
-        <p style="font-weight: 500;font-size: large;padding-left: 140px;"> {{ formatMontant(retraiteDetails?.montant) }}</p>
-      </div>
-
     </div>
   </div>
-</div>

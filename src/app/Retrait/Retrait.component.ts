@@ -107,7 +107,6 @@ export class RetraitComponent implements OnInit {
             this.fournisseursData = data;
           },
           (error) => {
-            this.messageService.add({severity: 'error', summary: 'Erreur', detail: 'Impossible de charger les fournisseurs!'});
           }
         );
 

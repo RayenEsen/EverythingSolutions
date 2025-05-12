@@ -1,85 +1,117 @@
 /* Color Variables */
 :root {
-  --primary-accent: #FCAA23;
-  --primary-hover: #E0991F;
+  --primary-accent: #03f9ed;
+  --primary-hover: #039fc4;
+  --secondary-accent: #9ffc7b;
   --text-dark: #2D3748;
   --text-medium: #4A5568;
   --text-light: #718096;
   --border-color: #E2E8F0;
   --background-light: #F7FAFC;
+  --card-shadow: 0 4px 30px rgba(3, 159, 196, 0.1);
+  --card-hover-shadow: 0 8px 40px rgba(3, 159, 196, 0.2);
 }
 
-/* Center content with spacing */
+/* Gradient Background */
 .page-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   padding: 2rem;
-  background-color: var(--background-light);
+  background: linear-gradient(135deg, #F7FAFC 0%, #e6f9fc 50%, #d0f5fa 100%);
 }
 
-/* Card style */
+/* Modern Card with Glass Effect */
 .card {
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
   width: 90%;
   max-width: 1000px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* Hover effect */
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transform: translateY(-8px);
+  box-shadow: var(--card-hover-shadow);
 }
 
+/* Logo with Subtle Glow */
 .logo-container {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .logo-container img {
   height: 140px;
   width: auto;
-  transition: transform 0.3s ease; /* Smooth transition effect */
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 4px 8px rgba(3, 159, 196, 0.2));
 }
 
 .logo-container img:hover {
-  transform: scale(1.01); /* Slightly increase size on hover */
+  transform: scale(1.05);
+  filter: drop-shadow(0 6px 12px rgba(3, 159, 196, 0.3));
 }
 
-
-/* Form sections styling */
+/* Form Sections with Gradient Border */
 .form-section {
   margin: 2rem 0;
-  padding: 1.5rem;
-  border-radius: 8px;
+  padding: 1.75rem;
+  border-radius: 12px;
+  background: white;
+  border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
 }
 
+.form-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: linear-gradient(to bottom, #9ffc7b, #03f9ed);
+}
+
+/* Section Title with Gradient Text */
 .section-title {
-  font-size: 1.75rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: var(--text-dark);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
   text-align: left;
-  border-bottom: 2px solid var(--primary-accent);
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.75rem;
+  position: relative;
+  background: linear-gradient(90deg, #039fc4, #03f9ed);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-/* Large label styling */
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #9ffc7b, #03f9ed);
+}
+
+/* Form Elements */
 .large-label {
-  font-size: 1.1rem;
-  font-weight: 500;
+  font-size: 1.15rem;
+  font-weight: 600;
   color: var(--text-dark);
   margin-bottom: 0.75rem;
-  text-align: left;
   display: block;
 }
 
-/* Form layout */
 .form-row {
   display: flex;
   gap: 2rem;
@@ -92,95 +124,131 @@
   flex-direction: column;
 }
 
-/* PrimeNG Input customization */
+/* Input Styling */
 .p-inputtext {
   width: 100%;
   font-size: 1.1rem;
-  padding: 0.75rem 1rem;
+  padding: 0.85rem 1.25rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
 }
 
 .p-inputtext:enabled:focus {
-  box-shadow: 0 0 0 0.2rem rgba(252, 170, 35, 0.2);
+  box-shadow: 0 0 0 0.2rem rgba(3, 249, 237, 0.2);
   border-color: var(--primary-accent);
 }
 
-/* Navigation buttons */
+/* Button Styling */
+.p-button {
+  transition: all 0.3s ease;
+}
+
+.p-button:enabled:hover {
+  transform: translateY(-2px);
+}
+
+.accent-button {
+  background: linear-gradient(90deg, #039fc4, #03f9ed) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.accent-button:hover {
+  background: linear-gradient(90deg, #038fb4, #03e9dd) !important;
+  box-shadow: 0 4px 12px rgba(3, 159, 196, 0.3);
+}
+
+/* Special Text Elements */
+.first-time-text {
+  font-size: 1rem;
+  background: linear-gradient(90deg, #039fc4, #9ffc7b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.first-time-text:hover {
+  transform: translateX(5px);
+}
+
+/* Navigation Buttons */
 .nav-buttons-top,
 .nav-buttons-bottom {
   display: flex;
   justify-content: space-between;
-  margin: 1rem 0;
+  margin: 1.5rem 0;
+  padding: 1.25rem 0;
 }
 
 .nav-buttons-top {
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(3, 159, 196, 0.1);
 }
 
 .nav-buttons-bottom {
-  border-top: 1px solid var(--border-color);
-  padding-top: 1rem;
+  border-top: 1px solid rgba(3, 159, 196, 0.1);
 }
 
-/* Accent buttons */
-.accent-button {
-  color: var(--primary-accent) !important;
+/* Warning Button */
+::ng-deep .p-button-warn {
+  background: linear-gradient(90deg, #FFA500, #FF6F00);
+  border: none;
+  color: white;
 }
 
-.accent-button:hover {
-  color: var(--primary-hover) !important;
+::ng-deep .p-button-warn:hover {
+  background: linear-gradient(90deg, #FF9500, #FF5F00);
 }
 
-/* Responsive adjustments */
+/* Responsive Adjustments */
 @media (max-width: 768px) {
-  .form-row {
-    flex-direction: column;
-    gap: 1.5rem;
+  .page-container {
+    padding: 1rem;
   }
   
   .card {
     width: 95%;
-    padding: 1.5rem;
+    padding: 1.75rem;
+  border-radius: 16px;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 1.5rem;
   }
   
   .section-title {
     font-size: 1.5rem;
   }
   
-  .large-label {
-    font-size: 1rem;
+  .logo-container img {
+    height: 100px;
   }
   
-  .p-inputtext {
-    font-size: 1rem;
+  .form-section {
+    padding: 1.25rem;
   }
 }
 
+/* Floating Animation for Visual Interest */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
 
+.floating-element {
+  animation: float 6s ease-in-out infinite;
+}
 
-
-
-
-
-::ng-deep .p-button-warn {
-  background: #EDAB02;
-  border: 1px solid #ffffff;
-  color: var(--p-button-warn-color);
+.error-message {
+  min-height: 1.25rem; /* Reserve height */
+  display: block;
+  transition: opacity 0.3s ease;
 }
 
 
-.first-time-text {
-  font-size: 16px;
-  color: #FF6F00; /* A nice orange color */
-  cursor: pointer;
-  font-weight: bold;
-  transition: color 0.3s ease-in-out;
-}
-
-.first-time-text:hover {
-  color: #FF4500; /* A darker shade of orange when hovering */
-}
-
-.text-center {
-  text-align: center;
-}

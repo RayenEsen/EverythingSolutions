@@ -1,5 +1,5 @@
 .footer {
-    background-color: #4a6ced; /* Dark background for the footer */
+    background-color: #121b3b; /* Dark background for the footer */
     color: #fff; /* White text color */
     padding: 20px; /* Padding for spacing */
     position: relative; /* Optional: position relative for better control */
@@ -13,10 +13,18 @@
 }
 
 .copyrights a {
-    color: #ff8f00;; /* Light blue color for the email link */
+    color: #039fc4;; /* Light blue color for the email link */
     text-decoration: none; /* Remove underline */
 }
 
 .copyrights a:hover {
     text-decoration: underline; /* Underline on hover */
+}
+
+/* This class will hide elements when printing */
+@media print {
+
+  .display-none {
+    display: none !important;
+  }
 }

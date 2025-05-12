@@ -20,15 +20,15 @@ export class PrintTraiteComponent implements OnInit {
     private retraitesService: RetraitesService
   ) { }
 
-  ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (id) {
-      this.retraitesService.getRetraiteById(id).subscribe({
-        next: (data) => this.retraiteDetails = data,
-        error: (err) => console.error('Error loading retraite:', err)
-      });
-    }
+ngOnInit(): void {
+  const id = Number(this.route.snapshot.paramMap.get('id'));
+  if (id) {
+    this.retraitesService.getRetraiteById(id).subscribe({
+      next: (data) => this.retraiteDetails = Object.assign(new RetraiteLightDto(), data),
+      error: (err) => console.error('Error loading retraite:', err)
+    });
   }
+}
 
 
    formatRIB(rib: string | undefined | null): string {
@@ -58,5 +58,21 @@ export class PrintTraiteComponent implements OnInit {
     if (value == null) return '0.000';
     return value.toFixed(3);
   }
+
+
+printRetraiteDetails(): void {
+  // Add a class to hide unwanted elements during printing
+  document.body.classList.add('print-mode');
+
+  // Trigger the print dialog
+  window.print();
+
+  // Remove the class after printing
+  window.onafterprint = () => {
+    document.body.classList.remove('print-mode');
+  };
+}
+
+
   
 }

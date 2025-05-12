@@ -8,7 +8,7 @@ import { LoginResponse } from '../DTO/LoginResponse';
 import { RegisterRequest } from '../DTO/RegisterRequest';
 import { jwtDecode } from 'jwt-decode';
 import { throwError } from 'rxjs';
-
+import { ResetPasswordRequest } from '../DTO/ResetPasswordRequest';
 @Injectable({
   providedIn: 'root'
 })
@@ -124,6 +124,16 @@ export class AuthService {
       console.error('Error decoding token:', error);
       return null;
     }
+  }
+
+    // Forgot password method
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/ForgotPassword`, { email });
+  }
+
+  // Reset password method
+  resetPassword(data: ResetPasswordRequest): Observable<any> {
+    return this.http.post(`${this.baseUrl}/ResetPassword`, data);
   }
 
 

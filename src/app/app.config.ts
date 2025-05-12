@@ -7,6 +7,8 @@ import { providePrimeNG } from 'primeng/config';
 import { provideHttpClient } from '@angular/common/http';
 import Lara from '@primeng/themes/lara';
 
+import { fr } from 'primelocale/fr.json';
+
 // PrimeNG modules
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -20,6 +22,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(ButtonModule, InputTextModule),
     provideAnimationsAsync(),
     providePrimeNG({
+      translation: fr, // ✅ Add this line to set French
       theme: {
         preset: Lara,
         options: {

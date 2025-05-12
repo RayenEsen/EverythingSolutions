@@ -1,11 +1,11 @@
 <div class="page-container" style="background-color: #ffa50024;">
     <div class="card">
         <div class="logo-container">
-            <img src="https://i.ibb.co/wFrPPJQQ/download.png" alt="Financial Manager Logo">
+            <img src="https://i.ibb.co/xKV3vddN/8a2a07a8-b6ca-4342-8173-14564dd9ab4e-removebg-preview-1-1.png" alt="Quick Soft Logo">
         </div>
 
         <!-- Login Section -->
-        <div class="form-section" *ngIf="!companyVisible  && !AccountVisible && ShowLoginSection">
+        <div class="form-section" *ngIf="!companyVisible && !AccountVisible && ShowLoginSection">
             <h2 class="section-title">Connexion</h2>
 
             <div class="form-row">
@@ -22,57 +22,96 @@
                 </div>
             </div>
 
-            <div style="display: flex; justify-content: space-between;">
-                <p-button label="S'inscrire" icon="pi pi-user-plus" severity="warn" (click)="showCompanyForm()"></p-button>
-                <p-button label="Se connecter" icon="pi pi-sign-in" severity="warn" (click)="Login()"></p-button>
+            <div class="nav-buttons-bottom" style="align-items: center;">
+                <p-button 
+                    label="Se connecter" 
+                    icon="pi pi-sign-in" 
+                    severity="primary" 
+                    class="accent-button" 
+                    (click)="Login()">
+                </p-button>
+                <a class="first-time-text" (click)="showResetPasswordSection()">Mot de passe oublié ?</a>
+            </div>
+        </div>
+
+        <!-- Réinitialisation du mot de passe -->
+        <div class="form-section" *ngIf="ShowResetPasswordSection">
+            <h2 class="section-title">Réinitialisation du mot de passe</h2>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="resetEmail" class="large-label">Email</label>
+                    <input pInputText type="email" pSize="large" placeholder="Entrez votre email" [(ngModel)]="resetPasswordRequest.email" required />
+                </div>
+            </div>
+
+            <div class="nav-buttons-bottom" style="align-items: center;">
+<p-button 
+  label="Envoyer le lien de réinitialisation" 
+  icon="pi pi-refresh" 
+  severity="primary" 
+  class="accent-button" 
+  [disabled]="isButtonDisabled"
+  (click)="sendResetPasswordLink()">
+</p-button>
+
+            </div>
+
+            <div class="text-center mt-4">
+                <span class="first-time-text" (click)="showLoginSection()">
+                    Retour à la connexion
+                </span>
             </div>
         </div>
 
         <!-- Informations sur l'entreprise -->
-        <div class="form-section" *ngIf="companyVisible && !AccountVisible && ShowRegisterSection">
+        <div class="form-section" *ngIf="companyVisible && !AccountVisible && ShowRegisterSection" style="padding-top: 0px;">
             <h2 class="section-title">Informations sur l'entreprise</h2>
             
             <div class="form-row">
                 <div class="form-group">
                     <label for="nomSociete" class="large-label">Nom de l'entreprise</label>
-                    <input pInputText  type="text" pSize="large" placeholder="Entrer le nom de l'entreprise"  [(ngModel)]="registerDto.nomSociete" />
+                    <input pInputText type="text" pSize="large" placeholder="Entrer le nom de l'entreprise" [(ngModel)]="registerDto.nomSociete" />
                 </div>
                 
                 <div class="form-group">
                     <label for="matriculeFiscale" class="large-label">Matricule fiscal</label>
-                    <input pInputText  type="text" pSize="large" placeholder="Entrer l'identifiant fiscal"  [(ngModel)]="registerDto.matriculeFiscale" />
+                    <input 
+                        pInputText 
+                        type="text" 
+                        id="matriculeFiscale"
+                        pSize="large" 
+                        placeholder="Entrer l'identifiant fiscal (ex: 1234567ABC)" 
+                        [(ngModel)]="registerDto.matriculeFiscale"
+                        name="matriculeFiscale"
+                        title="7 chiffres suivis de 3 lettres majuscules (ex: 1234567ABC)"
+                        required
+                        #matriculeFiscaleInput="ngModel"
+                        [ngClass]="{'ng-invalid': matriculeFiscaleInput.invalid && matriculeFiscaleInput.touched}"
+                    />
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label for="adresseEntreprise" class="large-label">Adresse de l'entreprise</label>
-                    <input pInputText  type="text" pSize="large" placeholder="Entrer l'adresse de l'entreprise" [(ngModel)]="registerDto.adresseEntreprise" />
+                    <input pInputText type="text" pSize="large" placeholder="Entrer l'adresse de l'entreprise" [(ngModel)]="registerDto.adresseEntreprise" />
                 </div>
                 
                 <div class="form-group">
                     <label for="email" class="large-label">Email</label>
-                    <input pInputText  type="text" pSize="large" placeholder="Entrer l'email de l'entreprise" [(ngModel)]="registerDto.email" />
+                    <input pInputText type="text" pSize="large" placeholder="Entrer l'email de l'entreprise" [(ngModel)]="registerDto.email" />
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label for="telephone" class="large-label">Numéro de téléphone</label>
-                    <input pInputText  type="text" pSize="large" placeholder="Entrer le numéro de téléphone"  [(ngModel)]="registerDto.telephone" />
+                    <input pInputText type="text" pSize="large" placeholder="Entrer le numéro de téléphone" [(ngModel)]="registerDto.telephone" />
                 </div>
                 <div class="form-group"></div> <!-- Empty for alignment -->
             </div>
-            <div>
-                <p-button label="Securité" icon="pi pi-arrow-right" severity="warn" (click)="showAccountForm()"></p-button>
-            </div>
-        </div>
 
-
-        <!-- Sécurité du compte -->
-        <div class="form-section" *ngIf="AccountVisible">
-            <h2 class="section-title">Sécurité du compte</h2>
-            
             <div class="form-row">
                 <div class="form-group">
                     <label for="password" class="large-label">Mot de passe</label>
@@ -84,46 +123,31 @@
                     <input pInputText type="password" pSize="large" placeholder="Confirmer le mot de passe" [(ngModel)]="confirmPassword" />
                 </div>
             </div>
-            <div style="display: flex; justify-content: space-between;">
-                <p-button label="Informations General" icon="pi pi-arrow-left" severity="warn" (click)="showCompanyForm()"></p-button>
-                <p-button label="Enregistrer" icon="pi pi-sign-in" severity="warn" (click)="Register()"></p-button>
+
+            <div>
+                <p-button label="Enregistrer" icon="pi pi-sign-in" severity="primary" (click)="Register()"></p-button>
             </div>
         </div>
 
         <!-- Vérification de l'email -->
-<div class="form-section" *ngIf="ShowVerificationSection">
-    <h2 class="section-title">Vérification de l'email</h2>
-    <p>Un code de vérification a été envoyé à votre email.</p>
+        <div class="form-section" *ngIf="ShowVerificationSection">
+            <h2 class="section-title">Vérification de l'email</h2>
+            <p>Un code de vérification a été envoyé à votre email.</p>
 
-    <!-- 
-    <div class="form-row">
-        <div class="form-group">
-            <label for="verificationCode" class="large-label">Code de vérification</label>
-            <input pInputText type="text" pSize="large" placeholder="Entrer le code" [(ngModel)]="verificationCode" />
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <p-button label="Renvoyer le code" icon="pi pi-refresh" severity="secondary" (click)="resendCode()" [disabled]="resendDisabled"></p-button>
+            </div>
         </div>
-    </div>
-    -->
 
-
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <p-button label="Renvoyer le code" icon="pi pi-refresh" severity="secondary" (click)="resendCode()" [disabled]="resendDisabled"></p-button>
-    </div>
-
-    
-</div>
-
-        
         <div class="text-center mt-4">
             <span class="first-time-text" (click)="showRegisterSection()" *ngIf="ShowLoginSection">
-              First time here? <strong>Register</strong>
+                Première fois ici ? <strong>Inscrivez-vous</strong>
             </span>
             <span class="first-time-text" (click)="showLoginSection()" *ngIf="ShowRegisterSection">
-              Already have an account? <strong>Login</strong>
+                Vous avez déjà un compte ? <strong>Connectez-vous</strong>
             </span>
-          </div>
-          
+        </div>
 
     </div>
-
 </div>
 <p-toast />
