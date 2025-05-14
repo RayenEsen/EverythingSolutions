@@ -1,8 +1,14 @@
+import { Entreprise } from "./Entreprise";
+import { Retraite } from "./Retraite";
 
-import { Adresse } from "./Adresse";
 export class Banque {
-    id: number = 0;
-    nom: string = '';
+  id: number = 0;
+  nom: string = "";
+  adresse: string = ''; // Simplified address
+  rib: string = '';
 
-    adresses: Adresse[] = []; // Relation many-to-many
-  }
+  // Relationship with Entreprise (one-to-many)
+  entrepriseId: number = 0;
+
+
+}

@@ -12,8 +12,7 @@ import { Entreprise } from '../shared/Entreprise';
 import { AuthService } from '../shared/Auth.service';
 import { LoginRequest } from '../DTO/LoginRequest';
 import { RegisterRequest } from '../DTO/RegisterRequest';
-import { Banque } from '../shared/Banque';
-import { BanquesService } from '../Services/Banques.service';
+
 
 
 @Component({
@@ -26,22 +25,11 @@ import { BanquesService } from '../Services/Banques.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(public ServiceA: AuthService, private messageService: MessageService, private router: Router , private banquesService: BanquesService) {}
+  constructor(public ServiceA: AuthService, private messageService: MessageService, private router: Router ) {}
 
-  banquesList: Banque[] = [];
-  selectedBanques: Banque[] = [];
-  filteredBanques: Banque[] = [];
   isButtonDisabled: boolean = false;
 
   ngOnInit(): void {
-    this.banquesService.getAll().subscribe({
-      next: (banques: Banque[]) => {
-        this.banquesList = banques;
-      },
-      error: (error) => {
-        console.error('Error fetching banques:', error);
-      }
-    });
        const lastClickTime = localStorage.getItem('resetButtonTimestamp');
     if (lastClickTime) {
       const diff = Date.now() - parseInt(lastClickTime, 10);
@@ -125,15 +113,29 @@ export class LoginComponent implements OnInit {
         });
         this.router.navigate(['']);
       },
-      (error) => {
-        console.error("Échec de la connexion", error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erreur',
-          detail: 'Échec de la connexion, veuillez réessayer.',
-          life: 3000
-        });
-      }
+     (error) => {
+  console.error("Échec de la connexion", error);
+
+  // Vérifie si un message d'erreur spécifique est renvoyé par le backend
+  const errorMessage = error?.error?.message;
+
+  if (errorMessage === 'Cet email est déjà utilisé.') {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Email utilisé',
+      detail: 'Cet email est déjà utilisé.',
+      life: 3000
+    });
+  } else {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Erreur',
+      detail: 'Échec de la connexion, veuillez réessayer.',
+      life: 3000
+    });
+  }
+}
+
     );
   }
 
@@ -222,25 +224,59 @@ if (!matriculeFiscalePattern.test(this.registerDto.matriculeFiscale)) {
     // Optionally copy confirmPassword into the DTO (if your backend expects it)
     this.registerDto.confirmPassword = this.confirmPassword;
   
-    // Proceed with registration
-    this.ServiceA.register(this.registerDto).subscribe(
-      (response) => {
-        console.log("Inscription réussie", response);
-        this.ShowRegisterSection = false;
-        this.AccountVisible = false;
-        this.ShowVerificationSection = true;
+// Proceed with registration
+this.ServiceA.register(this.registerDto).subscribe(
+  (response) => {
+    console.log("Inscription réussie", response);
+    this.ShowRegisterSection = false;
+    this.AccountVisible = false;
+    this.ShowVerificationSection = true;
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Inscription réussie',
+      detail: 'Bienvenue sur la plateforme !',
+      life: 3000
+    });
+  },
+  (error) => {
+    if (error.status === 400) {
+      // Handle specific validation error like email already in use
+      if (error.error === "Cet email est déjà utilisé.") {
         this.messageService.add({
-          severity: 'success',
-          summary: 'Inscription réussie',
-          detail: 'Bienvenue sur la plateforme !',
+          severity: 'error',
+          summary: 'Erreur d’inscription',
+          detail: 'Cet email est déjà utilisé.',
           life: 3000
         });
-      },
-      (error) => {
-        console.error("Échec de l’inscription", error);
-
+      } else if (error.error === "Ce nom de société est déjà utilisé.") {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur d’inscription',
+          detail: 'Ce nom de société est déjà utilisé.',
+          life: 3000
+        });
+      } else {
+        // Handle other validation errors
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: 'Une erreur est survenue, veuillez réessayer.',
+          life: 3000
+        });
       }
-    );
+    } else {
+      // Handle general error cases
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erreur de serveur',
+        detail: 'Une erreur est survenue, veuillez réessayer.',
+        life: 3000
+      });
+    }
+    console.error("Échec de l’inscription", error);
+  }
+);
+
 }
 
 
@@ -260,12 +296,7 @@ if (!matriculeFiscalePattern.test(this.registerDto.matriculeFiscale)) {
   ShowLoginSection = true;
   ShowRegisterSection = false
 
-  filterBanques(event: any) {
-    const query = event.query.toLowerCase();
-    this.filteredBanques = this.banquesList.filter(banque =>
-      banque.nom.toLowerCase().includes(query)
-    );
-  }
+
 
   ShowVerificationSection = false;
   verificationCode = '';

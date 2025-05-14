@@ -33,7 +33,7 @@
         </div>
         <div class="detail-item">
           <span class="detail-label">RIB</span>
-          <span class="detail-value">{{ retraiteDetails?.rib }}</span>
+          <span class="detail-value">{{ retraiteDetails?.banqueRib }}</span>
         </div>
       </div>
 
@@ -67,7 +67,7 @@
       </div>
 
 <div class="issuer-section">
-  <div class="issuer-stamp" (click)="printRetraiteDetails()">Imprimer</div>
+<div class="issuer-stamp" style="cursor: pointer;" (click)="printRetraiteDetails()">Imprimer</div>
   <div class="issuer-details">
     <div class="issuer-name">{{ retraiteDetails?.entrepriseNom }}</div>
     <div class="issuer-date">Émis le: {{ today | date:'dd/MM/yyyy' }}</div>
@@ -104,13 +104,13 @@
             
           <p style="font-weight: 500 " >{{retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}</p>   
           <div style="margin-right: 50px; font-weight: 500 ; margin-top: -42px;    text-align: justify;">
-          <p>{{retraiteDetails?.banqueVille}}</p>
+          <p>{{retraiteDetails?.banqueAdresse}}</p>
           <p>{{retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}</p>
           </div> 
 
         </div>
         <div style="text-align: center; display: flex;align-items: center;justify-content: center; padding-bottom: 20px;">
-          <p style="margin-top: 30px;padding-left: 200px;font-size: larger;font-weight: 500">{{ formatRIB(retraiteDetails?.rib) }}</p>  
+          <p style="margin-top: 30px;padding-left: 200px;font-size: larger;font-weight: 500">{{ formatRIB(retraiteDetails?.banqueRib) }}</p>  
           <p style="font-weight: 500;font-size: large;padding-left: 140px;"> {{ formatMontant(retraiteDetails?.montant) }}</p>
         </div>
         <div style="display: flex;justify-content: space-around;">
@@ -126,12 +126,12 @@
         </div>
         <div style="display: flex; gap: 50px;">
           <p>{{ retraiteDetails?.banqueAdresse }}</p>
-          <p>{{ retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}</p>
+          <p>{{ retraiteDetails?.dateCreation | date:'dd/MM/yyyy' }}</p>
           <p>{{ retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}</p>
         </div>
 
         <div style="display: flex; justify-content: space-between;">
-          <p style="font-size: normal;font-weight: 500">{{ formatRIB(retraiteDetails?.rib) }}</p>  
+          <p style="font-size: normal;font-weight: 500">{{ formatRIB(retraiteDetails?.banqueRib) }}</p>  
                   <p style="padding-left: 10px;">{{retraiteDetails?.banqueNom}}</p>
         </div>
         <div style="text-align: center;">

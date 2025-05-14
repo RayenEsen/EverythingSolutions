@@ -9,7 +9,7 @@ export class AuthGuard implements CanActivate {
 
   canActivate(): boolean {
     const token = localStorage.getItem('jwtToken');
-    console.log('AuthGuard: token =', token);
+
     if (token && token.trim() !== '') return true;
   
     this.router.navigate(['/login']);

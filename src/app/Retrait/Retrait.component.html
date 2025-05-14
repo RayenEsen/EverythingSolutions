@@ -60,6 +60,11 @@
             Date d'échéance
             <p-columnFilter type="date" field="dateEcheance" display="menu" class="ml-auto"/>
         </th>
+
+        <th style="width: 25rem">
+            Date Creation
+            <p-columnFilter type="date" field="DateCreation" display="menu" class="ml-auto"/>
+        </th>
         
         <th style="width: 25rem">
             Fournisseurs
@@ -82,7 +87,7 @@
         </th>
         
         <th>
-            Telecharger
+            Voir
         </th>
     </tr>
     </ng-template>
@@ -95,6 +100,7 @@
         <td>{{ ret.numeroCheque }}</td>
         <td>{{ ret.montant | number:'1.2-2' }} TND</td>
         <td>{{ getFormattedEcheance(ret.dateEcheance) }}</td>
+        <td>{{ ret.dateCreation | date:'dd/MM/yyyy ' }}</td>
           <td>
             <p-tag [severity]="'info'" [value]=" ret.fournisseurNom  || 'N/A'"></p-tag>
           </td>
@@ -105,8 +111,8 @@
           </td>
           
           <td>{{ ret.banqueAdresse || 'N/A' }}</td>
-        <td style="width: 7%; text-align: center;">
-          <i class="pi pi-download hover-blue" style="font-size: 1.25rem;"></i>
+        <td style="width: 7%; " (click)="NavigateToRetraiteDetails(ret)">
+          <i class="pi pi-eye hover-blue" style="font-size: 1.25rem;padding-left: 8px;"  ></i>
         </td>
         
       </tr>
@@ -163,8 +169,7 @@
             id="cheque"
             #chequeInput
             placeholder="Ex: CHK123456"
-            [(ngModel)]="todayDate"
-            [readonly]="true"
+            [(ngModel)]="AddRetrait.dateEcheance"
             >
         </div>
         <div *ngIf="showDateError" class="text-danger small mt-1">
@@ -227,6 +232,7 @@
             
               </p-autocomplete>
               <button type="button"  pButton icon="pi pi-plus" class="p-button-rounded p-button"   severity="secondary" [text]="true" (click)="toggleAddFournisseurInfo()"></button> 
+              <button type="button"  pButton icon="pi pi-eye" class="p-button-rounded p-button"   severity="secondary" [text]="true" (click)="toggleDialog()"></button> 
               </div>
 
 
@@ -264,6 +270,7 @@
                 
               </p-autocomplete>
                   <button type="button" pButton icon="pi pi-plus" class="p-button-rounded p-button"   severity="secondary" [text]="true" (click)="toggleAddBanqueInfo()"></button>
+                  <button type="button"  pButton icon="pi pi-eye" class="p-button-rounded p-button"   severity="secondary" [text]="true" (click)="toggleDialogBanque()"></button> 
               </div>
 
 
@@ -273,62 +280,9 @@
               </div>
             </div>
             
-            <div class="mb-3" *ngIf="selectedBank?.nom">
-              <label for="address-autocomplete" class="form-label d-block mb-2">Adresse Banque</label>
-              
-              <p-autocomplete 
-                id="address-autocomplete"
-                [(ngModel)]="selectedAddress"
-                [suggestions]="filteredAddresses"
-                (completeMethod)="filterAddresses($event)"
-                field="formattedAddress"
-                [dropdown]="true"
-                placeholder="Sélectionner une adresse"
-                [inputStyle]="{'width':'100%'}"
-                [style]="{'width':'100%'}"
-                [scrollHeight]="'250px'"
-                [panelStyle]="{'min-width':'300px', 'white-space':'normal'}"
-                class="d-block w-100">
-                
-                <!-- Dropdown item template -->
-                <ng-template let-address pTemplate="item">
-                  <div class="address-item" style="white-space: normal; padding: 8px;">
-                    {{formatAdresse(address)}}
-                  </div>
-                </ng-template>
-                
-                <!-- Selected item display template -->
-                <ng-template let-address pTemplate="selectedItem">
-                  <span *ngIf="address">
-                    {{formatAdresse(address)}}
-                  </span>
-                </ng-template>
-              </p-autocomplete>
-            
-              <div *ngIf="showAddressError" class="text-danger small mt-1">
-                Veuillez sélectionner une adresse valide
-              </div>
-            </div>
+
             
 
-
-            <div class="mb-3">
-              <label for="rib" class="form-label">RIB</label>
-              <p-inputNumber 
-                id="rib" 
-                #ribInput
-                [(ngModel)]="AddRetrait.rib"
-                placeholder="Ex: 123456789" 
-                locale="fr-FR"
-                [min]="0"
-                class="w-100"
-                inputStyleClass="form-control">
-              </p-inputNumber>
-              <div *ngIf="showRibError" class="text-danger small mt-1">
-                Veuillez saisir un RIB valide
-              </div>
-            </div>
-            
 
 
 
@@ -359,12 +313,14 @@
 
 
 
-<p-drawer [(visible)]="AddBanqueInfo" header="Ajouter un Nouveau Banque" position="right" [style]="{width: '450px'}">
+<p-drawer [(visible)]="AddBanqueInfo" header="Ajouter une Banque" position="right" [style]="{width: '450px'}">
   <div class="p-4 d-flex flex-column" style="height: 100%; position: relative;">
-    <!-- Form without reactive forms -->
+    <!-- Formulaire -->
     <div style="flex-grow: 1; overflow-y: auto; padding-bottom: 60px;"> 
+      
+      <!-- Nom de la banque -->
       <div class="mb-3">
-        <label class="form-label">Nom du Banque</label>
+        <label class="form-label">Nom de la Banque</label>
         <input 
           type="text" 
           class="form-control"
@@ -375,50 +331,38 @@
           Le nom de la banque est requis
         </div>
       </div>
-      <div *ngIf="showNoAdresseError" class="text-danger small mb-3">
-        Vous devez ajouter au moins une adresse.
+
+      <!-- Adresse de la banque -->
+      <div class="mb-3">
+        <label class="form-label">Adresse</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="banque.adresse"
+          name="banqueAdresse"
+          placeholder="Ex: 12 Rue de Paris, 75000 Paris, France">
+        <div *ngIf="showAdresseError" class="text-danger small mt-1">
+          L'adresse est requise
+        </div>
       </div>
 
-      <!-- Adresses -->
-      <div *ngFor="let adresse of banque.adresses; let i = index" class="border p-3 mb-3 rounded position-relative">
-        <h6>Adresse {{ i + 1 }}</h6>
-        <div class="mb-2">
-          <label class="form-label">Rue</label>
-          <input type="text" class="form-control" [(ngModel)]="adresse.rue" name="rue{{i}}" placeholder="Ex: Rue de Paris">
+      <!-- RIB -->
+      <div class="mb-3">
+        <label class="form-label">RIB</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="banque.rib"
+          name="banqueRIB"
+          placeholder="Ex: 12345678912345678912">
+        <div *ngIf="showRibError" class="text-danger small mt-1">
+          Le RIB est requis
         </div>
-        <div class="mb-2">
-          <label class="form-label">Code Postal</label>
-          <input type="text" class="form-control" [(ngModel)]="adresse.codePostal" name="codePostal{{i}}" placeholder="Ex: 75000">
-        </div>
-        <div class="mb-2">
-          <label class="form-label">Ville</label>
-          <input type="text" class="form-control" [(ngModel)]="adresse.ville" name="ville{{i}}" placeholder="Ex: Paris">
-        </div>
-        <div class="mb-2">
-          <label class="form-label">Pays</label>
-          <input type="text" class="form-control" [(ngModel)]="adresse.pays" name="pays{{i}}" placeholder="Ex: France">
-        </div>
-
-        <div *ngIf="showAdresseErrorList[i]" class="text-danger small mt-1">
-          Tous les champs de l'adresse {{ i + 1 }} sont requis
-        </div>
-
-        <!-- Supprimer adresse -->
-        <button 
-          type="button" 
-          class="btn btn-danger btn-sm mt-2"
-          (click)="removeAdresse(i)">
-          <i class="pi pi-trash me-1"></i> Supprimer l'adresse
-        </button>
       </div>
 
-      <!-- Button to Add More Addresses -->
-      <button type="button" class="btn btn-primary" (click)="addAdresse()">
-        Ajouter une adresse
-      </button>
     </div>
 
-    <!-- Action Buttons at Bottom -->
+    <!-- Boutons d'action -->
     <div class="d-flex justify-content-end gap-2 p-3 bg-light" style="position: absolute; bottom: 0; left: 0; width: 100%;">
       <button type="button" class="btn btn-outline-secondary" (click)="AddBanqueInfo = false">
         <i class="pi pi-times me-2"></i>Annuler
@@ -641,13 +585,14 @@
     <ng-template pTemplate="body" let-banque>
       <tr>
         <td>{{ banque.nom }}</td>
-        <td>
-          <div class="d-flex flex-column gap-1">
-            <div *ngFor="let adresse of banque.adresses" class="small text-secondary border-start ps-2">
-              {{ adresse.rue }}, {{ adresse.codePostal }} {{ adresse.ville }}, {{ adresse.pays }}
-            </div>
-          </div>
-        </td>
+<td>
+  <div class="d-flex flex-column gap-1">
+    <div class="small text-secondary border-start ps-2">
+      {{ banque?.adresse }}
+    </div>
+  </div>
+</td>
+
         <td>
           <button
             pButton

@@ -3,17 +3,18 @@ export class RetraiteLightDto {
   montant: number | null = null;
   numeroCheque: string | null = null;
   dateEcheance: Date | null = null;
+  dateCreation: Date = new Date();
 
   entrepriseNom: string = '';
-  entrepriseAdresse: string = '';  // New property for Entreprise address
+  entrepriseAdresse: string = '';
+
   banqueNom: string = '';
   banqueAdresse: string = '';
-  banqueVille: string = '';  // New property for Banque ville
+  banqueRib: string = ''; // Added RIB
+
   fournisseurNom: string = '';
   fournisseurAdresse: string = '';
-  rib: string = '';
 
-  // Format the échéance date
   getFormattedEcheance(): string {
     return this.dateEcheance?.toLocaleDateString('fr-TN', {
       day: '2-digit',
@@ -22,26 +23,23 @@ export class RetraiteLightDto {
     }) || 'N/A';
   }
 
-  // Format montant like "123.456 TND"
   getMontantFormatted(): string {
-    return this.montant != null ? 
-      new Intl.NumberFormat('fr-TN', {
-        minimumFractionDigits: 3,
-        maximumFractionDigits: 3
-      }).format(this.montant) + ' TND' : '0.000 TND';
+    return this.montant != null
+      ? new Intl.NumberFormat('fr-TN', {
+          minimumFractionDigits: 3,
+          maximumFractionDigits: 3
+        }).format(this.montant) + ' TND'
+      : '0.000 TND';
   }
 
-  // Combine fournisseur name and address
   getFournisseurComplete(): string {
     return `${this.fournisseurNom || 'N/A'}${this.fournisseurAdresse ? ' - ' + this.fournisseurAdresse : ''}`;
   }
 
-  // Get montant as text (e.g. "cent vingt-trois dinars et quatre cent cinquante-six millimes")
   getMontantEnLettres(): string {
     return this.numberToWords(this.montant);
   }
 
-  // Convert the numeric montant to words
   private numberToWords(num: number | null): string {
     if (num === null) {
       return 'zéro dinar et zéro millime';
@@ -54,7 +52,6 @@ export class RetraiteLightDto {
     return `${integerWords} dinars et ${fractionalWords} millimes`.trim();
   }
 
-  // Convert integer part of a number into French words
   private convertIntegerPart(num: number): string {
     const units = ['', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf'];
     const teens = ['dix', 'onze', 'douze', 'treize', 'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf'];

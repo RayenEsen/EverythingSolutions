@@ -60,8 +60,10 @@ export class RetraitComponent implements OnInit {
 
   selectedRetrait? : Retraite;
   selectedBank: Banque | null = null;
+  selected: Banque | null = null;
   filteredBanks: Banque[] = [];
-  
+  filteredFournisseurs: Fournisseur[] = [];
+  selectedFournisseur: Fournisseur | null = null;
 
 
 
@@ -99,7 +101,9 @@ export class RetraitComponent implements OnInit {
   fournisseursData: Fournisseur[]  = [];
   banquesData: Banque[] = [];
   ngOnInit() {
-
+        console.log('Token =', this.ServiceA.getToken());
+        const decodedToken = this.ServiceA.getDecodedToken();
+        console.log('ID =', decodedToken ? decodedToken.id : null);
     this.loadTraites();
         // Fetch fournisseurs data
         this.ServiceF.getAll().subscribe(
@@ -125,40 +129,14 @@ export class RetraitComponent implements OnInit {
     this.todayDate = today.toISOString().split('T')[0]; // 'yyyy-MM-dd'
     this.items = [
       {
-        label: 'Manager Traite',
-        icon: 'pi pi-folder',
-        items: [
-          {
-            label: 'Ajouter',
-            icon: 'pi pi-plus',
-            command: () => this.toggleAddRetraitInfo()
-          },
-          {
-            label: 'Supprimer',
-            icon: 'pi pi-trash'
-          }
-        ]
-      },
-      {
-        label: 'Manager Fournisseur',
-        icon: 'pi pi-users',
-        items: [
-          { label: 'Ajouter', icon: 'pi pi-user-plus', command: () => this.toggleAddFournisseurInfo() },
-          { label: 'Voir', icon: 'pi pi-eye', command: () => this.toggleDialog() }
-        ]
-      },
-      {
-        label: 'Manager Banque',
-        icon: 'pi pi-building',
-        items: [
-          { label: 'Ajouter', icon: 'pi pi-plus-circle', command: () => this.toggleAddBanqueInfo() },
-          { label: 'Voir', icon: 'pi pi-eye', command: () => this.toggleDialogBanque() }
-        ]
+        label: 'Ajouter Traite',
+        icon: 'pi pi-plus',
+        command: () => this.toggleAddRetraitInfo()
       }
     ];
-    
 
-}
+
+  }
 
 getFormattedEcheance(date: any): string {
   if (!date) return 'N/A';
@@ -195,15 +173,7 @@ showRibError = false;
 
 validateForm() {
 
-  console.log(
-    "Numéro de Chèque:", this.AddRetrait.NumCheque, 
-    "Date:", this.todayDate, 
-    "Montant:", this.AddRetrait.montant, 
-    "Fournisseur:", this.selectedFournisseur, 
-    "Banque:", this.selectedBank, 
-    "Adresse:", this.selectedAddress, 
-    "RIB:", this.AddRetrait.rib
-  );
+
   
   // Reset errors
   this.showMontantError = false;
@@ -212,7 +182,6 @@ validateForm() {
   this.showFournisseurError = false;
   this.showBankError = false;
   this.showAddressError = false;
-  this.showRibError = false;
 
   // Validate amount
   if (this.AddRetrait.montant === undefined || this.AddRetrait.montant <= 0) {
@@ -225,7 +194,7 @@ validateForm() {
   }
 
   // Validate date
-  if (!this.selectedDate) {
+  if (!this.AddRetrait.dateEcheance) {
     this.showDateError = true;
   }
 
@@ -239,15 +208,9 @@ validateForm() {
     this.showBankError = true;
   }
 
-  // Validate address
-  if (!this.selectedAddress || !this.selectedAddress.rue || this.selectedAddress.rue.trim() === '') {
-    this.showAddressError = true;
-  }
 
-  // Validate RIB
-  if (!this.AddRetrait.rib ) {
-    this.showRibError = true;
-  }
+
+
 
   // If all valid, submit form
   if (
@@ -261,12 +224,10 @@ validateForm() {
   ) {
     const formData: AddRetraiteDTO = {
       NumCheque: this.AddRetrait.NumCheque.trim(),
-      dateEcheance: new Date(this.todayDate || ''),
+      dateEcheance: this.AddRetrait.dateEcheance,
       montant: parseFloat(this.AddRetrait.montant.toString()),
       fournisseurId: this.selectedFournisseur?.id || 0,
       banqueId: this.selectedBank?.id || 0,
-      adresseId: this.selectedAddress?.id || 0,
-      rib: String(this.AddRetrait.rib),
       entrepriseId: this.ServiceA.getDecodedToken()?.id || 0, // Get the entrepriseId from the token
     };
     
@@ -280,6 +241,7 @@ submitForm(data: any) {
    // Call the service to create the Retraite
    this.ServiceR.createRetraite(data).subscribe(
     (response) => {
+      this.retraitesLightData.push(response); // Add the new retrait to the list
       // Show success message
       this.messageService.add({
         severity: 'success',
@@ -307,53 +269,46 @@ submitForm(data: any) {
   }
   
   selectedAddress: Adresse | null = null;
-  filteredAddresses: Adresse[] = [];
-  
-  // Add this to your component class
-  filterAddresses(event: { query: string }) {
-    if (!this.selectedBank?.adresses) {
-      this.filteredAddresses = [];
-      return;
-    }
-  
-    const searchTerm = event.query.toLowerCase();
-    this.filteredAddresses = this.selectedBank.adresses.filter(address => {
-      const fullAddress = this.formatAdresse(address).toLowerCase();
-      return fullAddress.includes(searchTerm);
-    });
-  }
-  
-  formatAdresse(adresse: Adresse): string {
-    return `${adresse.rue}, ${adresse.codePostal} ${adresse.ville}, ${adresse.pays}`;
-  }
-
-  selectedFournisseur: Fournisseur | null = null;
-  filteredFournisseurs: Fournisseur[] = [];
-  
-  filterFournisseurs(event: { query: string }) {
-    const q = event.query.trim().toLowerCase();
-    this.filteredFournisseurs = this.fournisseursData.filter(f =>
-      f.nom.toLowerCase().includes(q) ||
-      f.telephone.toLowerCase().includes(q) ||
-      f.email.toLowerCase().includes(q) ||
-      f.adresse.toLowerCase().includes(q)
+  filterFournisseurs(event: any) {
+    const query = event.query.toLowerCase();
+    this.filteredFournisseurs = this.fournisseursData.filter(fournisseur => 
+      fournisseur.nom && fournisseur.nom.toLowerCase().includes(query) 
     );
   }
   
 
-  DeleteRetrait() {
-    if (this.selectedRetrait?.id !== undefined) {
-      this.ServiceR.deleteRetraite(this.selectedRetrait.id).subscribe({
-      next: () => {
-        console.log('Retraite deleted successfully.');
-      },
-      error: err => {
-        console.error('Error deleting retraite:', err);
-    }
+
+DeleteRetrait() {
+  if (this.selectedRetrait?.id == null) {
+    return;
   }
-      );
+
+  this.ServiceR.deleteRetraite(this.selectedRetrait.id).subscribe({
+    next: () => {
+      // 1) Remove from local list
+      this.retraitesLightData = this.retraitesLightData.filter(r => r.id !== this.selectedRetrait!.id);
+
+      // 2) Show success message
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: 'Retraite supprimée avec succès'
+      });
+      
+      // Optionally clear selection
+      this.selectedRetrait = undefined;
+    },
+    error: err => {
+      console.error('Error deleting retraite:', err);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erreur',
+        detail: 'Échec de la suppression de la retraite'
+      });
     }
-  }
+  });
+}
+
 
 
   AddBanqueInfo: boolean = false;
@@ -369,26 +324,12 @@ submitForm(data: any) {
 FournisseurAjouter : Fournisseur = new Fournisseur();
 banque : Banque = new Banque();
 
-addAdresse() {
 
-  this.banque.adresses.push({
-    rue: '',
-    codePostal: '',
-    ville: '',
-    pays: '',
-    estSiegeSocial: false,
-    id: 0,
-    formattedAddress: ''
-  });
-}
 
-removeAdresse(index: number) {
-  this.banque.adresses?.splice(index, 1);
-}
 
 
 AddBanque() {
-  console.log(this.banque);
+  this.banque.entrepriseId = this.ServiceA.getDecodedToken()?.id ?? 0;
   this.ServiceB.create(this.banque).subscribe(
     (response) => {
       // Ajout à la liste
@@ -403,26 +344,18 @@ AddBanque() {
 
       // Réinitialiser le formulaire
       this.banque = {
-        id: 0, // Add the missing 'id' property
+        id: 0,
         nom: '',
-        adresses: [
-          {
-            rue: '',
-            codePostal: '',
-            ville: '',
-            pays: '',
-            estSiegeSocial: false,
-            id: 0,
-            formattedAddress: ''
-          }
-        ]
+        adresse: '',
+        rib: '',
+        entrepriseId: this.ServiceA.getDecodedToken()?.id ?? 0,
       };
 
       // Fermer le drawer
       this.AddBanqueInfo = false;
     },
     (error) => {
-      console.error('Error adding banque:', error);
+      console.error('Erreur lors de l\'ajout de la banque:', error);
       this.messageService.add({
         severity: 'error',
         summary: 'Erreur',
@@ -432,25 +365,14 @@ AddBanque() {
   );
 }
 
-
 showNomBanqueError = false;
-showAdresseErrorList: boolean[] = [];
-showNoAdresseError = false; // Nouveau flag
+showAdresseError = false;
 
 validateBanqueForm(): boolean {
   this.showNomBanqueError = !this.banque.nom?.trim();
-  this.showAdresseErrorList = [];
-  this.showNoAdresseError = this.banque.adresses.length === 0;
+  this.showAdresseError = !this.banque.adresse?.trim();
 
-  let allAdressesValid = true;
-
-  this.banque.adresses.forEach((adresse, index) => {
-    const isInvalid = !adresse.rue?.trim() || !adresse.codePostal?.trim() || !adresse.ville?.trim() || !adresse.pays?.trim();
-    this.showAdresseErrorList[index] = isInvalid;
-    if (isInvalid) allAdressesValid = false;
-  });
-
-  return !this.showNomBanqueError && !this.showNoAdresseError && allAdressesValid;
+  return !this.showNomBanqueError && !this.showAdresseError;
 }
 
 onSaveBanque() {
@@ -481,8 +403,10 @@ onSaveFournisseur() {
     this.AddFournisseur();
   }
 }
+
 AddFournisseur() {
-  
+  const decodedToken = this.ServiceA.getDecodedToken();
+  this.FournisseurAjouter.entrepriseId = decodedToken?.id ?? 0;
   this.ServiceF.create(this.FournisseurAjouter).subscribe(
     (response) => {
       this.messageService.add({
@@ -491,14 +415,19 @@ AddFournisseur() {
         detail: 'Fournisseur ajouté avec succès !'
       });
 
-      this.fournisseursData.push(response); // Ajouter le nouveau à la liste
+      // Ajouter le nouveau à la liste
+      this.fournisseursData.push(response);
+
+      // Réinitialiser le formulaire
       this.FournisseurAjouter = {
         id: 0,
         nom: '',
         email: '',
         telephone: '',
-        adresse: ''
-      }; // Réinitialiser le formulaire
+        adresse: '',
+        entrepriseId: decodedToken?.id ?? 0,
+      };
+
       this.AddFournisseurInfo = false;
     },
     (error) => {
