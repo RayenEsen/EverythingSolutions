@@ -109,7 +109,7 @@
                     <label for="telephone" class="large-label">Numéro de téléphone</label>
                     <input pInputText type="text" pSize="large" placeholder="Entrer le numéro de téléphone" [(ngModel)]="registerDto.telephone" />
                 </div>
-                <div class="form-group"></div> <!-- Empty for alignment -->
+                <div class="form-group"></div>
             </div>
 
             <div class="form-row">
@@ -123,21 +123,61 @@
                     <input pInputText type="password" pSize="large" placeholder="Confirmer le mot de passe" [(ngModel)]="confirmPassword" />
                 </div>
             </div>
+<div style="margin-top: 20px;">
+  <input 
+    type="checkbox" 
+    id="acceptCheckbox" 
+    [(ngModel)]="acceptTerms"
+    (change)="onCheckboxChange()"
+    style="width: 16px; height: 16px; margin: 0;"
+  />
+    <label for="termsCheckbox" style="margin-left: 8px;margin-bottom: 30px;">
+        J'accepte les <a href="#" (click)="showTerms($event)">Conditions Générales d'Utilisation</a>
+    </label>
+        <!-- Check icon (visible only when accepted) -->
 
-            <div>
-                <p-button label="Enregistrer" icon="pi pi-sign-in" severity="primary" (click)="Register()"></p-button>
+</div>
+
+
+            
+<div class="captcha-wrapper">
+  <re-captcha
+    siteKey="6Ld1gDsrAAAAAB9jNGrZNkmy_7Hs9oiDseebfUTH"
+    (resolved)="handleCaptcha($event)">
+  </re-captcha>
+</div>
+
+
+
+
+            <div style="margin-top: 35px;">
+            <p-button 
+            label="Enregistrer" 
+            icon="pi pi-sign-in" 
+            severity="primary" 
+            (click)="Register()"
+            [disabled]="
+            !acceptTerms || 
+            !registerDto.email || 
+            !registerDto.password || 
+            !confirmPassword || 
+            !registerDto.matriculeFiscale || 
+            !captchaToken
+            ">
+            </p-button>
             </div>
         </div>
 
-        <!-- Vérification de l'email -->
-        <div class="form-section" *ngIf="ShowVerificationSection">
-            <h2 class="section-title">Vérification de l'email</h2>
-            <p>Un code de vérification a été envoyé à votre email.</p>
+<!-- Vérification de l'email -->
+<div class="form-section" *ngIf="ShowVerificationSection">
+    <h2 class="section-title">Vérification de l'email</h2>
+    <p>Un lien de vérification a été envoyé à votre adresse email. Veuillez vérifier votre boîte de réception ainsi que le dossier spam.</p>
 
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <p-button label="Renvoyer le code" icon="pi pi-refresh" severity="secondary" (click)="resendCode()" [disabled]="resendDisabled"></p-button>
-            </div>
-        </div>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <p-button label="Renvoyer le lien" icon="pi pi-refresh" severity="secondary" (click)="resendCode()" [disabled]="resendDisabled"></p-button>
+    </div>
+</div>
+
 
         <div class="text-center mt-4">
             <span class="first-time-text" (click)="showRegisterSection()" *ngIf="ShowLoginSection">
@@ -151,3 +191,104 @@
     </div>
 </div>
 <p-toast />
+<p-dialog 
+  [(visible)]="displayTerms" 
+  [modal]="true" 
+  [dismissableMask]="true"
+  [style]="{ width: '60vw', 'border-radius': '16px', 'border': '1px solid rgba(255, 255, 255, 0.3)' }" 
+  [contentStyle]="{ 'background': 'rgba(255, 255, 255, 0.95)', 'border-radius': '0 0 16px 16px' }"
+  header="Conditions Générales d'Utilisation"
+  headerStyle="background: linear-gradient(90deg, var(--primary-hover) 0%, var(--primary-accent) 100%); color: white; border-radius: 16px 16px 0 0; padding: 1.25rem; border-bottom: none">
+
+ <div style="line-height: 1.8; max-height: 60vh; overflow-y: auto; padding: 1.5rem;">
+
+  <h3 style="color: var(--primary-hover); margin-bottom: 1rem; font-weight: 600; display: flex; align-items: center;">
+    <i class="pi pi-info-circle" style="margin-right: 0.5rem;"></i>
+    Acceptation des Conditions Générales
+  </h3>
+  <p style="color: var(--text-medium); margin-bottom: 1.5rem; background: rgba(3, 249, 237, 0.05); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--primary-accent);">
+    En accédant et en utilisant ce site web, vous acceptez sans réserve les présentes Conditions Générales d’Utilisation. Si vous n’acceptez pas ces conditions, merci de ne pas utiliser notre service.
+  </p>
+
+  <h3 style="color: var(--primary-hover); margin: '1.5rem 0 1rem'; font-weight: 600; display: flex; align-items: center;">
+    <i class="pi pi-user" style="margin-right: 0.5rem;"></i>
+    Utilisation du Site
+  </h3>
+  <p style="color: var(--text-medium); margin-bottom: 1.5rem;">
+    Vous vous engagez à utiliser ce site conformément à la loi et aux présentes conditions. Toute utilisation frauduleuse, abusive ou contraire aux lois applicables est strictement interdite. Vous êtes responsable de la confidentialité de vos identifiants de connexion.
+  </p>
+
+  <h3 style="color: var(--primary-hover); margin: '1.5rem 0 1rem'; font-weight: 600; display: flex; align-items: center;">
+    <i class="pi pi-shield" style="margin-right: 0.5rem;"></i>
+    Protection des Données Personnelles
+  </h3>
+  <p style="color: var(--text-medium); margin-bottom: 1.5rem;">
+    Vos données personnelles sont traitées conformément à notre politique de confidentialité. Nous collectons uniquement les données nécessaires à la fourniture du service et nous nous engageons à ne pas les divulguer à des tiers sans votre consentement, sauf obligation légale.
+  </p>
+
+  <h3 style="color: var(--primary-hover); margin: '1.5rem 0 1rem'; font-weight: 600; display: flex; align-items: center;">
+    <i class="pi pi-cog" style="margin-right: 0.5rem;"></i>
+    Propriété Intellectuelle
+  </h3>
+  <p style="color: var(--text-medium); margin-bottom: 1.5rem;">
+    Tous les contenus présents sur ce site (textes, images, logos, vidéos, etc.) sont la propriété exclusive de notre société ou de nos partenaires. Toute reproduction ou utilisation sans autorisation préalable est interdite.
+  </p>
+
+  <h3 style="color: var(--primary-hover); margin: '1.5rem 0 1rem'; font-weight: 600; display: flex; align-items: center;">
+    <i class="pi pi-exclamation-triangle" style="margin-right: 0.5rem;"></i>
+    Responsabilités
+  </h3>
+  <p style="color: var(--text-medium); margin-bottom: 1.5rem;">
+    Nous déclinons toute responsabilité en cas de dommages directs ou indirects résultant de l’utilisation ou de l’impossibilité d’utiliser notre site, notamment en cas d’erreurs, d’interruptions ou de virus.
+  </p>
+
+  <h3 style="color: var(--primary-hover); margin: '1.5rem 0 1rem'; font-weight: 600; display: flex; align-items: center;">
+    <i class="pi pi-sync" style="margin-right: 0.5rem;"></i>
+    Modification des Conditions
+  </h3>
+  <p style="color: var(--text-medium); margin-bottom: 1.5rem;">
+    Nous nous réservons le droit de modifier ces conditions à tout moment. Les modifications seront effectives dès leur publication sur le site. Votre utilisation continue du service vaut acceptation des nouvelles conditions.
+  </p>
+
+  <h3 style="color: var(--primary-hover); margin: '1.5rem 0 1rem'; font-weight: 600; display: flex; align-items: center;">
+    <i class="pi pi-phone" style="margin-right: 0.5rem;"></i>
+    Contact
+  </h3>
+  <p style="color: var(--text-medium); margin-bottom: 1.5rem;">
+    Pour toute question relative aux présentes conditions, veuillez nous contacter via notre formulaire de contact ou à l’adresse email supportvotresite.com.
+  </p>
+
+  <div style="background: var(--background-light); padding: 1.25rem; border-radius: 8px; margin-top: 1.5rem; border: 1px solid var(--border-color);">
+    <p style="color: var(--text-dark); font-weight: 600; margin-bottom: 0.5rem;">
+      <i class="pi pi-exclamation-circle" style="color: var(--primary-hover); margin-right: 0.5rem;"></i>
+      Important
+    </p>
+    <p style="color: var(--text-medium); margin-bottom: 0;">
+      Merci de lire attentivement ces conditions avant d’utiliser notre site. En poursuivant, vous confirmez votre compréhension et acceptation intégrale de ces conditions générales.
+    </p>
+
+  </div>
+<!-- Normal HTML Checkbox to Accept Terms -->
+<div style="margin-top: 1.5rem; display: flex; align-items: center;">
+  <input 
+    type="checkbox" 
+    id="acceptCheckbox" 
+    [(ngModel)]="acceptTerms"
+    (change)="onCheckboxChange()"
+    style="width: 16px; height: 16px; margin: 0;"
+  />
+  <label for="acceptCheckbox" style="margin-left: 0.5rem; cursor: pointer; color: var(--text-medium);">
+    J'accepte les conditions générales
+  </label>
+</div>
+
+
+</div>
+
+
+  <ng-template pTemplate="footer">
+    <button pButton (click)="onDismiss()">Cancel</button>
+        <button pButton (click)="onAccept()" [disabled]="!acceptTerms">Accept</button>
+  </ng-template>
+
+</p-dialog>

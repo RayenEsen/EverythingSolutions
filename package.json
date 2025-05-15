@@ -26,6 +26,7 @@
     "gsap": "^3.13.0",
     "jwt-decode": "^4.0.0",
     "lottie-web": "^5.12.2",
+    "ng-recaptcha": "^13.2.1",
     "primeicons": "^7.0.0",
     "primelocale": "^2.1.2",
     "primeng": "^19.1.1",

@@ -12,7 +12,11 @@ import { Entreprise } from '../shared/Entreprise';
 import { AuthService } from '../shared/Auth.service';
 import { LoginRequest } from '../DTO/LoginRequest';
 import { RegisterRequest } from '../DTO/RegisterRequest';
-
+import { CaptchaService } from '../Services/Captcha.service';
+import { RecaptchaV3Module } from 'ng-recaptcha';
+import { RecaptchaModule } from 'ng-recaptcha';
+import { DialogModule } from 'primeng/dialog';
+import { PopoverModule } from 'primeng/popover';
 
 
 @Component({
@@ -20,12 +24,12 @@ import { RegisterRequest } from '../DTO/RegisterRequest';
   selector: 'app-login',
   templateUrl: './Login.component.html',
   styleUrls: ['./Login.component.css'],
-  imports: [CommonModule, ButtonModule, InputTextModule, FormsModule, ToastModule , AutoCompleteModule],
+  imports: [PopoverModule ,CommonModule, ButtonModule, InputTextModule, FormsModule, ToastModule , AutoCompleteModule , RecaptchaV3Module , RecaptchaModule , DialogModule],
   providers: [MessageService]
 })
 export class LoginComponent implements OnInit {
 
-  constructor(public ServiceA: AuthService, private messageService: MessageService, private router: Router ) {}
+  constructor(public ServiceA: AuthService, private messageService: MessageService , private router: Router , private captchaService: CaptchaService ) {}
 
   isButtonDisabled: boolean = false;
 
@@ -139,17 +143,31 @@ export class LoginComponent implements OnInit {
     );
   }
 
+  
+
  Register() {
-    // Check if the user is already logged in
-    if (this.ServiceA.isAuthenticated()) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Déjà inscrit',
-        detail: 'Vous êtes déjà inscrit et connecté.',
-        life: 3000
-      });
-      return;
-    }
+
+if (!this.acceptTerms) {
+  this.messageService.add({
+    severity: 'error',
+    summary: 'Conditions non acceptées',
+    detail: 'Veuillez accepter les Conditions Générales d’Utilisation.',
+    life: 3000
+  });
+  return;
+}
+
+if (!this.captchaToken) {
+  this.messageService.add({
+    severity: 'error',
+    summary: 'CAPTCHA requis',
+    detail: 'Veuillez compléter le CAPTCHA.',
+    life: 3000
+  });
+  return;
+}
+
+    
   
     // Validate email
     if (!this.registerDto.email) {
@@ -356,7 +374,90 @@ sendResetPasswordLink(): void {
   }
 }
 
+  captchaToken: string | null = null;
 
+  handleCaptcha(token: string | null): void {
+    if (!token) {
+      console.warn('Captcha token is null');
+      return;
+    }
+
+    this.captchaToken = token;
+    console.log('reCAPTCHA token:', token);
+
+    // Call your service to verify the token
+    this.captchaService.verifyCaptcha(token).subscribe({
+      next: (response) => {
+        console.log('Captcha verification response:', response);
+        if (response.success) {
+          // proceed with your login or form submission
+          console.log('Captcha verified successfully');
+        } else {
+          console.warn('Captcha verification failed');
+          // handle failure (show message, etc.)
+        }
+      },
+      error: (error) => {
+        console.error('Captcha verification error:', error);
+        // handle error properly
+      }
+    });
+  }
+
+  // Dialog visibility state
+  displayTerms: boolean = false;
+  
+  // Terms acceptance state
+  acceptTerms: boolean = false;
+  
+  // Button hover state (for animations)
+  hoverAccept: boolean = false;
+
+  /**
+   * Shows the terms dialog and resets acceptance state
+   * @param event MouseEvent from the trigger element
+   */
+  showTerms(event: MouseEvent): void {
+    event.preventDefault(); // Prevent default link behavior
+    this.displayTerms = true;
+    this.acceptTerms = false; // Reset acceptance state when dialog opens
+    this.hoverAccept = false; // Reset hover state
+  }
+
+  /**
+   * Handles terms acceptance
+   */
+  onAccept(): void {
+    if (this.acceptTerms) {
+      // Perform acceptance actions:
+      console.log('Terms accepted');
+      
+      // Close the dialog
+      this.displayTerms = false;
+      
+      // Additional actions you might want:
+      // this.storeAcceptance();
+      // this.emitAcceptance();
+    }
+  }
+
+  /**
+   * Handles dialog dismissal
+   */
+  onDismiss(): void {
+    this.displayTerms = false;
+    console.log('Terms dialog dismissed');
+  }
+
+  // Optional: Store acceptance in localStorage
+  private storeAcceptance(): void {
+    localStorage.setItem('termsAccepted', 'true');
+  }
+
+  onCheckboxChange() {
+  // This triggers Angular's change detection
+}
 
 
 }
+

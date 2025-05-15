@@ -252,3 +252,44 @@
 }
 
 
+.captcha-wrapper {
+  z-index: 10000; /* high to avoid being covered */
+  overflow: visible; /* very important */
+}
+
+
+.register-scrollable {
+  max-height: 90vh; /* Fits within screen height */
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Add to your global styles if you want the dialog to match your card effects */
+::ng-deep .p-dialog {
+  box-shadow: var(--card-shadow) !important;
+  backdrop-filter: blur(8px) !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+}
+
+::ng-deep .p-dialog .p-dialog-content {
+  border-radius: 0 0 16px 16px !important;
+}
+
+::ng-deep .p-dialog .p-dialog-header-icons {
+  color: white !important;
+}
+
+::ng-deep .custom-checkbox .p-checkbox-box {
+  border-color: var(--border-color);
+  transition: all 0.3s ease;
+}
+
+::ng-deep .custom-checkbox .p-checkbox-box:hover {
+  border-color: var(--primary-accent);
+}
+
+::ng-deep .custom-checkbox .p-checkbox-box.p-highlight {
+  background: linear-gradient(90deg, var(--primary-hover) 0%, var(--primary-accent) 100%);
+  border-color: transparent;
+}
