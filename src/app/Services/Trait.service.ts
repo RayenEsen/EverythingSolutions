@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from './../Environments/environment';
@@ -12,65 +12,45 @@ import { RetraiteLightDto } from '../DTO/RetraiteLightDto';
 export class RetraitesService {
   private baseUrl = `${environment.apiBaseURL}/Retraites`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   createRetraite(retraite: AddRetraiteDTO): Observable<any> {
-    const token = localStorage.getItem('jwtToken');
-  
-    if (!token) {
-      console.error('No token found in localStorage!');
-    }
-  
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+    return this.http.post<any>(this.baseUrl, retraite, {
+      withCredentials: true
     });
-  
-    return this.http.post<any>(this.baseUrl, retraite, { headers });
   }
-
 
   getRetraites(): Observable<RetraiteLightDto[]> {
-    const token = localStorage.getItem('jwtToken');
-    
-    if (!token) {
-      throw new Error('No JWT token found in localStorage');
-    }
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Accept': 'application/json'
+    return this.http.get<RetraiteLightDto[]>(this.baseUrl, {
+      withCredentials: true
     });
-
-    return this.http.get<RetraiteLightDto[]>(this.baseUrl, { headers });
   }
-  
-// in RetraitesService
-deleteRetraite(id: number): Observable<string> {
-  const token = localStorage.getItem('jwtToken')!;
-  const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
-  return this.http.delete(`${this.baseUrl}/${id}`, {
-    headers,
-    responseType: 'text'  // ← tell HttpClient to expect plain text
+  deleteRetraite(id: number): Observable<string> {
+    return this.http.delete(`${this.baseUrl}/${id}`, {
+      withCredentials: true,
+      responseType: 'text'
+    });
+  }
+
+  getRetraiteById(id: number): Observable<RetraiteLightDto> {
+    return this.http.get<RetraiteLightDto>(`${this.baseUrl}/${id}`, {
+      withCredentials: true
+    });
+  }
+
+  deleteRetraites(ids: number[]): Observable<string> {
+  return this.http.post(`${this.baseUrl}/batch-delete`, ids, {
+    withCredentials: true,
+    responseType: 'text'
   });
 }
 
-  
+updateRetraite(id: number, retraite: AddRetraiteDTO): Observable<RetraiteLightDto> {
+  return this.http.put<RetraiteLightDto>(`${this.baseUrl}/${id}`, retraite, {
+    withCredentials: true
+  });
+}
 
-    getRetraiteById(id: number): Observable<RetraiteLightDto> {
-      const token = localStorage.getItem('jwtToken');
-  
-      if (!token) {
-        throw new Error('No JWT token found in localStorage');
-      }
-  
-      const headers = new HttpHeaders({
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/json'
-      });
-  
-      return this.http.get<RetraiteLightDto>(`${this.baseUrl}/${id}`, { headers });
-    }
-  
-  
+
 }

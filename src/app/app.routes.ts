@@ -22,9 +22,15 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: '',
+    path: 'Trait',
     component: RetraitComponent,
-    title: 'Retrait',
+    title: 'Trait',
+    canActivate: [AuthGuard]
+  },
+    {
+    path: '',
+    component: HomeComponent,
+    title: 'Trait',
     canActivate: [AuthGuard]
   },
   {

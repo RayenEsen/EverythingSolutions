@@ -5,7 +5,7 @@ import { Banque } from "./Banque";
 export class Retraite {
   id: number = 0;
   montant: number | null = null;
-  numeroCheque: string | null = null;
+  numeroCheque: string = "";
   dateEcheance: Date | null = null;
 
   // The new DateCreation property

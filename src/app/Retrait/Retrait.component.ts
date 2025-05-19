@@ -46,19 +46,22 @@ export class RetraitComponent implements OnInit {
   constructor(private confirmationService: ConfirmationService ,private ServiceA : AuthService,private ServiceR : RetraitesService,private ServiceB : BanquesService,private ServiceF: FournisseurService, private messageService: MessageService, private router: Router,  ) { }
 
 
-  items: MenuItem[] | undefined;
   AddRetraitInfo : boolean = false;
   AddRetrait : AddRetraiteDTO  = new AddRetraiteDTO();
+  ModifyTraiteInfo: boolean = false;
 
 
-  items2: any[] = [
-    { label: 'Voir Retraite', icon: 'pi pi-eye',  command: () => this.NavigateToRetraiteDetails(this.selectedRetrait!)},
-    { label: 'Supprimer', icon: 'pi pi-trash',  command: () => this.DeleteRetrait()},
-  ];
+items2: any[] = [
+  { label: 'Voir Traite', icon: 'pi pi-eye', command: () => this.NavigateToRetraiteDetails(this.selectedRetrait!) },
+  { label: 'Modifier Traite', icon: 'pi pi-pencil', command: () => this.showModifyForm() },
+  { label: 'Supprimer', icon: 'pi pi-trash', command: () => this.DeleteRetrait() },
+];
+
 
   items4: any[] = [];
 
-  selectedRetrait? : Retraite;
+ selectedRetrait: Retraite = new Retraite();
+
   selectedBank: Banque | null = null;
   selected: Banque | null = null;
   filteredBanks: Banque[] = [];
@@ -75,6 +78,18 @@ export class RetraitComponent implements OnInit {
 
 
 
+items = [
+  {
+    label: 'Ajouter Traite',
+    icon: 'pi pi-plus',
+    command: () => this.toggleAddRetraitInfo()
+  },
+  {
+    label: 'Supprimer',
+    icon: 'pi pi-trash',
+    command: () => this.deleteSelectedRetraites()
+  }
+];
 
  
 
@@ -86,13 +101,11 @@ export class RetraitComponent implements OnInit {
   {
     this.ServiceR.getRetraites().subscribe({
       next: (retraites) => {
-        console.log('Retraites:', retraites);
-        // Do something with retraites, like storing them in a local variable
+        this.retraitesLightDataOriginal = retraites; 
         this.retraitesLightData = retraites;
       },
       error: (err) => {
         console.error('Error fetching retraites:', err);
-        // Optionally show an error message to the user
       }
     });
   }
@@ -100,43 +113,40 @@ export class RetraitComponent implements OnInit {
   loading: boolean = false;
   fournisseursData: Fournisseur[]  = [];
   banquesData: Banque[] = [];
-  ngOnInit() {
-        console.log('Token =', this.ServiceA.getToken());
-        const decodedToken = this.ServiceA.getDecodedToken();
-        console.log('ID =', decodedToken ? decodedToken.id : null);
-    this.loadTraites();
-        // Fetch fournisseurs data
-        this.ServiceF.getAll().subscribe(
-          (data) => {
-            this.fournisseursData = data;
-          },
-          (error) => {
-          }
-        );
+ngOnInit() {
+  // Get employee ID directly from localStorage
+  const employeeId = localStorage.getItem('employeeId');
+  console.log('Employee ID =', employeeId);
 
-        this.ServiceB.getAll().subscribe(
-          (data: Banque[]) => {
-            this.banquesData = data; // Assign the data to banques array
-            console.log('Banques fetched successfully:', this.banquesData);
-          },
-          (error) => {
-            console.error('Error fetching banques data:', error);
-          }
-        );
+  this.loadTraites();
 
+  // Fetch fournisseurs data
+  this.ServiceF.getAll().subscribe(
+    (data) => {
+      this.fournisseursData = data;
+    },
+    (error) => {
+      // handle error if needed
+    }
+  );
 
-    const today = new Date();
-    this.todayDate = today.toISOString().split('T')[0]; // 'yyyy-MM-dd'
-    this.items = [
-      {
-        label: 'Ajouter Traite',
-        icon: 'pi pi-plus',
-        command: () => this.toggleAddRetraitInfo()
-      }
-    ];
+  // Fetch banques data
+  this.ServiceB.getAll().subscribe(
+    (data: Banque[]) => {
+      this.banquesData = data;
+      console.log('Banques fetched successfully:', this.banquesData);
+    },
+    (error) => {
+      console.error('Error fetching banques data:', error);
+    }
+  );
+
+  const today = new Date();
+  this.todayDate = today.toISOString().split('T')[0]; // 'yyyy-MM-dd'
 
 
-  }
+}
+
 
 getFormattedEcheance(date: any): string {
   if (!date) return 'N/A';
@@ -189,7 +199,7 @@ validateForm() {
   }
 
   // Validate cheque number
-  if (!this.AddRetrait.NumCheque || this.AddRetrait.NumCheque.trim() === '') {
+  if (!this.AddRetrait.numCheque || this.AddRetrait.numCheque.trim() === '') {
     this.showChequeError = true;
   }
 
@@ -223,12 +233,12 @@ validateForm() {
     !this.showRibError
   ) {
     const formData: AddRetraiteDTO = {
-      NumCheque: this.AddRetrait.NumCheque.trim(),
+      numCheque: this.AddRetrait.numCheque.trim(),
       dateEcheance: this.AddRetrait.dateEcheance,
       montant: parseFloat(this.AddRetrait.montant.toString()),
       fournisseurId: this.selectedFournisseur?.id || 0,
       banqueId: this.selectedBank?.id || 0,
-      entrepriseId: this.ServiceA.getDecodedToken()?.id || 0, // Get the entrepriseId from the token
+      entrepriseId: +(localStorage.getItem('employeeId') ?? 0),
     };
     
     
@@ -296,7 +306,7 @@ DeleteRetrait() {
       });
       
       // Optionally clear selection
-      this.selectedRetrait = undefined;
+      this.selectedRetrait = new  Retraite ;
     },
     error: err => {
       console.error('Error deleting retraite:', err);
@@ -329,7 +339,8 @@ banque : Banque = new Banque();
 
 
 AddBanque() {
-  this.banque.entrepriseId = this.ServiceA.getDecodedToken()?.id ?? 0;
+this.banque.entrepriseId = +(localStorage.getItem('employeeId') ?? 0);
+
   this.ServiceB.create(this.banque).subscribe(
     (response) => {
       // Ajout à la liste
@@ -348,7 +359,7 @@ AddBanque() {
         nom: '',
         adresse: '',
         rib: '',
-        entrepriseId: this.ServiceA.getDecodedToken()?.id ?? 0,
+        entrepriseId: +(localStorage.getItem('employeeId') ?? 0)
       };
 
       // Fermer le drawer
@@ -369,6 +380,7 @@ showNomBanqueError = false;
 showAdresseError = false;
 
 validateBanqueForm(): boolean {
+  console.log(this.selectedBank);
   this.showNomBanqueError = !this.banque.nom?.trim();
   this.showAdresseError = !this.banque.adresse?.trim();
 
@@ -405,8 +417,9 @@ onSaveFournisseur() {
 }
 
 AddFournisseur() {
-  const decodedToken = this.ServiceA.getDecodedToken();
-  this.FournisseurAjouter.entrepriseId = decodedToken?.id ?? 0;
+  const entrepriseId = +(localStorage.getItem('employeeId') ?? 0);
+  this.FournisseurAjouter.entrepriseId = entrepriseId;
+
   this.ServiceF.create(this.FournisseurAjouter).subscribe(
     (response) => {
       this.messageService.add({
@@ -415,17 +428,17 @@ AddFournisseur() {
         detail: 'Fournisseur ajouté avec succès !'
       });
 
-      // Ajouter le nouveau à la liste
+      // Add the new fournisseur to the list
       this.fournisseursData.push(response);
 
-      // Réinitialiser le formulaire
+      // Reset the form
       this.FournisseurAjouter = {
         id: 0,
         nom: '',
         email: '',
         telephone: '',
         adresse: '',
-        entrepriseId: decodedToken?.id ?? 0,
+        entrepriseId: entrepriseId,
       };
 
       this.AddFournisseurInfo = false;
@@ -440,6 +453,7 @@ AddFournisseur() {
     }
   );
 }
+
 
 dialogVisible: boolean = false;
 toggleDialog() {
@@ -556,5 +570,219 @@ confirmDeleteBanque(banque: Banque) {
   this.router.navigate(['/RetraitDetails', retrait.id]);
 
  }
+
+
+ banques: string[] = [
+  "Amen Bank",
+  "Al Baraka Bank Tunisie",
+  "Arab Banking Corporation (ABC)",
+  "Arab Tunisian Bank (ATB)",
+  "Attijari Bank",
+  "BBFPME",
+  "Banque de l’Habitat (BH Bank)",
+  "Banque de Tunisie (BT)",
+  "Banque de Tunisie et des Émirats (BTE)",
+  "Banque Franco Tunisienne (BFT)",
+  "Banque Internationale Arabe de Tunisie (BIAT)",
+  "Banque Nationale Agricole (BNA)",
+  "Banque Tuniso-Koweïtienne (BTK)",
+  "Banque Tuniso-Libyenne (BTL)",
+  "Banque Tunisienne de Solidarité (BTS)",
+  "Banque Zitouna",
+  "CitiBank Tunisie",
+  "La Poste Tunisienne (Office National des Postes)",
+  "North Africa International Bank (NAIB)",
+  "Qatar National Bank Tunisie (QNB)",
+  "Société Tunisienne de Banque (STB)",
+  "Tunis International Bank (TIB)",
+  "Tunisian Foreign Bank (TFB)",
+  "Tunisian Saudi Bank (TSB)",
+  "Union Bancaire pour le Commerce et l’Industrie (UBCI)",
+  "Union Internationale de Banques (UIB)",
+  "Wifak International Bank (WIB)"
+];
+
+
+filteredBanques: string[] = [];
+
+filterBanques(event: { query: string }) {
+  const query = event.query.toLowerCase();
+  this.filteredBanques = this.banques.filter(banque =>
+    banque.toLowerCase().includes(query)
+  );
+}
+
+
+SelectedTraits: Retraite[] = [];
+ 
+deleteSelectedRetraites(): void {
+  const idsToDelete = this.SelectedTraits.map(r => r.id);
+
+  if (idsToDelete.length === 0) {
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Aucune sélection',
+      detail: 'Veuillez sélectionner au moins une retraite à supprimer.'
+    });
+    return;
+  }
+
+  this.ServiceR.deleteRetraites(idsToDelete).subscribe({
+    next: () => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Suppression réussie',
+        detail: 'Les retraites sélectionnées ont été supprimées.'
+      });
+
+      // Filter retraites locally
+      this.retraitesLightData = this.retraitesLightData.filter(
+        r => !idsToDelete.includes(r.id)
+      );
+
+      this.SelectedTraits = [];
+    },
+    error: () => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erreur',
+        detail: 'Une erreur est survenue lors de la suppression.'
+      });
+    }
+  });
+}
+
+
+retraitesLightDataOriginal: any[] = []; // Store unfiltered data
+searchText: string = '';
+
+filterRetraites() {
+  const text = this.searchText?.toLowerCase() || '';
+  this.retraitesLightData = this.retraitesLightDataOriginal.filter(r =>
+    Object.values(r).some(value =>
+      String(value).toLowerCase().includes(text)
+    )
+  );
+}
+
+  showModifyForm() {
+    console.log(this.selectedRetrait)
+    this.ModifyTraiteInfo = !this.ModifyTraiteInfo;
+  }
+
+
+ModifyTraite(): void {
+  console.log(this.selectedRetrait)
+  if (!this.selectedRetrait || !this.selectedRetrait.id) return;
+
+  const updatedRetraite: AddRetraiteDTO = {
+    numCheque: this.selectedRetrait.numeroCheque?.trim() || '',
+    dateEcheance: this.selectedRetrait.dateEcheance,
+    montant: this.selectedRetrait.montant ?? 0,
+    fournisseurId: this.selectedFournisseur?.id || 0,
+    banqueId: this.selectedBank?.id || null,
+    entrepriseId: +(localStorage.getItem('employeeId') ?? 0),
+  };
+
+  this.ServiceR.updateRetraite(this.selectedRetrait.id, updatedRetraite).subscribe({
+    next: () => {
+      this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Traite modifiée avec succès', life: 3000 });
+      this.ModifyTraiteInfo = false;
+      this.loadTraites();
+    },
+    error: () => {
+      this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Échec de la modification', life: 3000 });
+    }
+  });
+}
+
+dateEcheance: string = '';
+
+get dateEcheanceFormatted(): string {
+  if (!this.selectedRetrait?.dateEcheance) return '';
+  const d = new Date(this.selectedRetrait.dateEcheance);
+  const year = d.getFullYear();
+  const month = (d.getMonth() + 1).toString().padStart(2, '0');
+  const day = d.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+set dateEcheanceFormatted(value: string) {
+  this.selectedRetrait.dateEcheance = value ? new Date(value) : null;
+}
+
+
+onRowEditInit(banque: Banque) {
+  // Optionally store original value if you want to restore it on cancel
+  // this.clonedBanques[banque.id] = { ...banque };
+}
+
+onRowEditSave(banque: Banque) {
+  this.ServiceB.update(banque.id, banque).subscribe({
+    next: () => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: 'Banque modifiée avec succès',
+      });
+    },
+    error: () => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erreur',
+        detail: 'Échec de la modification',
+      });
+    }
+  });
+}
+
+onRowEditCancel(banque: Banque, index: number) {
+  // If you cloned original, restore here
+  // this.banquesData[index] = this.clonedBanques[banque.id];
+  this.messageService.add({
+    severity: 'info',
+    summary: 'Annulé',
+    detail: 'Modification annulée',
+  });
+}
+
+
+
+
+onRowEditInitFournisseur(fournisseur: Fournisseur) {
+  // Optional: keep a clone if cancel needs to restore
+  // this.clonedFournisseurs[fournisseur.id] = { ...fournisseur };
+}
+
+onRowEditSaveFournisseur(fournisseur: Fournisseur) {
+  this.ServiceF.update(fournisseur.id, fournisseur).subscribe({
+    next: () => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: 'Fournisseur modifié avec succès',
+      });
+    },
+    error: () => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erreur',
+        detail: 'Échec de la modification du fournisseur',
+      });
+    },
+  });
+}
+
+onRowEditCancelFournisseur(fournisseur: Fournisseur, index: number) {
+  // Optional: restore original from clone
+  // this.fournisseursData[index] = this.clonedFournisseurs[fournisseur.id];
+  this.messageService.add({
+    severity: 'info',
+    summary: 'Annulé',
+    detail: 'Modification annulée',
+  });
+}
+
+
 
 }

@@ -93,10 +93,18 @@
             </div>
 
             <div class="form-row">
-                <div class="form-group">
-                    <label for="adresseEntreprise" class="large-label">Adresse de l'entreprise</label>
-                    <input pInputText type="text" pSize="large" placeholder="Entrer l'adresse de l'entreprise" [(ngModel)]="registerDto.adresseEntreprise" />
-                </div>
+<div class="form-group">
+  <label for="adresseEntreprise" class="large-label">Adresse de l'entreprise</label>
+<p-autoComplete 
+  [dropdown]="true" 
+  [suggestions]="filteredAdresses" 
+  (completeMethod)="search($event)" 
+  [(ngModel)]="registerDto.adresseEntreprise" 
+  placeholder="Choisir l'adresse" [forceSelection]="true"
+  [style]="{'width':'100%'}">
+</p-autoComplete>
+</div>
+
                 
                 <div class="form-group">
                     <label for="email" class="large-label">Email</label>
@@ -112,17 +120,36 @@
                 <div class="form-group"></div>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="password" class="large-label">Mot de passe</label>
-                    <input pInputText type="password" pSize="large" placeholder="Entrer le mot de passe" [(ngModel)]="registerDto.password"/>
-                </div>
-                
-                <div class="form-group">
-                    <label for="confirm-password" class="large-label">Confirmer le mot de passe</label>
-                    <input pInputText type="password" pSize="large" placeholder="Confirmer le mot de passe" [(ngModel)]="confirmPassword" />
-                </div>
-            </div>
+<div class="form-row" style="display: flex; gap: 16rem; align-items: flex-start;">
+  <div class="form-group" style="position: relative;">
+    <label for="password" class="large-label" style="display: flex; align-items: center; gap: 0.5rem;">
+      Mot de passe
+      <p-button icon="pi pi-question-circle" [text]="true"  severity="secondary" class="p-button-text p-button-rounded p-button-sm"
+                (click)="passwordPopover.toggle($event)">
+      </p-button>
+    </label>
+
+    <p-popover #passwordPopover>
+      <div class="flex flex-col gap-2" style="max-width: 250px;">
+        <span class="font-medium text-surface-900 block mb-2">Conseils pour le mot de passe</span>
+        <ul class="list-disc list-inside">
+          <li>Au moins 8 caractères</li>
+          <li>Au moins une majuscule</li>
+          <li>Au moins une minuscule</li>
+          <li>Au moins un chiffre</li>
+        </ul>
+      </div>
+    </p-popover>
+
+    <input pInputText type="password" pSize="large" placeholder="Entrer le mot de passe" [(ngModel)]="registerDto.password" />
+  </div>
+
+  <div class="form-group">
+    <label for="confirm-password" class="large-label">Confirmer le mot de passe</label>
+    <input pInputText type="password" pSize="large" placeholder="Confirmer le mot de passe" [(ngModel)]="confirmPassword" />
+  </div>
+</div>
+
 <div style="margin-top: 20px;">
   <input 
     type="checkbox" 

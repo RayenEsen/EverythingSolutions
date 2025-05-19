@@ -1,5 +1,5 @@
 export class AddRetraiteDTO {
-  NumCheque: string = '';
+  numCheque: string = '';
   dateEcheance: Date | null = null;
   montant: number = 0;
   entrepriseId: number = 0;

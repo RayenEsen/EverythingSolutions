@@ -27,6 +27,7 @@
     "jwt-decode": "^4.0.0",
     "lottie-web": "^5.12.2",
     "ng-recaptcha": "^13.2.1",
+    "ngx-spinner": "^19.0.0",
     "primeicons": "^7.0.0",
     "primelocale": "^2.1.2",
     "primeng": "^19.1.1",

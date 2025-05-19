@@ -42,8 +42,6 @@ onSubmit(): void {
 
   this.authService.resetPassword(resetPasswordData).subscribe({
     next: (response: any) => {
-      console.log('Password reset successful:', response);
-      alert(response.message || 'Votre mot de passe a été changé avec succès');
       this.router.navigate(['/login']);  // Redirect to login page
     },
     error: (err: any) => {

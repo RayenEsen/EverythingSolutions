@@ -67,7 +67,13 @@
       </div>
 
 <div class="issuer-section">
-<div class="issuer-stamp" style="cursor: pointer;" (click)="printRetraiteDetails()">Imprimer</div>
+  
+  <div style="display: flex;">
+    <div class="issuer-stamp" style="cursor: pointer;margin-right: 20px;" (click)="printRetraiteDetails()">Imprimer</div>
+    <div class="issuer-stamp" style="cursor: pointer;" (click)="ViewTrait()">Voir</div>
+  </div>
+
+
   <div class="issuer-details">
     <div class="issuer-name">{{ retraiteDetails?.entrepriseNom }}</div>
     <div class="issuer-date">Émis le: {{ today | date:'dd/MM/yyyy' }}</div>
@@ -90,56 +96,204 @@
 </ng-template>
 
 
+<p-dialog header="Détail de la Traite" [(visible)]="displayDialog" [modal]="true" [style]="{ width: '1200px' }" [contentStyle]="{ 'overflow': 'auto' }">
 
+<div class="prin position-relative mx-auto" style="
+  background-image: url('https://i.ibb.co/WvZkMNZx/Whats-App-Image-2025-05-01-at-5-47-22-PM.jpg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 1169px;
+      height: 623px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+">
 
-  <div class="print-container print-only" >
-    <div class="modern-card"  style="width: max-content;padding: 84px;">
-      <div class="cheque-container">
-        <div class="text amount-text" style="
-            display: flex;
-            text-align: center;
-            gap: 50px;
-            align-items: center;
-            justify-content: center;">
-            
-          <p style="font-weight: 500 " >{{retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}</p>   
-          <div style="margin-right: 50px; font-weight: 500 ; margin-top: -42px;    text-align: justify;">
-          <p>{{retraiteDetails?.banqueAdresse}}</p>
-          <p>{{retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}</p>
-          </div> 
-
-        </div>
-        <div style="text-align: center; display: flex;align-items: center;justify-content: center; padding-bottom: 20px;">
-          <p style="margin-top: 30px;padding-left: 200px;font-size: larger;font-weight: 500">{{ formatRIB(retraiteDetails?.banqueRib) }}</p>  
-          <p style="font-weight: 500;font-size: large;padding-left: 140px;"> {{ formatMontant(retraiteDetails?.montant) }}</p>
-        </div>
-        <div style="display: flex;justify-content: space-around;">
-          <p>{{retraiteDetails?.banqueNom}}</p>
-          <p >{{retraiteDetails?.banqueNom}}</p>
-          <p style="font-weight: 500;font-size: large;padding-left: 140px;"> {{ formatMontant(retraiteDetails?.montant) }}</p>
-        </div>
-
-        <div>
-        <p style="font-weight: 500; text-align: center; justify-content: center;">
-          {{ retraiteDetails?.getMontantEnLettres() }}
-        </p>
-        </div>
-        <div style="display: flex; gap: 50px;">
-          <p>{{ retraiteDetails?.banqueAdresse }}</p>
-          <p>{{ retraiteDetails?.dateCreation | date:'dd/MM/yyyy' }}</p>
-          <p>{{ retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}</p>
-        </div>
-
-        <div style="display: flex; justify-content: space-between;">
-          <p style="font-size: normal;font-weight: 500">{{ formatRIB(retraiteDetails?.banqueRib) }}</p>  
-                  <p style="padding-left: 10px;">{{retraiteDetails?.banqueNom}}</p>
-        </div>
-        <div style="text-align: center;">
-          <p>{{retraiteDetails?.entrepriseNom}}</p>
-          <p>{{retraiteDetails?.entrepriseAdresse}}</p>
-        </div>
-
-
-      </div>
-    </div>
+  <!-- Date d'échéance (top left) -->
+  <div class="position-absolute fw-bold" style="top: 95px; left: 410px; font-size: 1rem;">
+    {{ retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}
   </div>
+
+  <!-- Adresse entreprise + date creation (top right) -->
+  <div class="position-absolute fw-bold text-justify" style="top: 70px; left: 620px; width: 300px; font-size: 1rem;">
+    <p class="mb-0">{{ retraiteDetails?.entrepriseAdresse }}</p>
+    <p>{{ retraiteDetails?.dateCreation | date:'dd/MM/yyyy' }}</p>
+
+    
+  </div>
+
+      
+      <!-- Adresse entreprise + date creation (top right) -->
+  <div class="position-absolute fw-bold text-justify" style="top: 93px; left: 840px; width: 300px; font-size: 1rem;">
+    <p class="mb-0">{{ retraiteDetails?.entrepriseNom }}</p>
+  </div>
+  
+  <!-- RIB parts (center section) -->
+  <div class="position-absolute fw-bold" style="top: 144px; left: 387px; font-size: 1rem;">
+    <span class="rib-part" style="position: absolute; left: px;">{{ getRibParts(retraiteDetails?.banqueRib)[0] }}</span>
+    <span class="rib-part" style="position: absolute; left: 60px;">{{ getRibParts(retraiteDetails?.banqueRib)[1] }}</span>
+    <span class="rib-part" style="position: absolute; left: 130px;">{{ getRibParts(retraiteDetails?.banqueRib)[2] }}</span>
+    <span class="rib-part" style="position: absolute; left: 174px;">{{ getRibParts(retraiteDetails?.banqueRib)[3] }}</span>
+    <span class="rib-part" style="position: absolute; left: 210px;">{{ getRibParts(retraiteDetails?.banqueRib)[4] }}</span>
+    <span class="rib-part" style="position: absolute; left: 248px;">{{ getRibParts(retraiteDetails?.banqueRib)[5] }}</span>
+    <span class="rib-part" style="position: absolute; left: 310px;">{{ getRibParts(retraiteDetails?.banqueRib)[6] }}</span>
+    <span class="rib-part" style="position: absolute; left: 353px;">{{ getRibParts(retraiteDetails?.banqueRib)[7] }}</span>
+  </div>
+  <div class="position-absolute fw-bold" style="top: 145px; left: 893px; font-size: 1rem;">
+    {{ formatMontant(retraiteDetails?.montant) }}
+  </div>
+
+  <!-- Banque noms (3 entries) -->
+  <div class="position-absolute fw-bold" style="top: 215px; left: 149px; font-size: 1rem;">
+    {{ retraiteDetails?.entrepriseNom }}
+  </div>
+  <div class="position-absolute fw-bold" style="top: 234px; left: 357px; font-size: 1rem;">
+    {{ retraiteDetails?.entrepriseNom }}
+  </div>
+  <div class="position-absolute fw-bold" style="top: 223px; left: 893px; font-size: 1rem;">
+    {{ formatMontant(retraiteDetails?.montant) }}
+  </div>
+
+  <!-- Montant en lettres (centered) -->
+  <div class="position-absolute fw-bold text-center" style="top: 270px; left: 250px; width: 700px; font-size: 0.8rem;">
+    {{ retraiteDetails?.getMontantEnLettres() }}
+  </div>
+
+  <!-- Adresse banque + dates + entrepriseNom -->
+  <div class="position-absolute fw-bold" style="top: 318px; left: 179px; font-size: 1rem;">
+    {{ retraiteDetails?.entrepriseAdresse }}
+  </div>
+  <div class="position-absolute fw-bold" style="top: 318px; left: 294px; font-size: 1rem;">
+    {{ retraiteDetails?.dateCreation | date:'dd/MM/yyyy' }}
+  </div>
+  <div class="position-absolute fw-bold" style="top: 320px; left: 441px; font-size: 1rem;">
+    {{ retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}
+  </div>
+
+
+  <!-- RIB + banque -->
+  <div class="position-absolute fw-bold" style="top: 369px; left: 132px; font-size: 1rem;">
+    <span class="rib-part" style="position: absolute; left: 0px;">{{ getRibParts(retraiteDetails?.banqueRib)[0] }}</span>
+    <span class="rib-part" style="position: absolute; left: 48px;">{{ getRibParts(retraiteDetails?.banqueRib)[1] }}</span>
+    <span class="rib-part" style="position: absolute; left: 110px;">{{ getRibParts(retraiteDetails?.banqueRib)[2] }}</span>
+    <span class="rib-part" style="position: absolute; left: 150px;">{{ getRibParts(retraiteDetails?.banqueRib)[3] }}</span>
+    <span class="rib-part" style="position: absolute; left: 180px;">{{ getRibParts(retraiteDetails?.banqueRib)[4] }}</span>
+    <span class="rib-part" style="position: absolute; left: 220px;">{{ getRibParts(retraiteDetails?.banqueRib)[5] }}</span>
+    <span class="rib-part" style="position: absolute; left: 290px;">{{ getRibParts(retraiteDetails?.banqueRib)[6] }}</span>
+    <span class="rib-part" style="position: absolute; left: 350px;">{{ getRibParts(retraiteDetails?.banqueRib)[7] }}</span>
+  </div>
+
+  <div class="position-absolute fw-bold text-center" style="top: 380px; left: 765px; font-size: small; word-wrap: break-word;">
+    <p class="mb-0">{{ retraiteDetails?.banqueNom }}</p>
+    <p class="mb-0">{{ retraiteDetails?.banqueAdresse }}</p>
+  </div>
+
+  <!-- Nom + adresse fournisseur -->
+  <div class="position-absolute fw-bold text-center" style="top: 415px; left: 495px; width: 250px; word-wrap: break-word; font-size: small;">
+    <p class="mb-0">{{ retraiteDetails?.fournisseurNom }}</p>
+    <p class="mb-0">{{ retraiteDetails?.fournisseurAdresse }}</p>
+  </div>
+
+</div>
+
+</p-dialog>
+
+
+
+<div class="print-only prin position-relative mx-auto" style="
+  background-image: url('https://i.ibb.co/WvZkMNZx/Whats-App-Image-2025-05-01-at-5-47-22-PM.jpg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 1169px;
+      height: 623px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+">
+
+  <!-- Date d'échéance (top left) -->
+  <div class="position-absolute fw-bold" style="top: 95px; left: 410px; font-size: 1rem;">
+    {{ retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}
+  </div>
+
+  <!-- Adresse entreprise + date creation (top right) -->
+  <div class="position-absolute fw-bold text-justify" style="top: 70px; left: 620px; width: 300px; font-size: 1rem;">
+    <p class="mb-0">{{ retraiteDetails?.entrepriseAdresse }}</p>
+    <p>{{ retraiteDetails?.dateCreation | date:'dd/MM/yyyy' }}</p>
+
+    
+  </div>
+
+      
+      <!-- Adresse entreprise + date creation (top right) -->
+  <div class="position-absolute fw-bold text-justify" style="top: 93px; left: 840px; width: 300px; font-size: 1rem;">
+    <p class="mb-0">{{ retraiteDetails?.entrepriseNom }}</p>
+  </div>
+  
+  <!-- RIB parts (center section) -->
+  <div class="position-absolute fw-bold" style="top: 144px; left: 387px; font-size: 1rem;">
+    <span class="rib-part" style="position: absolute; left: px;">{{ getRibParts(retraiteDetails?.banqueRib)[0] }}</span>
+    <span class="rib-part" style="position: absolute; left: 60px;">{{ getRibParts(retraiteDetails?.banqueRib)[1] }}</span>
+    <span class="rib-part" style="position: absolute; left: 130px;">{{ getRibParts(retraiteDetails?.banqueRib)[2] }}</span>
+    <span class="rib-part" style="position: absolute; left: 174px;">{{ getRibParts(retraiteDetails?.banqueRib)[3] }}</span>
+    <span class="rib-part" style="position: absolute; left: 210px;">{{ getRibParts(retraiteDetails?.banqueRib)[4] }}</span>
+    <span class="rib-part" style="position: absolute; left: 248px;">{{ getRibParts(retraiteDetails?.banqueRib)[5] }}</span>
+    <span class="rib-part" style="position: absolute; left: 310px;">{{ getRibParts(retraiteDetails?.banqueRib)[6] }}</span>
+    <span class="rib-part" style="position: absolute; left: 353px;">{{ getRibParts(retraiteDetails?.banqueRib)[7] }}</span>
+  </div>
+  <div class="position-absolute fw-bold" style="top: 145px; left: 893px; font-size: 1rem;">
+    {{ formatMontant(retraiteDetails?.montant) }}
+  </div>
+
+  <!-- Banque noms (3 entries) -->
+  <div class="position-absolute fw-bold" style="top: 215px; left: 149px; font-size: 1rem;">
+    {{ retraiteDetails?.entrepriseNom }}
+  </div>
+  <div class="position-absolute fw-bold" style="top: 234px; left: 357px; font-size: 1rem;">
+    {{ retraiteDetails?.entrepriseNom }}
+  </div>
+  <div class="position-absolute fw-bold" style="top: 223px; left: 893px; font-size: 1rem;">
+    {{ formatMontant(retraiteDetails?.montant) }}
+  </div>
+
+  <!-- Montant en lettres (centered) -->
+  <div class="position-absolute fw-bold text-center" style="top: 270px; left: 250px; width: 700px; font-size: 0.8rem;">
+    {{ retraiteDetails?.getMontantEnLettres() }}
+  </div>
+
+  <!-- Adresse banque + dates + entrepriseNom -->
+  <div class="position-absolute fw-bold" style="top: 318px; left: 179px; font-size: 1rem;">
+    {{ retraiteDetails?.entrepriseAdresse }}
+  </div>
+  <div class="position-absolute fw-bold" style="top: 318px; left: 294px; font-size: 1rem;">
+    {{ retraiteDetails?.dateCreation | date:'dd/MM/yyyy' }}
+  </div>
+  <div class="position-absolute fw-bold" style="top: 320px; left: 441px; font-size: 1rem;">
+    {{ retraiteDetails?.dateEcheance | date:'dd/MM/yyyy' }}
+  </div>
+
+
+  <!-- RIB + banque -->
+  <div class="position-absolute fw-bold" style="top: 380px;  left: 132px; font-size: 1rem;">
+    <span class="rib-part" style="position: absolute; left: 0px;">{{ getRibParts(retraiteDetails?.banqueRib)[0] }}</span>
+    <span class="rib-part" style="position: absolute; left: 48px;">{{ getRibParts(retraiteDetails?.banqueRib)[1] }}</span>
+    <span class="rib-part" style="position: absolute; left: 110px;">{{ getRibParts(retraiteDetails?.banqueRib)[2] }}</span>
+    <span class="rib-part" style="position: absolute; left: 150px;">{{ getRibParts(retraiteDetails?.banqueRib)[3] }}</span>
+    <span class="rib-part" style="position: absolute; left: 180px;">{{ getRibParts(retraiteDetails?.banqueRib)[4] }}</span>
+    <span class="rib-part" style="position: absolute; left: 220px;">{{ getRibParts(retraiteDetails?.banqueRib)[5] }}</span>
+    <span class="rib-part" style="position: absolute; left: 290px;">{{ getRibParts(retraiteDetails?.banqueRib)[6] }}</span>
+    <span class="rib-part" style="position: absolute; left: 350px;">{{ getRibParts(retraiteDetails?.banqueRib)[7] }}</span>
+  </div>
+
+  <div class="position-absolute fw-bold text-center" style="top: 380px; left: 765px; font-size: small; word-wrap: break-word;">
+    <p class="mb-0">{{ retraiteDetails?.banqueNom }}</p>
+    <p class="mb-0">{{ retraiteDetails?.banqueAdresse }}</p>
+  </div>
+
+  <!-- Nom + adresse fournisseur -->
+  <div class="position-absolute fw-bold text-center" style="top: 415px; left: 495px; width: 250px; word-wrap: break-word; font-size: small;">
+    <p class="mb-0">{{ retraiteDetails?.fournisseurNom }}</p>
+    <p class="mb-0">{{ retraiteDetails?.fournisseurAdresse }}</p>
+  </div>
+
+</div>

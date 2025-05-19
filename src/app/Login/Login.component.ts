@@ -17,14 +17,19 @@ import { RecaptchaV3Module } from 'ng-recaptcha';
 import { RecaptchaModule } from 'ng-recaptcha';
 import { DialogModule } from 'primeng/dialog';
 import { PopoverModule } from 'primeng/popover';
+import { AutoComplete } from 'primeng/autocomplete';
 
+interface AutoCompleteCompleteEvent {
+    originalEvent: Event;
+    query: string;
+}
 
 @Component({
   standalone: true,
   selector: 'app-login',
   templateUrl: './Login.component.html',
   styleUrls: ['./Login.component.css'],
-  imports: [PopoverModule ,CommonModule, ButtonModule, InputTextModule, FormsModule, ToastModule , AutoCompleteModule , RecaptchaV3Module , RecaptchaModule , DialogModule],
+  imports: [AutoComplete, PopoverModule ,CommonModule, ButtonModule, InputTextModule, FormsModule, ToastModule , AutoCompleteModule , RecaptchaV3Module , RecaptchaModule , DialogModule],
   providers: [MessageService]
 })
 export class LoginComponent implements OnInit {
@@ -44,6 +49,35 @@ export class LoginComponent implements OnInit {
       }
     }
   }
+
+adresseOptions = [
+  { label: 'Ariana', value: 'Ariana' },
+  { label: 'Béja', value: 'Béja' },
+  { label: 'Ben Arous', value: 'Ben Arous' },
+  { label: 'Bizerte', value: 'Bizerte' },
+  { label: 'Gabès', value: 'Gabès' },
+  { label: 'Gafsa', value: 'Gafsa' },
+  { label: 'Jendouba', value: 'Jendouba' },
+  { label: 'Kairouan', value: 'Kairouan' },
+  { label: 'Kasserine', value: 'Kasserine' },
+  { label: 'Kébili', value: 'Kébili' },
+  { label: 'Le Kef', value: 'Le Kef' },
+  { label: 'Mahdia', value: 'Mahdia' },
+  { label: 'La Manouba', value: 'La Manouba' },
+  { label: 'Médenine', value: 'Médenine' },
+  { label: 'Monastir', value: 'Monastir' },
+  { label: 'Nabeul', value: 'Nabeul' },
+  { label: 'Sfax', value: 'Sfax' },
+  { label: 'Sidi Bouzid', value: 'Sidi Bouzid' },
+  { label: 'Siliana', value: 'Siliana' },
+  { label: 'Sousse', value: 'Sousse' },
+  { label: 'Tataouine', value: 'Tataouine' },
+  { label: 'Tozeur', value: 'Tozeur' },
+  { label: 'Tunis', value: 'Tunis' },
+  { label: 'Zaghouan', value: 'Zaghouan' }
+];
+
+
 
   entreprise = new Entreprise();
   registerDto: RegisterRequest = new RegisterRequest();
@@ -167,6 +201,31 @@ if (!this.captchaToken) {
   return;
 }
 
+// Check if adresse is selected
+if (!this.registerDto.adresseEntreprise || this.registerDto.adresseEntreprise.trim() === '') {
+  this.messageService.add({
+    severity: 'error',
+    summary: 'Adresse manquante',
+    detail: 'Veuillez choisir une adresse valide.',
+    life: 3000
+  });
+  return;
+}
+
+// Check if adresse is one of the allowed options
+const isAdresseValid = this.adresseOptions.some(
+  option => option.value === this.registerDto.adresseEntreprise
+);if (!isAdresseValid) {
+  this.messageService.add({
+    severity: 'error',
+    summary: 'Adresse invalide',
+    detail: 'L’adresse choisie n’est pas reconnue.',
+    life: 3000
+  });
+  return;
+}
+
+
     
   
     // Validate email
@@ -222,9 +281,7 @@ if (!this.captchaToken) {
       return;
     }
 
-// Trim the value to remove any spaces before testing
 
-console.log(this.registerDto.matriculeFiscale);  // Log to check the value
 
 // Validate the matricule fiscale
 const matriculeFiscalePattern = /^[0-9]{7}[A-Z]{3}$/;
@@ -456,6 +513,16 @@ sendResetPasswordLink(): void {
 
   onCheckboxChange() {
   // This triggers Angular's change detection
+}
+
+
+filteredAdresses: string[] = [];
+
+search(event: any) {
+  const query = event.query.toLowerCase();
+  this.filteredAdresses = this.adresseOptions
+    .filter(addr => addr.label.toLowerCase().includes(query))
+    .map(addr => addr.label);
 }
 
 
