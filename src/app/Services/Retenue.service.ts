@@ -1,0 +1,53 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from './../Environments/environment';
+import { Retenue } from '../shared/Retenue';
+import { RetenueDto } from '../DTO/RetenueDto';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class RetenuesService {
+  private baseUrl = `${environment.apiBaseURL}/Retenues`;
+
+  constructor(private http: HttpClient) {}
+
+  createRetenue(retenue: RetenueDto): Observable<any> {
+    return this.http.post<any>(this.baseUrl, retenue, {
+      withCredentials: true
+    });
+  }
+
+  getRetenues(): Observable<RetenueDto[]> {
+    return this.http.get<RetenueDto[]>(this.baseUrl, {
+      withCredentials: true
+    });
+  }
+
+  getRetenueById(id: number): Observable<RetenueDto> {
+    return this.http.get<RetenueDto>(`${this.baseUrl}/${id}`, {
+      withCredentials: true
+    });
+  }
+
+  updateRetenue(id: number, retenue: RetenueDto): Observable<RetenueDto> {
+    return this.http.put<RetenueDto>(`${this.baseUrl}/${id}`, retenue, {
+      withCredentials: true
+    });
+  }
+
+  deleteRetenue(id: number): Observable<string> {
+    return this.http.delete(`${this.baseUrl}/${id}`, {
+      withCredentials: true,
+      responseType: 'text'
+    });
+  }
+
+  deleteRetenues(ids: number[]): Observable<string> {
+    return this.http.post(`${this.baseUrl}/batch-delete`, ids, {
+      withCredentials: true,
+      responseType: 'text'
+    });
+  }
+}

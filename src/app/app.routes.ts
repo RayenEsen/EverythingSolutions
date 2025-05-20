@@ -7,6 +7,8 @@ import { BanqueComponent } from './Banque/Banque.component';
 import { RetraitComponent } from './Retrait/Retrait.component';
 import { PrintTraiteComponent } from './PrintTraite/PrintTraite.component';
 import { ResetPasswordComponent } from './ResetPassword/ResetPassword.component';
+import { RetenueSourceComponent } from './RetenueSource/RetenueSource.component';
+import { PrintRetenueComponent } from './PrintRetenue/PrintRetenue.component';
 export const routes: Routes = [
 
   {
@@ -39,7 +41,18 @@ export const routes: Routes = [
     title: 'Détails Retrait',
     canActivate: [AuthGuard]
   },
-
+    {
+    path: 'Retenue',
+    component: RetenueSourceComponent,
+    title: 'Retenue a la source',
+    canActivate: [AuthGuard]
+  },
+      {
+    path: 'ImprimerRetenue/:id',
+    component: PrintRetenueComponent,
+    title: 'Imprimer Retenue a la source',
+    canActivate: [AuthGuard]
+  },
     {
     path: 'reset-password',
     component: ResetPasswordComponent,

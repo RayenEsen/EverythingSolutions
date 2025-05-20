@@ -1,0 +1,493 @@
+<p-toast />
+<div class="card">
+  <!-- Breadcrumb / Header -->
+  <div style="margin-bottom: 20px; font-size: 14px; font-weight: 500; color: #555;">
+    <a href="/" style="color: #4f46e5; text-decoration: none;">Accueil</a>
+    &nbsp; &gt; &nbsp;
+    <div style="position: absolute; top: 30px; right: 30px;">
+      <img src="https://i.ibb.co/Xfj86PzY/8a2a07a8-b6ca-4342-8173-14564dd9ab4e-removebg-preview-1-1.png" alt="Logo" width="60" height="60" />
+    </div>
+    <span>Imprimer Retenue à la source</span>
+  </div>
+
+  <div style="margin-bottom: 30px;">
+    <h2>Liste des Retenues</h2>
+    <p>Voici la liste des Retenues effectuées avec leurs détails.</p>
+  </div>
+
+  <div class="d-flex align-items-center justify-content-between p-2 bg-light text-dark border rounded mb-3">
+    <p-menubar [model]="items" />
+    <p-iconfield class="d-flex align-items-center">
+      <p-inputicon styleClass="pi pi-search" />
+      <input type="text" pInputText placeholder="Rechercher" class="form-control" />
+    </p-iconfield>
+  </div>
+
+  <p-contextMenu #cm [model]="items2" [appendTo]="'body'"></p-contextMenu>
+
+  <p-table 
+    #dt1
+    dataKey="id" 
+    [rows]="10" 
+    [rowsPerPageOptions]="[10, 25, 50]" 
+    [loading]="loading" 
+    [paginator]="true"
+    [filterDelay]="0"
+    selectionMode="single"
+    [contextMenu]="cm"
+    [globalFilterFields]="['numeroFacture', 'fournisseur']">
+
+    <ng-template #header>
+      <tr>
+        <th><p-tableHeaderCheckbox /></th>
+
+        <th>
+          Numero Facture
+          <p-columnFilter type="text" field="numeroFacture" display="menu" class="ml-auto"/>
+        </th>
+
+        <th>
+          Montant TTC
+          <p-columnFilter type="numeric" field="montantTTC" display="menu" class="ml-auto"/>
+        </th>
+
+        <th>
+          Type
+          <p-columnFilter type="text" field="type" display="menu" class="ml-auto"/>
+        </th>
+
+        <th>
+          Fournisseur
+          <p-columnFilter type="text" field="fournisseur" display="menu" class="ml-auto"/>
+        </th>
+
+        <th>
+          Date Creation
+          <p-columnFilter type="date" field="dateCreation" display="menu" class="ml-auto"/>
+        </th>
+
+        <th>
+          Retenue
+          <p-columnFilter type="numeric" field="retenue" display="menu" class="ml-auto"/>
+        </th>
+
+        <th>
+          Montant Net
+          <p-columnFilter type="numeric" field="montantNet" display="menu" class="ml-auto"/>
+        </th>
+
+        <th>Opérations</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-ret>
+      <tr [pContextMenuRow]="ret" style="cursor: pointer;">
+        <td><p-tableCheckbox [value]="ret" /></td>
+        <td>{{ ret.numeroFacture }}</td>
+        <td>{{ ret.montantTTC | number:'1.2-2' }} TND</td>
+        <td>{{ ret.type }}</td>
+        <td>{{ ret.fournisseur }}</td>
+        <td>{{ ret.dateCreation | date:'dd/MM/yyyy' }}</td>
+        <td>{{ ret.retenue | number:'1.2-2' }} TND</td>
+        <td>{{ ret.montantNet | number:'1.2-2' }} TND</td>
+        <td>
+          <i class="pi pi-eye hover-blue" style="font-size: 1.25rem; padding-left: 8px;"></i>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="100%" style="text-align: center;">
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+            <iframe 
+              src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie" 
+              width="200" 
+              height="200" 
+              frameborder="0" 
+              allow="autoplay; encrypted-media" 
+              allowfullscreen>
+            </iframe>
+            <div>Aucune Retenue trouvée.</div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p-drawer [(visible)]="AddRetenueInfo" header="Ajouter une Retenue" position="right" [style]="{width: '450px'}">
+  <div class="p-4">
+    <!-- Numéro de Facture -->
+    <div class="mb-3">
+      <label for="facture" class="form-label" style="color: #223167;">Numéro de Facture</label>
+      <input 
+        type="text" 
+        class="form-control" 
+        id="facture"
+        [(ngModel)]="AddRetenue.numeroFacture"
+        placeholder="Ex: FAC123456">
+      <div *ngIf="showNumeroFactureError" class="text-danger small mt-1">Le numéro de facture est requis</div>
+    </div>
+
+
+    <!-- Montant TTC -->
+    <div class="mb-3">
+      <label for="montantTTC" class="form-label">Montant TTC (TND)</label>
+      <p-inputNumber 
+        id="montantTTC" 
+        [(ngModel)]="AddRetenue.montantTTC"
+        mode="currency" 
+        currency="TND" 
+        locale="fr-FR"
+        [min]="0"
+        class="w-100"
+        inputStyleClass="form-control"
+        [showButtons]="true">
+      </p-inputNumber>
+      <div *ngIf="showMontantTTCError" class="text-danger small mt-1">Veuillez entrer un montant valide</div>
+    </div>
+
+<!-- Type -->
+<div class="mb-3 d-flex flex-column w-100">
+  <label for="type" class="form-label">Type</label>
+  <p-autoComplete 
+    class="w-100"
+    inputId="type"
+    [(ngModel)]="AddRetenue.type"
+    [suggestions]="filteredTypes"
+    (completeMethod)="filterTypes($event)"
+    [forceSelection]="true"
+    [dropdown]="true"
+    [style]="{'width':'100%'}"
+    placeholder="Ex: 1%, 10%, 15%">
+  </p-autoComplete>
+  <div *ngIf="showTypeError" class="text-danger small mt-1">Veuillez entrer un type valide</div>
+</div>
+
+
+
+    <!-- Fournisseur -->
+    <div class="mb-3">
+      <label for="fournisseur-autocomplete" class="form-label d-block mb-2">Fournisseur</label>
+      <div style="display: flex;">
+        <p-autocomplete 
+          id="fournisseur-autocomplete"
+          [(ngModel)]="selectedFournisseur"
+          [suggestions]="filteredFournisseurs"
+          (completeMethod)="filterFournisseurs($event)"
+          field="nom"
+          [dropdown]="true"
+          placeholder="Sélectionner un fournisseur"
+          class="d-block w-100">
+          <ng-template let-fournisseur pTemplate="item">
+            <div class="d-flex flex-column p-2">
+              <div><strong>{{ fournisseur.nom }}</strong></div>
+              <div class="small text-muted mt-1">
+                <i class="pi pi-phone me-1"></i>{{ fournisseur.telephone }}
+                <i class="pi pi-envelope ms-3 me-1"></i>{{ fournisseur.email }}
+              </div>
+              <div class="small text-muted mt-1">
+                <i class="pi pi-map-marker me-1"></i>{{ fournisseur.adresse }}
+              </div>
+            </div>
+          </ng-template>
+        </p-autocomplete>
+        <button type="button" pButton icon="pi pi-plus" class="p-button-rounded p-button" severity="secondary" [text]="true" (click)="toggleAddFournisseurInfo()"></button> 
+        <button type="button" pButton icon="pi pi-eye" class="p-button-rounded p-button" severity="secondary" [text]="true" (click)="toggleDialog()"></button> 
+      </div>
+      <div *ngIf="showFournisseurError" class="text-danger small mt-1">Veuillez sélectionner un fournisseur valide</div>
+    </div>
+  </div>
+
+        <!-- Action Buttons -->
+      <div class="d-flex justify-content-end gap-2 p-3 bg-light" style="position: absolute; bottom: 0; left: 0; width: 100%;">
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary"
+          (click)="AddRetenueInfo = false">
+          <i class="pi pi-times me-2"></i>Annuler
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-primary"
+          >
+          <i class="pi pi-check me-2"></i>Enregistrer
+        </button>
+      </div>
+
+</p-drawer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p-drawer [(visible)]="AddFournisseurInfo" header="Ajouter un Nouveau Fournisseur" position="right" [style]="{width: '450px'}">
+  <div class="p-4">
+    <div>
+      <div class="mb-3">
+        <label class="form-label">Nom du Fournisseur</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="FournisseurAjouter.nom"
+          name="fournisseurNom"
+          placeholder="Ex: Société ABC">
+        <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.nom">
+          Le nom du fournisseur est requis
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Email du Fournisseur</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="FournisseurAjouter.email"
+          name="fournisseurEmail"
+          placeholder="Ex: contact@abc.com">
+        <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.email">
+          L'email du fournisseur est requis
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Téléphone du Fournisseur</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="FournisseurAjouter.telephone"
+          name="fournisseurTelephone"
+          placeholder="Ex: +216 99 999 999">
+        <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.telephone">
+          Le téléphone du fournisseur est requis
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Adresse du Fournisseur</label>
+        <input 
+          type="text" 
+          class="form-control"
+          [(ngModel)]="FournisseurAjouter.adresse"
+          name="fournisseurAdresse"
+          placeholder="Ex: 12 Rue de Tunis">
+        <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.adresse">
+          L'adresse du fournisseur est requise
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="d-flex justify-content-end gap-2 p-3 bg-light" style="position: absolute; bottom: 0; left: 0; width: 100%;">
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary"
+          (click)="AddFournisseurInfo = false">
+          <i class="pi pi-times me-2"></i>Annuler
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-primary"
+          (click)="onSaveFournisseur()">
+          <i class="pi pi-check me-2"></i>Enregistrer
+        </button>
+      </div>
+    </div>
+  </div>
+</p-drawer>
+
+<p-dialog
+  header="Liste des Fournisseurs"
+  [(visible)]="displayFournisseurDialog"
+  [modal]="true"
+  [resizable]="false"
+  [maximizable]="true"
+  appendTo="body"
+  [style]="{ width: '75vw' }"
+  [contentStyle]="{ height: '350px' }"
+>
+  <p-table
+    #dt
+    [value]="fournisseursData"
+    dataKey="id"
+    [paginator]="true"
+    editMode="row" 
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="loading"
+    [scrollable]="true"
+    scrollHeight="flex"
+    [tableStyle]="{ 'min-width': '60rem' }"
+    [globalFilterFields]="['nom', 'email', 'telephone', 'adresse']"
+  >
+    <!-- Header -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 15rem">
+          Nom
+          <p-columnFilter type="text" field="nom" display="menu" class="ml-auto" />
+        </th>
+        <th style="width: 20rem">
+          Email
+          <p-columnFilter type="text" field="email" display="menu" class="ml-auto" />
+        </th>
+        <th style="width: 15rem">
+          Téléphone
+          <p-columnFilter type="text" field="telephone" display="menu" class="ml-auto" />
+        </th>
+        <th style="width: 25rem">
+          Adresse
+          <p-columnFilter type="text" field="adresse" display="menu" class="ml-auto" />
+        </th>
+        <th style="width: 10rem">Actions</th>
+      </tr>
+    </ng-template>
+
+    <!-- Body -->
+    <ng-template pTemplate="body" let-fournisseur let-editing="editing" let-ri="rowIndex">
+      <tr [pEditableRow]="fournisseur">
+            <td>
+      <p-cellEditor>
+        <ng-template pTemplate="input">
+          <input pInputText [(ngModel)]="fournisseur.nom" />
+        </ng-template>
+        <ng-template pTemplate="output">
+          {{ fournisseur.nom }}
+        </ng-template>
+      </p-cellEditor>
+    </td>
+       <td>
+      <p-cellEditor>
+        <ng-template pTemplate="input">
+          <input pInputText [(ngModel)]="fournisseur.email" />
+        </ng-template>
+        <ng-template pTemplate="output">
+          {{ fournisseur.email }}
+        </ng-template>
+      </p-cellEditor>
+    </td>
+         <td>
+      <p-cellEditor>
+        <ng-template pTemplate="input">
+          <input pInputText [(ngModel)]="fournisseur.telephone" />
+        </ng-template>
+        <ng-template pTemplate="output">
+          {{ fournisseur.telephone }}
+        </ng-template>
+      </p-cellEditor>
+            <td>
+      <p-cellEditor>
+        <ng-template pTemplate="input">
+          <input pInputText [(ngModel)]="fournisseur.adresse" />
+        </ng-template>
+        <ng-template pTemplate="output">
+          {{ fournisseur.adresse }}
+        </ng-template>
+      </p-cellEditor>
+    </td>
+        <td style="display: flex">
+ <div class="flex items-center justify-center gap-2">
+                    <button
+                        *ngIf="!editing"
+                        pButton
+                        pRipple
+                        type="button"
+                        pInitEditableRow
+                        icon="pi pi-pencil"
+                        text
+                        rounded
+                        severity="secondary"
+                    ></button>
+                    <button
+                        *ngIf="editing"
+                        pButton
+                        pRipple
+                        type="button"
+                        pSaveEditableRow
+                        icon="pi pi-check"
+                        text
+                        rounded
+                        severity="secondary"
+                    ></button>
+                    <button
+                        *ngIf="editing"
+                        pButton
+                        pRipple
+                        type="button"
+                        pCancelEditableRow
+                        icon="pi pi-times"
+                        text
+                        rounded
+                        severity="secondary"
+                    ></button>
+                </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!-- Empty Message -->
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5" class="text-center">
+          <div class="d-flex flex-column align-items-center justify-content-center w-100">
+            <iframe
+              src="https://lottie.host/embed/9001f2fe-ee47-47a4-bc9b-a4f3899d0d13/CoC7Gm9nvK.lottie"
+              width="200"
+              height="200"
+              frameborder="0"
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+            ></iframe>
+            <div>Aucun fournisseur trouvé.</div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Footer -->
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Fermer"
+      icon="pi pi-times"
+      (click)="displayFournisseurDialog = false"
+      class="p-button-text"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+
+
+
+
+ 

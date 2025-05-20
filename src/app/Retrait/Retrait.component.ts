@@ -21,7 +21,7 @@ import { FormsModule } from '@angular/forms';
 import { RetraiteLightDto } from '../DTO/RetraiteLightDto';
 import { Banque } from '../shared/Banque';
 import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
-import { Adresse } from '../shared/Adresse';
+
 import { Fournisseur } from '../shared/Fournisseur';
 import { AddRetraiteDTO } from '../DTO/AddRetrait';
 import { FournisseurService } from '../Services/Fournisseurs.service';
@@ -278,7 +278,6 @@ submitForm(data: any) {
     );
   }
   
-  selectedAddress: Adresse | null = null;
   filterFournisseurs(event: any) {
     const query = event.query.toLowerCase();
     this.filteredFournisseurs = this.fournisseursData.filter(fournisseur => 

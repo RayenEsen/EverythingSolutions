@@ -1,0 +1,96 @@
+.certificate-card {
+  background-color: #f3f4f6;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.certificate {
+  background: #fff;
+  padding: 40px;
+  width: 100%;
+  max-width: 1200px;
+  color: #000;
+  font-family: 'Calibri', sans-serif;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.certificate:hover {
+  transform: scale(1.005);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.header-left,
+.header-right {
+  width: 20%;
+}
+
+.header-left p {
+  margin: 4px 0;
+}
+
+.header-right {
+  text-align: left;
+}
+
+.header-right h2 {
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.section {
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th,
+td {
+  border: 1px solid #000;
+  padding: 6px;
+  text-align: center;
+}
+
+.no-border td {
+  border: none;
+  text-align: left;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+
+.print-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.print-btn:hover {
+  background-color: #e09a1d;
+  transform: scale(1.05);
+}
