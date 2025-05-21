@@ -2,9 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from './../Environments/environment';
-import { Retenue } from '../shared/Retenue';
 import { RetenueDto } from '../DTO/RetenueDto';
-
+import { AddRetenueDTO } from '../DTO/AddRetenue';
 @Injectable({
   providedIn: 'root'
 })
@@ -13,7 +12,7 @@ export class RetenuesService {
 
   constructor(private http: HttpClient) {}
 
-  createRetenue(retenue: RetenueDto): Observable<any> {
+  createRetenue(retenue: AddRetenueDTO): Observable<any> {
     return this.http.post<any>(this.baseUrl, retenue, {
       withCredentials: true
     });

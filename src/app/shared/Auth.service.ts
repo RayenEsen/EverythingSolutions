@@ -76,43 +76,46 @@ checkSession(): Observable<boolean> {
     );
   }
 
-  login(data: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.baseUrl}/Login`, data, {
-      withCredentials: true
-    }).pipe(
-      tap(response => {
-        if (response?.entreprise) {
-          localStorage.setItem('entrepriseInfo', JSON.stringify(response.entreprise));
-          localStorage.setItem('employeeId', response.entreprise.id.toString());
-        }
-        this.loggedIn.next(true);
-        this.lastCheckTime = Date.now();
-      }),
-      catchError(error => {
-        console.error('Login error', error);
-        this.loggedIn.next(false);
-        throw error;
-      })
-    );
-  }
-
-  logout(): void {
-    this.http.post(`${this.baseUrl}/Logout`, {}, {
-      withCredentials: true
-    }).subscribe({
-      next: () => {
-        this.loggedIn.next(false);
-        localStorage.removeItem('entrepriseInfo');
-        this.lastCheckTime = 0;
-      },
-      error: error => {
-        console.error('Logout error', error);
-        this.loggedIn.next(false);
-        localStorage.removeItem('entrepriseInfo');
-        this.lastCheckTime = 0;
+login(data: LoginRequest): Observable<LoginResponse> {
+  return this.http.post<LoginResponse>(`${this.baseUrl}/Login`, data, {
+    withCredentials: true
+  }).pipe(
+    tap(response => {
+      if (response?.entreprise) {
+        // Store only the entreprise object
+        localStorage.setItem('entrepriseInfo', JSON.stringify(response.entreprise));
       }
-    });
-  }
+
+      this.loggedIn.next(true);
+      this.lastCheckTime = Date.now();
+    }),
+    catchError(error => {
+      console.error('Login error', error);
+      this.loggedIn.next(false);
+      throw error;
+    })
+  );
+}
+
+
+logout(): Observable<any> {
+  return this.http.post(`${this.baseUrl}/Logout`, {}, {
+    withCredentials: true
+  }).pipe(
+    tap(() => {
+      this.loggedIn.next(false);
+      localStorage.removeItem('entrepriseInfo');
+      this.lastCheckTime = 0;
+    }),
+    catchError(error => {
+      console.error('Logout error', error);
+      this.loggedIn.next(false);
+      localStorage.removeItem('entrepriseInfo');
+      this.lastCheckTime = 0;
+      return of(null);
+    })
+  );
+}
 
   isAuthenticated(): boolean {
     return this.loggedIn.value;

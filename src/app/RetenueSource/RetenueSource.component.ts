@@ -47,7 +47,9 @@ export class RetenueSourceComponent implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private ServiceF : FournisseurService,
+    private router: Router,
   ) {}
+
 
 
   items2: any[] = [
@@ -117,6 +119,66 @@ showTypeError = false;
 showRetenueError = false;
 showMontantNetError = false;
 showFournisseurError = false;
+
+
+
+onSubmit() {
+  // Reset error flags
+  this.showNumeroFactureError = false;
+  this.showMontantTTCError = false;
+  this.showTypeError = false;
+  this.showFournisseurError = false;
+
+  let isValid = true;
+
+  // Validation checks
+  if (!this.AddRetenue.numeroFacture || this.AddRetenue.numeroFacture.trim() === '') {
+    this.showNumeroFactureError = true;
+    isValid = false;
+  }
+
+  if (this.AddRetenue.montantTTC === null || this.AddRetenue.montantTTC === undefined || this.AddRetenue.montantTTC <= 0) {
+    this.showMontantTTCError = true;
+    isValid = false;
+  }
+
+  if (!this.AddRetenue.type || this.AddRetenue.type.trim() === '') {
+    this.showTypeError = true;
+    isValid = false;
+  }
+
+  if (!this.selectedFournisseur || !this.selectedFournisseur.nom) {
+    this.showFournisseurError = true;
+    isValid = false;
+  }
+
+  if (isValid) {
+    // Prepare DTO
+    const retenueDto: AddRetenueDTO = {
+      ...this.AddRetenue,
+      fournisseurId: this.selectedFournisseur?.id ?? 0 // Adjust field name as needed
+    };
+
+    // Call API
+    this.retenuesService.createRetenue(retenueDto).subscribe({
+      next: (response) => {
+          this.messageService.add({
+          severity: 'success',
+          summary: 'Succès',
+          detail: 'Retenue ajoutée avec succès'
+        });
+        this.retenues.push(response)
+        this.AddRetenueInfo = false; // Close drawer
+        // Optionally reset form or show success message
+      },
+      error: (err) => {
+        console.error('Error creating retenue:', err);
+        // Optionally show error notification
+      }
+    });
+  }
+}
+
 
 displayFournisseurDialog = false;
 
@@ -230,6 +292,12 @@ filterTypes(event: any) {
 
 
 dialogVisible: boolean = false;
+
+viewRetenue(id: number) {
+  this.router.navigate(['/ImprimerRetenue', id]);
+}
+
+
 
 
 

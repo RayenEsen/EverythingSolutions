@@ -28,12 +28,14 @@
   <p-table 
     #dt1
     dataKey="id" 
+    [value]="retenues"
     [rows]="10" 
     [rowsPerPageOptions]="[10, 25, 50]" 
     [loading]="loading" 
     [paginator]="true"
     [filterDelay]="0"
     selectionMode="single"
+    values = Retenue
     [contextMenu]="cm"
     [globalFilterFields]="['numeroFacture', 'fournisseur']">
 
@@ -86,13 +88,18 @@
         <td>{{ ret.numeroFacture }}</td>
         <td>{{ ret.montantTTC | number:'1.2-2' }} TND</td>
         <td>{{ ret.type }}</td>
-        <td>{{ ret.fournisseur }}</td>
+        <td>{{ ret.fournisseurNom }}</td>
         <td>{{ ret.dateCreation | date:'dd/MM/yyyy' }}</td>
         <td>{{ ret.retenue | number:'1.2-2' }} TND</td>
         <td>{{ ret.montantNet | number:'1.2-2' }} TND</td>
         <td>
-          <i class="pi pi-eye hover-blue" style="font-size: 1.25rem; padding-left: 8px;"></i>
+          <i 
+            class="pi pi-eye hover-blue" 
+            style="font-size: 1.25rem; padding-left: 8px; cursor: pointer;" 
+            (click)="viewRetenue(ret.id)">
+          </i>
         </td>
+
       </tr>
     </ng-template>
 
@@ -230,6 +237,7 @@
         <button 
           type="button" 
           class="btn btn-primary"
+          (click)="onSubmit()"
           >
           <i class="pi pi-check me-2"></i>Enregistrer
         </button>

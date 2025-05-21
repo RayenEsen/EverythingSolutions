@@ -15,13 +15,12 @@ export class NavbarComponent implements OnInit {
   }
 
 
-  logout(): void {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.removeItem('jwtToken');
-      // Navigate after removing the token
-      this.router.navigate(['/login']);
-    }
-  }
+logout(): void {
+  this.authService.logout().subscribe(() => {
+    this.router.navigate(['/login']);
+  });
+}
+
   
   
   

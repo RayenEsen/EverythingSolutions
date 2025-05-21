@@ -1,4 +1,4 @@
-<div class="certificate-card" style="margin-top: 150px; margin-bottom: 100px;">
+<div class="certificate-card" >
   <div class="certificate">
     <div class="header">
       <div class="header-left">
@@ -8,8 +8,8 @@
       </div>
       <div class="header-right">
         <h2>CERTIFICAT DE RETENUE D'IMPÔT<br />SUR LE REVENU<br />OU D'IMPÔT SUR LES SOCIÉTÉS</h2>
-        <p>Retenue effectuée le : 25/05/2017</p>
-        <p>ou pendant</p>
+        <p>Retenue effectuée le : {{ retenue.dateCreation | date: 'dd/MM/yyyy' }}</p>
+        <p style="margin-top: -15px;">ou pendant</p>
       </div>
     </div>
 
@@ -23,46 +23,47 @@
           <td>N° Etab. secondaire</td>
         </tr>
         <tr>
-          <td>1447045A</td>
+          <td>{{ stored?.matriculeFiscale }}</td>
           <td>A</td>
           <td>M</td>
           <td>0 0 0</td>
-        </tr>
+        </tr> 
       </table>
-      <p><strong>Dénomination :</strong> SOCIETE SMART ELECTRIC</p>
-      <p><strong>Adresse :</strong> N°52 AL Ain, 3042 Sfax</p>
+      <p style="padding-top: 15px;">Dénomination de la personne ou de l'organisme payeur : <strong>{{ stored.nomSociete }}</strong></p>
+      <p><strong>Adresse :</strong> {{ stored?.adresseEntreprise }} </p>
     </div>
 
     <div class="section">
       <h4>B - RETENUE EFFECTUÉES SUR :</h4>
-      <table>
+      <table >
         <tr>
-          <th>Nature</th>
+          <th class="SecondTable">Nature</th>
           <th>Montant Brut</th>
-          <th>Retenue (1,5%)</th>
+          <th>Retenue ({{retenue.type}})</th>
           <th>Montant Net</th>
         </tr>
         <tr>
-          <td>* Retenue à la source au titre de marché FACTURE 0000303</td>
-          <td>1008.502</td>
-          <td>15.128</td>
-          <td>993.374</td>
+          <td class="SecondTable">* Retenue à la source au titre de marché FACTURE {{retenue.numeroFacture}}</td>
+          <td>{{ retenue.montantTTC }}</td>
+          <td>{{ retenue.retenueMontant }}</td>
+          <td>{{ retenue.montantNet }}</td>
         </tr>
-        <tr><td>Redevances</td><td></td><td></td><td></td></tr>
-        <tr><td>Revenus des comptes spéciaux d'épargne...</td><td></td><td></td><td></td></tr>
-        <tr><td>Revenus des capitaux mobiliers</td><td></td><td></td><td></td></tr>
-        <tr><td>Revenus des bons de caisse au porteur</td><td></td><td></td><td></td></tr>
+        <tr ><td class="SecondTable">Redevances</td><td></td><td></td><td></td></tr>
+        <tr><td class="SecondTable">Revenus des comptes spéciaux d'épargnes ouverts auprés des banques</td><td></td><td></td><td></td></tr>
+        <tr><td class="SecondTable">Revenus des capitaux mobiliers</td><td></td><td></td><td></td></tr>
+        <tr><td class="SecondTable">Revenus des bons de caisse au porteur</td><td></td><td></td><td></td></tr>
         <tr>
-          <td><strong>Total Général</strong></td>
-          <td><strong>1008.502</strong></td>
-          <td><strong>15.128</strong></td>
-          <td><strong>993.374</strong></td>
+          <td class="SecondTable"><strong>Total Général</strong></td>
+          <td><strong>{{ retenue.montantTTC }}</strong></td>
+          <td><strong>{{ retenue.retenueMontant }}</strong></td>
+          <td><strong>{{ retenue.montantNet }}</strong></td>
         </tr>
       </table>
     </div>
 
     <div class="section">
       <h4>C - BÉNÉFICIAIRE</h4>
+      <p>Numero de la carte d'identite ou matricule fiscal</p>
       <table>
         <tr>
           <td>Matricule fiscal</td>
@@ -71,19 +72,21 @@
           <td>N° Etab. secondaire</td>
         </tr>
         <tr>
-          <td>1011267V</td>
+          <td>{{retenue.numeroFacture}}</td>
           <td>A</td>
           <td>M</td>
           <td>0</td>
         </tr>
       </table>
-      <p><strong>Nom, prénom ou raison sociale :</strong> V2 TUNISIE<br />47, Rue El Moez, El manzah, 1004 Tunis</p>
+      <p style="padding-top: 10px;"><strong>Nom, prénom ou raison sociale :</strong> {{retenue.fournisseurNom}} <br />{{retenue.fournisseurAdresse}} </p>
     </div>
+    <hr>
+          <p style="text-align: center;">Je soussigné, certifie exacts les renseignements figurant sur le présent certificat et m'expose aux sanctions prévues par la loi pour toute inexactitude.</p>
 
-    <div class="footer">
-      <div>
-        <p>A Sfax</p>
-        <p>25/05/2017</p>
+    <div class="footer" >
+      <div style="display: flex;">
+        <p style="padding-right: 30px;">A {{ stored?.adresseEntreprise }}</p>
+        <p>{{ retenue.dateCreation | date: 'dd/MM/yyyy' }}</p>
       </div>
       <div>
         <p>Cachet et signature</p>

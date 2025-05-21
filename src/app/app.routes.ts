@@ -38,7 +38,7 @@ export const routes: Routes = [
   {
     path: 'RetraitDetails/:id',
     component: PrintTraiteComponent,
-    title: 'Détails Retrait',
+    title: 'Imprimer Trait',
     canActivate: [AuthGuard]
   },
     {
