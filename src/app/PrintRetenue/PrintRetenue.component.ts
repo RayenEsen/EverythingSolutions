@@ -39,7 +39,6 @@ export class PrintRetenueComponent implements OnInit {
         }
       });
     }
-
   }
 
 

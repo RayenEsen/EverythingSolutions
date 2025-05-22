@@ -1,0 +1,45 @@
+<div class="d-flex flex-column justify-content-center align-items-center text-center min-vh-100 bg-light px-5 py-5">
+  <iframe
+    src="https://lottie.host/embed/c46a4616-85bf-4c20-a47e-0104335a1c6b/3Dr9iUWCDC.lottie"
+    style="width: 300px; height: 300px; border: none;"
+    class="mb-4"
+  ></iframe>
+
+  <h1 class="display-3 fw-bold mb-3 text-dark">Bientôt disponible</h1>
+  <p class="text-muted fs-4 mb-4">Nous lançons notre site dans quelques jours. Le compte à rebours a commencé.</p>
+
+  <div class="d-flex justify-content-center flex-wrap gap-5 mb-5 fs-4">
+    <div>
+      <h2 class="fw-bold">{{ days }}</h2>
+      <span class="text-muted">Jours</span>
+    </div>
+    <div>
+      <h2 class="fw-bold">{{ hours }}</h2>
+      <span class="text-muted">Heures</span>
+    </div>
+    <div>
+      <h2 class="fw-bold">{{ minutes }}</h2>
+      <span class="text-muted">Minutes</span>
+    </div>
+    <div>
+      <h2 class="fw-bold">{{ seconds }}</h2>
+      <span class="text-muted">Secondes</span>
+    </div>
+  </div>
+
+  <form class="w-100" style="max-width: 600px;">
+    <div class="input-group input-group-lg">
+      <input
+        type="email"
+        class="form-control rounded-start-pill"
+        placeholder="Entrez votre adresse e-mail"
+        required
+      />
+      <button class="btn btn-warning rounded-end-pill px-4" type="submit">
+        Me notifier
+      </button>
+    </div>
+  </form>
+
+  <p class="text-muted mt-4 small">Nous vous enverrons un e-mail dès que nous serons en ligne.</p>
+</div>

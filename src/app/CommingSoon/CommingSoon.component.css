@@ -1,0 +1,6 @@
+/* Ajoute de l’espace top et bottom */
+:host {
+  display: block;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}

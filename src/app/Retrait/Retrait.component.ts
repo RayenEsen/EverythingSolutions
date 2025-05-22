@@ -247,7 +247,7 @@ validateForm() {
 }
 
 submitForm(data: any) {
-
+    data.entrepriseId =  this.stored?.id;
    // Call the service to create the Retraite
    this.ServiceR.createRetraite(data).subscribe(
     (response) => {
@@ -336,10 +336,11 @@ banque : Banque = new Banque();
 
 
 
-
+stored = JSON.parse(localStorage.getItem('entrepriseInfo') || '{}');
 AddBanque() {
-this.banque.entrepriseId = +(localStorage.getItem('employeeId') ?? 0);
-
+const entrepriseId = this.stored?.id
+this.banque.entrepriseId = entrepriseId;
+console.log(this.banque)
   this.ServiceB.create(this.banque).subscribe(
     (response) => {
       // Ajout à la liste
@@ -358,7 +359,7 @@ this.banque.entrepriseId = +(localStorage.getItem('employeeId') ?? 0);
         nom: '',
         adresse: '',
         rib: '',
-        entrepriseId: +(localStorage.getItem('employeeId') ?? 0)
+        entrepriseId: 0
       };
 
       // Fermer le drawer
@@ -394,29 +395,49 @@ onSaveBanque() {
 
 
 showFournisseurErrors = {
+  matriculeFournisseur: '', // 'empty' | 'invalid' | ''
   nom: false,
   email: false,
   telephone: false,
   adresse: false
 };
+
 validateFournisseurForm(): boolean {
   const f = this.FournisseurAjouter;
+  const matricule = f.matriculeFournisseur?.trim() || '';
+  const matriculeRegex = /^[0-9]{7}[A-Z]{3}$/;
+
+  if (!matricule) {
+    this.showFournisseurErrors.matriculeFournisseur = 'empty';
+  } else if (!matriculeRegex.test(matricule)) {
+    this.showFournisseurErrors.matriculeFournisseur = 'invalid';
+  } else {
+    this.showFournisseurErrors.matriculeFournisseur = '';
+  }
 
   this.showFournisseurErrors.nom = !f.nom?.trim();
   this.showFournisseurErrors.email = !f.email?.trim();
   this.showFournisseurErrors.telephone = !f.telephone?.trim();
   this.showFournisseurErrors.adresse = !f.adresse?.trim();
 
-  return !(this.showFournisseurErrors.nom || this.showFournisseurErrors.email || this.showFournisseurErrors.telephone || this.showFournisseurErrors.adresse);
+  return !(
+    this.showFournisseurErrors.matriculeFournisseur ||
+    this.showFournisseurErrors.nom ||
+    this.showFournisseurErrors.email ||
+    this.showFournisseurErrors.telephone ||
+    this.showFournisseurErrors.adresse
+  );
 }
+
 onSaveFournisseur() {
   if (this.validateFournisseurForm()) {
     this.AddFournisseur();
   }
 }
+  
 
 AddFournisseur() {
-  const entrepriseId = +(localStorage.getItem('employeeId') ?? 0);
+  const entrepriseId = this.stored?.id
   this.FournisseurAjouter.entrepriseId = entrepriseId;
 
   this.ServiceF.create(this.FournisseurAjouter).subscribe(
@@ -437,6 +458,7 @@ AddFournisseur() {
         email: '',
         telephone: '',
         adresse: '',
+        matriculeFournisseur: '',
         entrepriseId: entrepriseId,
       };
 
@@ -481,7 +503,7 @@ openMenu(event: Event, fournisseur: Fournisseur, menu: any) {
   menu.toggle(event);
 }
 
-selectedFournisseurToDelete: Fournisseur | null = null;
+selectedFournisseurToDelete: Fournisseur = new Fournisseur()
 ConfirmFournisseurDialog: boolean = false;
 // Pour les fournisseurs
 confirmDeleteFournisseur(fournisseur: Fournisseur) {
@@ -497,7 +519,7 @@ confirmDeleteFournisseur(fournisseur: Fournisseur) {
     acceptLabel: 'Supprimer',
     rejectLabel: 'Annuler',
     accept: () => {
-      this.ServiceF.delete(fournisseur.id).subscribe({
+      this.ServiceF.delete(this.selectedFournisseurToDelete.id).subscribe({
         next: () => {
           this.loadTraites(); // Reload the list of retraites
           this.messageService.add({
@@ -754,6 +776,17 @@ onRowEditInitFournisseur(fournisseur: Fournisseur) {
 }
 
 onRowEditSaveFournisseur(fournisseur: Fournisseur) {
+  const matriculeRegex = /^[0-9]{7}[A-Z]{3}$/;
+
+  if (!matriculeRegex.test(fournisseur.matriculeFournisseur || '')) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Format invalide',
+      detail: 'Le matricule doit être au format 1234567ABC',
+    });
+    return;
+  }
+
   this.ServiceF.update(fournisseur.id, fournisseur).subscribe({
     next: () => {
       this.messageService.add({
@@ -771,6 +804,7 @@ onRowEditSaveFournisseur(fournisseur: Fournisseur) {
     },
   });
 }
+
 
 onRowEditCancelFournisseur(fournisseur: Fournisseur, index: number) {
   // Optional: restore original from clone

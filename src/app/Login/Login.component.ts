@@ -201,6 +201,17 @@ if (!this.captchaToken) {
   return;
 }
 
+  // Check if adresseComplete is filled
+  if (!this.registerDto.adresseComplete || this.registerDto.adresseComplete.trim() === '') {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Adresse complète manquante',
+      detail: 'Veuillez remplir l’adresse complète.',
+      life: 3000
+    });
+    return;
+  }
+
 // Check if adresse is selected
 if (!this.registerDto.adresseEntreprise || this.registerDto.adresseEntreprise.trim() === '') {
   this.messageService.add({

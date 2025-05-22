@@ -88,7 +88,14 @@
         <td>{{ ret.numeroFacture }}</td>
         <td>{{ ret.montantTTC | number:'1.2-2' }} TND</td>
         <td>{{ ret.type }}</td>
-        <td>{{ ret.fournisseurNom }}</td>
+     <td>
+  <p-tag 
+    severity="info" 
+    value="{{ ret.fournisseurNom }}" 
+    styleClass="px-2 py-1 text-sm">
+  </p-tag>
+</td>
+
         <td>{{ ret.dateCreation | date:'dd/MM/yyyy' }}</td>
         <td>{{ ret.retenue | number:'1.2-2' }} TND</td>
         <td>{{ ret.montantNet | number:'1.2-2' }} TND</td>
@@ -144,17 +151,24 @@
 
 <p-drawer [(visible)]="AddRetenueInfo" header="Ajouter une Retenue" position="right" [style]="{width: '450px'}">
   <div class="p-4">
-    <!-- Numéro de Facture -->
-    <div class="mb-3">
-      <label for="facture" class="form-label" style="color: #223167;">Numéro de Facture</label>
-      <input 
-        type="text" 
-        class="form-control" 
-        id="facture"
-        [(ngModel)]="AddRetenue.numeroFacture"
-        placeholder="Ex: FAC123456">
-      <div *ngIf="showNumeroFactureError" class="text-danger small mt-1">Le numéro de facture est requis</div>
-    </div>
+<!-- Numéro de Facture -->
+<div class="mb-3">
+  <label for="facture" class="form-label" style="color: #223167;">Numéro de Facture</label>
+  <input 
+    type="text" 
+    class="form-control" 
+    id="facture"
+    [(ngModel)]="AddRetenue.numeroFacture"
+    placeholder="Ex: 1234567ABC">
+  
+  <div *ngIf="showNumeroFactureError && !AddRetenue.numeroFacture" class="text-danger small mt-1">
+    Le numéro de facture est requis
+  </div>
+  <div *ngIf="showNumeroFactureError && AddRetenue.numeroFacture" class="text-danger small mt-1">
+    Format invalide. Utilisez 7 chiffres suivis de 3 lettres majuscules (Ex: 1234567ABC)
+  </div>
+</div>
+
 
 
     <!-- Montant TTC -->
@@ -262,6 +276,28 @@
 <p-drawer [(visible)]="AddFournisseurInfo" header="Ajouter un Nouveau Fournisseur" position="right" [style]="{width: '450px'}">
   <div class="p-4">
     <div>
+
+      <!-- ✅ Matricule Fournisseur -->
+<div class="mb-3">
+  <label class="form-label">Matricule du Fournisseur</label>
+  <input 
+    type="text" 
+    class="form-control"
+    [(ngModel)]="FournisseurAjouter.matriculeFournisseur"
+    name="fournisseurMatricule"
+    placeholder="Ex: 1234567ABC">
+  
+  <!-- Erreur si vide -->
+  <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.matriculeFournisseur === 'empty'">
+    Le matricule du fournisseur est requis
+  </div>
+
+  <!-- Erreur si format incorrect -->
+  <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.matriculeFournisseur === 'invalid'">
+    Le matricule doit être au format 1234567ABC (7 chiffres + 3 lettres majuscules)
+  </div>
+</div>
+
       <div class="mb-3">
         <label class="form-label">Nom du Fournisseur</label>
         <input 
@@ -361,6 +397,10 @@
     <ng-template pTemplate="header">
       <tr>
         <th style="width: 15rem">
+          Matricule
+          <p-columnFilter type="text" field="matriculeFournisseur" display="menu" class="ml-auto" />
+        </th>
+        <th style="width: 15rem">
           Nom
           <p-columnFilter type="text" field="nom" display="menu" class="ml-auto" />
         </th>
@@ -383,6 +423,17 @@
     <!-- Body -->
     <ng-template pTemplate="body" let-fournisseur let-editing="editing" let-ri="rowIndex">
       <tr [pEditableRow]="fournisseur">
+
+      <td>
+      <p-cellEditor>
+        <ng-template pTemplate="input">
+          <input pInputText [(ngModel)]="fournisseur.matriculeFournisseur" />
+        </ng-template>
+        <ng-template pTemplate="output">
+          {{ fournisseur.matriculeFournisseur }}
+        </ng-template>
+      </p-cellEditor>
+    </td>
             <td>
       <p-cellEditor>
         <ng-template pTemplate="input">

@@ -20,8 +20,11 @@ export class PrintTraiteComponent implements OnInit {
     private route: ActivatedRoute,
     private retraitesService: RetraitesService
   ) { }
+  
+  stored = JSON.parse(localStorage.getItem('entrepriseInfo') || '{}');
 
 ngOnInit(): void {
+  
   const id = Number(this.route.snapshot.paramMap.get('id'));
   if (id) {
     this.retraitesService.getRetraiteById(id).subscribe({

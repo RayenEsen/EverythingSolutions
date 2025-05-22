@@ -9,6 +9,7 @@ import { PrintTraiteComponent } from './PrintTraite/PrintTraite.component';
 import { ResetPasswordComponent } from './ResetPassword/ResetPassword.component';
 import { RetenueSourceComponent } from './RetenueSource/RetenueSource.component';
 import { PrintRetenueComponent } from './PrintRetenue/PrintRetenue.component';
+import { CommingSoonComponent } from './CommingSoon/CommingSoon.component';
 export const routes: Routes = [
 
   {
@@ -54,9 +55,16 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
     {
+    path: 'CommingSoon',
+    component: CommingSoonComponent,
+    title: 'Bientôt disponible Soon',
+    canActivate: [AuthGuard]
+  },
+      {
     path: 'reset-password',
     component: ResetPasswordComponent,
     title: 'Réinitialiser le mot de passe'
   }
+
 
 ];

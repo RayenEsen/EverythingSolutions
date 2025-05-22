@@ -131,13 +131,19 @@ onSubmit() {
 
   let isValid = true;
 
+  const numeroFactureRegex = /^[0-9]{7}[A-Z]{3}$/;
+
   // Validation checks
-  if (!this.AddRetenue.numeroFacture || this.AddRetenue.numeroFacture.trim() === '') {
+  if (!this.AddRetenue.numeroFacture || !numeroFactureRegex.test(this.AddRetenue.numeroFacture.trim())) {
     this.showNumeroFactureError = true;
     isValid = false;
   }
 
-  if (this.AddRetenue.montantTTC === null || this.AddRetenue.montantTTC === undefined || this.AddRetenue.montantTTC <= 0) {
+  if (
+    this.AddRetenue.montantTTC === null ||
+    this.AddRetenue.montantTTC === undefined ||
+    this.AddRetenue.montantTTC <= 0
+  ) {
     this.showMontantTTCError = true;
     isValid = false;
   }
@@ -156,24 +162,22 @@ onSubmit() {
     // Prepare DTO
     const retenueDto: AddRetenueDTO = {
       ...this.AddRetenue,
-      fournisseurId: this.selectedFournisseur?.id ?? 0 // Adjust field name as needed
+      fournisseurId: this.selectedFournisseur?.id ?? 0
     };
 
     // Call API
     this.retenuesService.createRetenue(retenueDto).subscribe({
       next: (response) => {
-          this.messageService.add({
+        this.messageService.add({
           severity: 'success',
           summary: 'Succès',
           detail: 'Retenue ajoutée avec succès'
         });
-        this.retenues.push(response)
+        this.retenues.push(response);
         this.AddRetenueInfo = false; // Close drawer
-        // Optionally reset form or show success message
       },
       error: (err) => {
         console.error('Error creating retenue:', err);
-        // Optionally show error notification
       }
     });
   }
@@ -214,24 +218,54 @@ toggleDialog(): void {
   }
   
 
-  showFournisseurErrors = {
+showFournisseurErrors = {
+  matriculeFournisseur: '', // 'empty' | 'invalid' | ''
   nom: false,
   email: false,
   telephone: false,
   adresse: false
 };
+
 FournisseurAjouter : Fournisseur = new Fournisseur();
 
 validateFournisseurForm(): boolean {
   const f = this.FournisseurAjouter;
+  const matricule = f.matriculeFournisseur?.trim() || '';
+  const matriculeRegex = /^[0-9]{7}[A-Z]{3}$/;
+
+  if (!matricule) {
+    this.showFournisseurErrors.matriculeFournisseur = 'empty';
+  } else if (!matriculeRegex.test(matricule)) {
+    this.showFournisseurErrors.matriculeFournisseur = 'invalid';
+  } else {
+    this.showFournisseurErrors.matriculeFournisseur = '';
+  }
 
   this.showFournisseurErrors.nom = !f.nom?.trim();
   this.showFournisseurErrors.email = !f.email?.trim();
   this.showFournisseurErrors.telephone = !f.telephone?.trim();
   this.showFournisseurErrors.adresse = !f.adresse?.trim();
 
-  return !(this.showFournisseurErrors.nom || this.showFournisseurErrors.email || this.showFournisseurErrors.telephone || this.showFournisseurErrors.adresse);
+  return !(
+    this.showFournisseurErrors.matriculeFournisseur ||
+    this.showFournisseurErrors.nom ||
+    this.showFournisseurErrors.email ||
+    this.showFournisseurErrors.telephone ||
+    this.showFournisseurErrors.adresse
+  );
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 onSaveFournisseur() {
   if (this.validateFournisseurForm()) {
@@ -261,6 +295,7 @@ AddFournisseur() {
         email: '',
         telephone: '',
         adresse: '',
+        matriculeFournisseur: '', // Ajout du champ requis
         entrepriseId: entrepriseId,
       };
 

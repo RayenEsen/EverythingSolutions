@@ -7,8 +7,7 @@ export class Fournisseur {
   email: string | null = '';
   telephone: string | null = '';
   adresse: string | null = '';
+  matriculeFournisseur: string  = ''; // ➕ Nouveau champ
 
-  // One-to-many relationship with Entreprise
   entrepriseId: number = 0;
-
 }

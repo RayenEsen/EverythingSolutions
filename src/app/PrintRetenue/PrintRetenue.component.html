@@ -23,43 +23,61 @@
           <td>N° Etab. secondaire</td>
         </tr>
         <tr>
-          <td>{{ stored?.matriculeFiscale }}</td>
-          <td>A</td>
-          <td>M</td>
+          <td>{{ stored?.matriculeFiscale?.slice(0, 8) }}</td>  <!-- 1234567A -->
+          <td>{{ stored?.matriculeFiscale?.charAt(8) }}</td>    <!-- B -->
+          <td>{{ stored?.matriculeFiscale?.charAt(9) }}</td>    <!-- C -->
           <td>0 0 0</td>
         </tr> 
       </table>
       <p style="padding-top: 15px;">Dénomination de la personne ou de l'organisme payeur : <strong>{{ stored.nomSociete }}</strong></p>
-      <p><strong>Adresse :</strong> {{ stored?.adresseEntreprise }} </p>
+      <p><strong>Adresse :</strong> {{ stored?.adresseComplete }} </p>
     </div>
 
-    <div class="section">
-      <h4>B - RETENUE EFFECTUÉES SUR :</h4>
-      <table >
-        <tr>
-          <th class="SecondTable">Nature</th>
-          <th>Montant Brut</th>
-          <th>Retenue ({{retenue.type}})</th>
-          <th>Montant Net</th>
-        </tr>
-        <tr>
-          <td class="SecondTable">* Retenue à la source au titre de marché FACTURE {{retenue.numeroFacture}}</td>
-          <td>{{ retenue.montantTTC }}</td>
-          <td>{{ retenue.retenueMontant }}</td>
-          <td>{{ retenue.montantNet }}</td>
-        </tr>
-        <tr ><td class="SecondTable">Redevances</td><td></td><td></td><td></td></tr>
-        <tr><td class="SecondTable">Revenus des comptes spéciaux d'épargnes ouverts auprés des banques</td><td></td><td></td><td></td></tr>
-        <tr><td class="SecondTable">Revenus des capitaux mobiliers</td><td></td><td></td><td></td></tr>
-        <tr><td class="SecondTable">Revenus des bons de caisse au porteur</td><td></td><td></td><td></td></tr>
-        <tr>
-          <td class="SecondTable"><strong>Total Général</strong></td>
-          <td><strong>{{ retenue.montantTTC }}</strong></td>
-          <td><strong>{{ retenue.retenueMontant }}</strong></td>
-          <td><strong>{{ retenue.montantNet }}</strong></td>
-        </tr>
-      </table>
-    </div>
+<div class="section">
+  <h4>B - RETENUE EFFECTUÉES SUR :</h4>
+  <table>
+    <tr>
+      <th class="SecondTable">Nature</th>
+      <th>Montant Brut</th>
+      <th>Retenue ({{ retenue.type }})</th>
+      <th>Montant Net</th>
+    </tr>
+
+    <!-- 1% → Ligne 1 -->
+    <tr>
+      <td class="SecondTable">* Retenue à la source au titre de marché FACTURE {{ retenue.numeroFacture }}</td>
+      <td>{{ retenue.type == '1%' ? retenue.montantTTC : '' }}</td>
+      <td>{{ retenue.type == '1%' ? retenue.retenueMontant : '' }}</td>
+      <td>{{ retenue.type == '1%' ? retenue.montantNet : '' }}</td>
+    </tr>
+
+    <!-- 15% → Ligne 2 -->
+    <tr>
+      <td class="SecondTable">Redevances - Honoraire</td>
+      <td>{{ retenue.type == '15%' ? retenue.montantTTC : '' }}</td>
+      <td>{{ retenue.type == '15%' ? retenue.retenueMontant : '' }}</td>
+      <td>{{ retenue.type == '15%' ? retenue.montantNet : '' }}</td>
+    </tr>
+
+    <!-- 10% → Ligne 4 -->
+    <tr>
+      <td class="SecondTable">Revenus des comptes spéciaux d'épargnes ouverts auprés des banques</td>
+      <td>{{ retenue.type == '10%' ? retenue.montantTTC : '' }}</td>
+      <td>{{ retenue.type == '10%' ? retenue.retenueMontant : '' }}</td>
+      <td>{{ retenue.type == '10%' ? retenue.montantNet : '' }}</td>
+    </tr>
+
+    <!-- Totals -->
+    <tr>
+      <td class="SecondTable"><strong>Total Général</strong></td>
+      <td><strong>{{ retenue.montantTTC }}</strong></td>
+      <td><strong>{{ retenue.retenueMontant }}</strong></td>
+      <td><strong>{{ retenue.montantNet }}</strong></td>
+    </tr>
+  </table>
+</div>
+
+
 
     <div class="section">
       <h4>C - BÉNÉFICIAIRE</h4>
@@ -72,10 +90,10 @@
           <td>N° Etab. secondaire</td>
         </tr>
         <tr>
-          <td>{{retenue.numeroFacture}}</td>
-          <td>A</td>
-          <td>M</td>
-          <td>0</td>
+        <td>{{ retenue.fournisseurMatricule?.substring(0, 8) }}</td>
+        <td>{{ retenue.fournisseurMatricule?.charAt(8) }}</td>
+        <td>{{ retenue.fournisseurMatricule?.charAt(9) }}</td>
+        <td>0 0 0</td>
         </tr>
       </table>
       <p style="padding-top: 10px;"><strong>Nom, prénom ou raison sociale :</strong> {{retenue.fournisseurNom}} <br />{{retenue.fournisseurAdresse}} </p>
@@ -88,9 +106,8 @@
         <p style="padding-right: 30px;">A {{ stored?.adresseEntreprise }}</p>
         <p>{{ retenue.dateCreation | date: 'dd/MM/yyyy' }}</p>
       </div>
-      <div>
         <p>Cachet et signature</p>
-      </div>
+        <p style="text-align: right;">Décharge Bénéficiaire</p>
     </div>
       <div style="text-align: center; margin-top: 30px;">
     <button onclick="window.print()" class="print-btn">Imprimer</button>

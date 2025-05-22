@@ -412,6 +412,28 @@
 <p-drawer [(visible)]="AddFournisseurInfo" header="Ajouter un Nouveau Fournisseur" position="right" [style]="{width: '450px'}">
   <div class="p-4">
     <div>
+      <!-- ✅ Matricule Fournisseur -->
+<div class="mb-3">
+  <label class="form-label">Matricule du Fournisseur</label>
+  <input 
+    type="text" 
+    class="form-control"
+    [(ngModel)]="FournisseurAjouter.matriculeFournisseur"
+    name="fournisseurMatricule"
+    placeholder="Ex: 1234567ABC">
+  
+  <!-- Erreur si vide -->
+  <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.matriculeFournisseur === 'empty'">
+    Le matricule du fournisseur est requis
+  </div>
+
+  <!-- Erreur si format incorrect -->
+  <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.matriculeFournisseur === 'invalid'">
+    Le matricule doit être au format 1234567ABC (7 chiffres + 3 lettres majuscules)
+  </div>
+</div>
+
+
       <div class="mb-3">
         <label class="form-label">Nom du Fournisseur</label>
         <input 
@@ -483,6 +505,7 @@
   </div>
 </p-drawer>
 
+
 <p-dialog
   header="Liste des Fournisseurs"
   [(visible)]="dialogVisible"
@@ -510,6 +533,10 @@
     <!-- Header -->
     <ng-template pTemplate="header">
       <tr>
+          <th style="width: 15rem">
+          Matricule
+          <p-columnFilter type="text" field="matriculeFournisseur" display="menu" class="ml-auto" />
+        </th>
         <th style="width: 15rem">
           Nom
           <p-columnFilter type="text" field="nom" display="menu" class="ml-auto" />
@@ -534,6 +561,17 @@
     <ng-template pTemplate="body" let-fournisseur let-editing="editing" let-ri="rowIndex">
       <tr [pEditableRow]="fournisseur">
             <td>
+
+      <p-cellEditor>
+        <ng-template pTemplate="input">
+          <input pInputText [(ngModel)]="fournisseur.matriculeFournisseur"/>
+        </ng-template>
+        <ng-template pTemplate="output">
+          {{ fournisseur.matriculeFournisseur }}
+        </ng-template>
+      </p-cellEditor>
+      </td>
+      <td>
       <p-cellEditor>
         <ng-template pTemplate="input">
           <input pInputText [(ngModel)]="fournisseur.nom" />
@@ -571,6 +609,7 @@
           {{ fournisseur.adresse }}
         </ng-template>
       </p-cellEditor>
+      
     </td>
         <td style="display: flex">
  <div class="flex items-center justify-center gap-2">
@@ -615,7 +654,7 @@
             pButton
             icon="pi pi-trash"
             class="p-button-sm p-button-rounded p-button-text p-button-danger"
-            (click)="confirmDeleteBanque(banque);"
+            (click)="confirmDeleteFournisseur(fournisseur);"
             title="Supprimer"
           ></button>
         </td>
@@ -879,7 +918,7 @@
           [dropdown]="true"
           placeholder="Sélectionner un fournisseur"
           class="flex-grow-1"
-        >
+          >
           <ng-template let-f pTemplate="item">
             <div class="p-2">
               <strong>{{ f.nom }}</strong><br />
@@ -911,7 +950,7 @@
             <div class="p-2">{{ bank.nom }}</div>
           </ng-template>
         </p-autocomplete>
-        <div class="d-flex flex-column gap-2 mt-1">
+        <div class="d-flex  gap-2 mt-1">
           <button pButton icon="pi pi-plus" (click)="toggleAddBanqueInfo()" class="p-button-rounded p-button-sm" severity="secondary" text></button>
           <button pButton icon="pi pi-eye" (click)="toggleDialogBanque()" class="p-button-rounded p-button-sm" severity="secondary" text></button>
         </div>

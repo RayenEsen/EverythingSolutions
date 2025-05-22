@@ -4,6 +4,7 @@ export class RetenueDto {
   type: string = '';
   fournisseurNom: string = '';
   fournisseurAdresse: string = '';
+  fournisseurMatricule: string = ''; // ✅ Ajout du matricule fiscal
 
   dateCreation: Date = new Date();
   retenueMontant: number = 0;
