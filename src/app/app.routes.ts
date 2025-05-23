@@ -10,8 +10,9 @@ import { ResetPasswordComponent } from './ResetPassword/ResetPassword.component'
 import { RetenueSourceComponent } from './RetenueSource/RetenueSource.component';
 import { PrintRetenueComponent } from './PrintRetenue/PrintRetenue.component';
 import { CommingSoonComponent } from './CommingSoon/CommingSoon.component';
-export const routes: Routes = [
+import { LayoutComponent } from './layout/layout.component';
 
+export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
@@ -19,52 +20,56 @@ export const routes: Routes = [
     canActivate: [LoginGuard]
   },
   {
-    path: 'Banque',
-    component: BanqueComponent,
-    title: 'Banque',
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'Trait',
-    component: RetraitComponent,
-    title: 'Trait',
-    canActivate: [AuthGuard]
-  },
-    {
-    path: '',
-    component: HomeComponent,
-    title: 'Trait',
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'RetraitDetails/:id',
-    component: PrintTraiteComponent,
-    title: 'Imprimer Trait',
-    canActivate: [AuthGuard]
-  },
-    {
-    path: 'Retenue',
-    component: RetenueSourceComponent,
-    title: 'Retenue a la source',
-    canActivate: [AuthGuard]
-  },
-      {
-    path: 'ImprimerRetenue/:id',
-    component: PrintRetenueComponent,
-    title: 'Imprimer Retenue a la source',
-    canActivate: [AuthGuard]
-  },
-    {
-    path: 'CommingSoon',
-    component: CommingSoonComponent,
-    title: 'Bientôt disponible Soon',
-    canActivate: [AuthGuard]
-  },
-      {
     path: 'reset-password',
     component: ResetPasswordComponent,
     title: 'Réinitialiser le mot de passe'
+  },
+  {
+    path: '',
+    component: LayoutComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: '',
+        component: HomeComponent,
+        title: 'Quick Soft',
+      },
+      {
+        path: 'Banque',
+        component: BanqueComponent,
+        title: 'Banque',
+      },
+      {
+        path: 'Trait',
+        component: RetraitComponent,
+        title: 'Trait',
+      },
+      {
+        path: 'RetraitDetails/:id',
+        component: PrintTraiteComponent,
+        title: 'Imprimer Trait',
+      },
+      {
+        path: 'Retenue',
+        component: RetenueSourceComponent,
+        title: 'Retenue a la source',
+      },
+      {
+        path: 'ImprimerRetenue/:id',
+        component: PrintRetenueComponent,
+        title: 'Imprimer Retenue a la source',
+      },
+      {
+        path: 'CommingSoon',
+        component: CommingSoonComponent,
+        title: 'Bientôt disponible Soon',
+      }
+    ]
+  },
+  // fallback to home or 404
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full'
   }
-
-
 ];

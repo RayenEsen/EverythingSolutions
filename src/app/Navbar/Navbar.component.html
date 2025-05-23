@@ -1,44 +1,21 @@
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<nav class="navbar display-none" style="padding-bottom: 22px;">
-  <div class="navbar-container">
-    <input type="checkbox" id="menu-toggle">
-    <label for="menu-toggle" class="hamburger">
-      <span></span>
-      <span></span>
-      <span></span>
-    </label>
-
-    <a href="#" class="logo">
-      <img src="https://i.ibb.co/TBg078Rg/image-3-1.png" alt="Quick Soft">
+<nav class="navbar" style="padding-left: 20px;padding-right: 20px; position: fixed;">
+  <div class="logo_item">
+    <i class="bx bx-menu" id="sidebarOpen" (click)="onToggleSidebar()"></i>
+    <img src="https://i.ibb.co/xKV3vddN/8a2a07a8-b6ca-4342-8173-14564dd9ab4e-removebg-preview-1-1.png" alt="">
+    <a href="" style="cursor: pointer; text-decoration: none; color: inherit;">
+      <span>Quick Soft</span>
     </a>
+  </div>
 
-    <ul class="main-menu">
-        <li><a href="/CommingSoon"><i class="fas fa-tachometer-alt"></i> Tableau de bord</a></li>
+  <div class="search_bar">
+    <input type="text" placeholder="Search">
+  </div>
 
-      <!-- New Menu Items -->
-      <li><a href="/CommingSoon"><i class="fas fa-chart-line"></i> Gestion commerciale</a></li>
-      <li><a href="/CommingSoon"><i class="fas fa-wallet"></i> Gestion portefeuille client</a></li>
-      <li><a href="/CommingSoon"><i class="fas fa-cogs"></i> ERP </a></li>
-      <li><a href="/Retenue"><i class="fas fa-print"></i> Retenue à la source </a></li>
-    </ul>
-
-    <div class="user-actions">
-<a href="/Trait" class="quick-action-button">
-  <i class="fas fa-plus"></i> Nouveaux Traite
-</a>
-
-      <div class="user-menu">
-        <img src="https://i.ibb.co/5GzXkw3/user-avatar.png" alt="User" class="user-avatar">
-        <span class="username">Entreprise</span>
-        <i class="fas fa-chevron-down user-arrow"></i>
-        <ul class="user-dropdown">
-          <li><a href="/CommingSoon"><i class="fas fa-user-cog"></i> Profile</a></li>
-          <li><a href="/CommingSoon"><i class="fas fa-cog"></i> Paramétre</a></li>
-          <li><a (click)="logout()"><i class="fas fa-sign-out-alt"></i> Déconnecter </a></li>
-        </ul>
-      </div>
-    </div>
+  <div class="navbar_content">
+    <i class="bi bi-grid"></i>
+    <i class='bx' [class.bx-sun]="!themeService.isDarkMode()" [class.bx-moon]="themeService.isDarkMode()" 
+       id="darkLight" (click)="toggleDarkMode()"></i>
+    <i class='bx bx-bell'></i>
+    <img src="https://i.ibb.co/5GzXkw3/user-avatar.png" alt="" class="profile">
   </div>
 </nav>

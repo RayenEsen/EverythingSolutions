@@ -10,15 +10,12 @@
 }
 
 .print-container {
-  max-width: 1600px;
+  max-width: 1300px;
   margin: 2rem auto;
   font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
 }
 
 .modern-card {
-  
-  margin-top: 15vh;
-  margin-bottom: 15vh;
   background: white;
   border-radius: 16px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);

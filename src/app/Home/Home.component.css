@@ -4,8 +4,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f8fafc;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(135deg, #F7FAFC 0%, #e6f9fc 50%, #d0f5fa 100%);  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   padding: 2rem;
   text-align: center;
 }

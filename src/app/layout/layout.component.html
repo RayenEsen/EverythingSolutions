@@ -1,0 +1,16 @@
+<ng-container *ngIf="isAuthenticated">
+  <app-navbar (toggleSidebar)="toggleSidebar()"></app-navbar>
+  <app-sidebar
+    [isCollapsed]="isSidebarCollapsed"
+    (isCollapsedChange)="isSidebarCollapsed = $event">
+  </app-sidebar>
+</ng-container>
+
+<main [ngClass]="{
+  'main-content': isAuthenticated,
+  'collapsed': isSidebarCollapsed,
+}">
+  <div class="content-wrapper" style="background-color: #f3f4f6;">
+    <router-outlet></router-outlet>
+  </div>
+</main>

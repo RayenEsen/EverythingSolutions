@@ -1,0 +1,36 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px; /* Expanded width */
+  height: 100vh;
+  background-color: var(--white-color);
+  z-index: 100;
+  transition: width 0.3s ease, transform 0.3s ease;
+}
+
+.sidebar.close {
+  width: 80px; /* Collapsed width */
+}
+
+@media screen and (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 260px !important;
+  }
+  
+  .sidebar:not(.close) {
+    transform: translateX(0);
+  }
+}
+
+.sidebar {
+  width: 260px;
+  transition: width 0.3s ease;
+  overflow: hidden; /* prevents content overflow during transition */
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+

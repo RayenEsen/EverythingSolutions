@@ -60,7 +60,7 @@ items2: any[] = [
 
   items4: any[] = [];
 
- selectedRetrait: Retraite = new Retraite();
+  selectedRetrait: Retraite = new Retraite();
 
   selectedBank: Banque | null = null;
   selected: Banque | null = null;
@@ -103,6 +103,16 @@ items = [
       next: (retraites) => {
         this.retraitesLightDataOriginal = retraites; 
         this.retraitesLightData = retraites;
+        const totalAmount = this.getTotalAmount(this.retraitesLightData);
+        const avgAmount = this.getAverageAmount(this.retraitesLightData);
+        const pending = this.getPendingCount(this.retraitesLightData);
+        const banks = this.getUniqueBanks(this.retraitesLightData);
+
+        this.animateValue('animatedTotalAmount', totalAmount);
+        this.animateValue('animatedAverageAmount', avgAmount);
+        this.animateValue('animatedPendingCount', pending);
+        this.animateValue('animatedUniqueBanks', banks);
+
       },
       error: (err) => {
         console.error('Error fetching retraites:', err);
@@ -814,6 +824,61 @@ onRowEditCancelFournisseur(fournisseur: Fournisseur, index: number) {
     summary: 'Annulé',
     detail: 'Modification annulée',
   });
+}
+
+
+
+
+//Stats section
+
+animatedTotalAmount: number = 0;
+animatedAverageAmount: number = 0;
+animatedPendingCount: number = 0;
+animatedUniqueBanks: number = 0;
+
+
+animateValue(property: keyof this, end: number, baseDuration = 1000) {
+  const start = 0;
+  const range = end - start;
+  let current = start;
+
+  // Calculate duration based on magnitude: small numbers take longer, large numbers faster
+  const duration = Math.max(500, Math.min(2000, baseDuration * (100 / Math.max(end, 1))));
+  const steps = 60; // total steps for smoother animation
+  const stepTime = duration / steps;
+  const increment = range / steps;
+
+  const timer = setInterval(() => {
+    current += increment;
+    if (current >= end) {
+      current = end;
+      clearInterval(timer);
+    }
+    (this[property] as unknown as number) = parseFloat(current.toFixed(0));
+  }, stepTime);
+}
+
+
+getTotalAmount(traites: any[]): number {
+  return traites.length
+}
+
+getAverageAmount(traites: any[]): number {
+  return traites.reduce((total, traite) => total + traite.montant, 0);
+}
+getPendingCount(traites: any[]): number {
+  const today = new Date();
+  return traites.filter(traite => {
+    const dateEcheance = new Date(traite.dateEcheance);
+    return !isNaN(dateEcheance.getTime()) && dateEcheance > today;
+  }).length;
+}
+
+
+getUniqueBanks(traites: any[]): number {
+  const banks = new Set();
+  traites.forEach(traite => banks.add(traite.banqueNom));
+  return banks.size;
 }
 
 
