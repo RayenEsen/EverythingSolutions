@@ -104,19 +104,39 @@ td {
 
 
 @media print {
+  html, body {
+    margin: 0;
+    padding: 20mm; /* Add print-safe margin */
+    height: 100%;
+    font-size: 12px;
+    box-sizing: border-box;
+  }
+
   .certificate-card {
-    margin-top: 10px; margin-bottom: 10px;
     background: none !important;
     box-shadow: none !important;
     display: block !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    page-break-before: avoid !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
   }
 
   .certificate {
-    box-shadow: none !important;
-    padding: 0 !important;
+    padding: 10mm !important; /* Inner spacing to avoid edges */
     width: 100% !important;
     max-width: none !important;
     transform: none !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    background: white;
+  }
+
+  .certificate * {
+    page-break-inside: avoid !important;
+    page-break-before: auto !important;
+    page-break-after: auto !important;
   }
 
   .print-btn {
@@ -124,14 +144,7 @@ td {
   }
 
   .header-right {
-  width: 60%;
+    width: 60%;
+    text-align: right;
   }
-
-  .header-right {
-  text-align: right;
 }
-
-
-}
-
-

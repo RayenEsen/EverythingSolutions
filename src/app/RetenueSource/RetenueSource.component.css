@@ -1,125 +1,458 @@
-
- .p-tag-info {
-  background: #4a6ced; /* Original color */
-  color: var(--p-tag-info-color); /* Original color */
-  border-radius: 4px; /* Even smaller rounded corners */
-  padding: 0.15rem 0.5rem; /* Very small padding */
-  font-size: 0.75rem; /* Smallest font size */
-  font-weight: 500; /* Slightly bolder text */
-  box-shadow: none; /* Remove shadow for a cleaner look */
-  transition: background 0.2s ease; /* Smooth transition */
+/* ========== ROOT & GLOBAL STYLES ========== */
+:root {
+  --primary-color: #4a6ced;
+  --primary-hover: #5f7deb;
+  --secondary-color: #3cbfae;
+  --text-dark: #2d3748;
+  --text-medium: #4a5568;
+  --text-light: #e2e8f0;
+  --border-color: #e2e8f0;
+  --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.3s ease;
 }
 
-/* Hover effect */
- .p-tag-info:hover {
-  background: #5f7deb; /* Slightly darker blue on hover */
+/* ========== BASE LAYOUT STRUCTURE ========== */
+:host {
+  display: flex;
+  padding: 30px;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f3f4f6;
+  color: #333;
 }
-.hover-blue:hover {
-  color: #007bff; /* Bootstrap primary blue or pick any blue shade */
-  cursor: pointer;
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
 }
 
+.main-content.collapsed {
+  margin-left: 80px;
+}
 
-
-
+/* ========== CARD COMPONENT ========== */
 .card {
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  width: 95%;
-  max-width: 1800px;
-  margin: 18vh auto 10vh auto; /* Top and bottom spacing */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition-medium);
 }
 
-/* Hover effect */
 .card:hover {
-  transform: scale(1.01);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
 }
 
-/* Responsive */
+/* ========== TABLE STYLES ========== */
+.p-table-container {
+  flex: 1;
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.p-table {
+  width: 100%;
+  min-width: 0; /* Allows table to shrink below 1200px */
+  
+  th, td {
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+  }
+  
+  th {
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+}
+
+/* ========== UTILITY COMPONENTS ========== */
+.p-tag {
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  
+  &.p-tag-info {
+    background: var(--primary-color);
+    color: white;
+    
+    &:hover {
+      background: var(--primary-hover);
+    }
+  }
+}
+
+/* ========== FORM ELEMENTS ========== */
+.form-control, .p-autocomplete-input {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+/* ========== DRAWER STYLES ========== */
+.p-drawer {
+  .p-drawer-content {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  .form-actions {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+  }
+}
+
+/* ========== BREADCRUMB & HEADER ========== */
+.breadcrumb-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0 1rem;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #888;
+  
+  .separator {
+    margin: 0 6px;
+  }
+  
+  .current {
+    font-weight: 600;
+    color: #333;
+  }
+}
+
+/* ========== STATS GRID ========== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 1.5rem;
+  padding: 0 1rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  text-align: center;
+  
+  h3 {
+    margin-bottom: 0.5rem;
+    font-size: 16px;
+    color: #555;
+  }
+  
+  p {
+    font-size: 20px;
+    font-weight: 600;
+    color: #222;
+  }
+}
+
+/* ========== RESPONSIVE ADJUSTMENTS ========== */
+@media (max-width: 992px) {
+  .p-table {
+    th, td {
+      white-space: normal;
+    }
+  }
+}
+
 @media (max-width: 768px) {
+  .main-content {
+    margin-left: 0 !important;
+  }
+  
   .card {
-    width: 95%;
+    margin: 0.5rem;
+    border-radius: 0;
+  }
+  
+  .breadcrumb-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .p-dialog {
+    width: 95vw !important;
+  }
+}
+
+/* ========== ANIMATIONS & UTILITIES ========== */
+.fade-in {
+  animation: fadeSlide 0.3s ease-out;
+}
+
+@keyframes fadeSlide {
+  0% { opacity: 0; transform: translateY(-5px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.empty-state {
+  padding: 2rem;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  iframe {
+    max-width: 200px;
+    height: auto;
+  }
+}
+
+/* ========== CONTEXT MENU ========== */
+.p-contextmenu {
+  width: 250px;
+  max-width: 100%;
+}
+
+
+
+/* ========== DASHBOARD HEADER ========== */
+.dashboard-header {
+  padding: 1.5rem 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.breadcrumb-nav {
+  margin-bottom: 0.5rem;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.breadcrumb-item {
+  color: var(--text-medium);
+  transition: color 0.2s ease;
+}
+
+.breadcrumb-item:hover {
+  color: var(--primary-color);
+}
+
+.breadcrumb-item.active {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.breadcrumb-separator {
+  margin: 0 0.5rem;
+  color: black;
+}
+
+.header-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.header-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.title-gradient {
+  background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-subtitle {
+  color: var(--text-medium);
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* ========== MODERN METRICS GRID ========== */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.metric-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.metric-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.metric-content {
+  position: relative;
+  z-index: 2;
+}
+
+.metric-label {
+  font-size: 0.95rem;
+  color: var(--text-medium);
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+  line-height: 1.2;
+  font-feature-settings: "tnum";
+}
+
+.currency {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-medium);
+  margin-left: 2px;
+}
+
+.metric-decoration {
+  position: absolute;
+  bottom: 0rem;
+  right: 0rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: bottom right;
+}
+
+.metric-decoration i {
+  font-size: 2rem;
+  
+}
+
+/* Color variants with modern pastel tones */
+.metric-card .metric-decoration { 
+  background-color: #4f46e5;
+}
+.metric-card.accent-2 .metric-decoration { 
+  background-color: #10b981;
+}
+.metric-card.accent-3 .metric-decoration { 
+  background-color: #f97316;
+}
+.metric-card.accent-4 .metric-decoration { 
+  background-color: #8b5cf6;
+}
+
+/* Hover effects */
+.metric-card:hover .metric-decoration {
+  opacity: 0.7;
+  transform: scale(1.1);
+  border-radius: 24px;
+}
+
+/* Gradient accents for modern touch */
+.metric-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, #4f46e5, #8b5cf6);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.metric-card.accent-2::after {
+  background: linear-gradient(to bottom, #10b981, #3cbfae);
+}
+
+.metric-card.accent-3::after {
+  background: linear-gradient(to bottom, #f97316, #f59e0b);
+}
+
+.metric-card.accent-4::after {
+  background: linear-gradient(to bottom, #8b5cf6, #6366f1);
+}
+
+.metric-card:hover::after {
+  opacity: 1;
+}
+
+/* ========== RESPONSIVE ADJUSTMENTS ========== */
+@media (max-width: 768px) {
+  .metrics-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  
+  .metric-card {
     padding: 1.5rem;
   }
 }
 
-
-
-
-/* Add these to your component's CSS */
-.compact-fournisseur-item {
-  padding: 6px 8px;
-  border-bottom: 1px solid #f0f0f0;
-  font-size: 0.85rem;
-}
-
-.compact-fournisseur-name {
-  font-weight: 600;
-  color: #2c3e50;
-  font-size: 0.9rem;
-  margin-bottom: 2px;
-}
-
-.compact-fournisseur-contact {
-  color: #6c757d;
-  font-size: 0.8rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.compact-fournisseur-address {
-  color: #495057;
-  font-size: 0.8rem;
-  margin-top: 4px;
-  padding: 2px 0;
-}
-
-.compact-fournisseur-id {
-  font-size: 0.75rem;
-  color: #adb5bd;
-  background-color: #f8f9fa;
-  padding: 1px 4px;
-  border-radius: 3px;
-  margin-left: 8px;
-}
-
-.small-icon {
-  font-size: 0.75rem;
-  margin-right: 3px;
-}
-
-.small-text {
-  font-size: 0.85rem;
-}
-
-/* Make the dropdown input smaller */
-.p-autocomplete-input {
-  padding: 0.375rem 0.75rem !important;
-  font-size: 0.9rem !important;
-}
-
-.upcoming-echeance {
-  background-color: #fff3cd !important; /* light orange */
-}
-
-
-
-.fade-in {
-  animation: fadeSlide 0.5s ease-out;
-}
-
-@keyframes fadeSlide {
-  0% {
-    opacity: 0;
-    transform: translateY(-5px);
+@media (max-width: 480px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
+  
+  .metric-value {
+    font-size: 1.75rem;
+  }
+  
+  .metric-decoration {
+    width: 60px;
+    height: 60px;
   }
 }

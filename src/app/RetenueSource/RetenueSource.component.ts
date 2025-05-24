@@ -51,15 +51,18 @@ export class RetenueSourceComponent implements OnInit {
   ) {}
 
 
-
-  items2: any[] = [
-  { label: 'Voir Retenue', icon: 'pi pi-eye', },
-  { label: 'Modifier Retenue', icon: 'pi pi-pencil', },
-  { label: 'Supprimer', icon: 'pi pi-trash',  },
+items2: any[] = [
+  { label: 'Voir Retenue', icon: 'pi pi-eye' , command: () => this.viewRetenue(this.contextMenuSelection) },
+  { 
+    label: 'Supprimer', 
+    icon: 'pi pi-trash', 
+    command: () => this.deleteSelectedRetenues() 
+  }
 ];
+
   
 loading = false;
-
+RetenuesToDelete : RetenueDto[] = [];
 items = [
   {
     label: 'Ajouter Retenue',
@@ -68,7 +71,7 @@ items = [
   },
   {
     label: 'Supprimer',
-    icon: 'pi pi-trash',
+    icon: 'pi pi-trash' ,  command: () => this.deleteSelectedRetenues(),
   }
 ];
 
@@ -81,26 +84,43 @@ items = [
     this.fetchRetenues();
   }
 
-  fetchRetenues(): void {
-    this.loading = true;
-    this.retenuesService.getRetenues().subscribe({
-      next: (data) => {
-        this.retenues = data;
-        this.loading = false;
-      },
-      error: () => {
-        this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Impossible de charger les retenues.' });
-        this.loading = false;
-      }
-    });
+fetchRetenues(): void {
+  this.loading = true;
+  this.retenuesService.getRetenues().subscribe({
+    next: (data) => {
+      this.retenues = data;
+      console.log(this.retenues)
+      this.loading = false;
 
-      // Fetch fournisseurs data
+      // Calculate raw values
+      const totalTTC = this.getTotalTTC(this.retenues);
+      const averageNet = this.getAverageNet(this.retenues);
+      const retenueTotal = this.getRetenueTotal(this.retenues);
+      const retenueAvg = this.getAverageRetenueMontant(this.retenues);
+
+      // Animate them
+      this.animateValue('animatedTotalTTC', totalTTC);
+      this.animateValue('animatedAverageNet', averageNet);
+      this.animateValue('animatedRetenueTotal', retenueTotal);
+      this.animateValue('animatedretenueAvg', retenueAvg); // ✅ Use same name as declared
+    },
+    error: () => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erreur',
+        detail: 'Impossible de charger les retenues.'
+      });
+      this.loading = false;
+    }
+  });
+
+  // Fetch fournisseurs data
   this.ServiceF.getAll().subscribe(
     (data) => {
       this.fournisseursData = data;
     },
     (error) => {
-      // handle error if needed
+      // Optional error handling
     }
   );
 }
@@ -130,7 +150,6 @@ onSubmit() {
   this.showFournisseurError = false;
 
   let isValid = true;
-
   const numeroFactureRegex = /^[0-9]{7}[A-Z]{3}$/;
 
   // Validation checks
@@ -159,13 +178,11 @@ onSubmit() {
   }
 
   if (isValid) {
-    // Prepare DTO
     const retenueDto: AddRetenueDTO = {
       ...this.AddRetenue,
       fournisseurId: this.selectedFournisseur?.id ?? 0
     };
 
-    // Call API
     this.retenuesService.createRetenue(retenueDto).subscribe({
       next: (response) => {
         this.messageService.add({
@@ -173,8 +190,20 @@ onSubmit() {
           summary: 'Succès',
           detail: 'Retenue ajoutée avec succès'
         });
+
         this.retenues.push(response);
-        this.AddRetenueInfo = false; // Close drawer
+        this.AddRetenueInfo = false;
+
+        // ✅ Recalculate totals and average
+      const totalTTC = this.getTotalTTC(this.retenues);
+      const averageNet = this.getAverageNet(this.retenues);
+      const retenueTotal = this.getRetenueTotal(this.retenues);
+      const RetenueAvg = this.getAverageRetenueMontant(this.retenues);
+
+      this.animateValue('animatedTotalTTC', totalTTC);
+      this.animateValue('animatedAverageNet', averageNet);
+      this.animateValue('animatedRetenueTotal', retenueTotal);
+      this.animateValue('animatedretenueAvg', RetenueAvg);
       },
       error: (err) => {
         console.error('Error creating retenue:', err);
@@ -182,7 +211,6 @@ onSubmit() {
     });
   }
 }
-
 
 displayFournisseurDialog = false;
 
@@ -273,8 +301,10 @@ onSaveFournisseur() {
   }
 }
 
+stored = JSON.parse(localStorage.getItem('entrepriseInfo') || '{}');
+
 AddFournisseur() {
-  const entrepriseId = +(localStorage.getItem('employeeId') ?? 0);
+  const entrepriseId =this.stored.id;
   this.FournisseurAjouter.entrepriseId = entrepriseId;
 
   this.ServiceF.create(this.FournisseurAjouter).subscribe(
@@ -327,10 +357,151 @@ filterTypes(event: any) {
 
 
 dialogVisible: boolean = false;
+contextMenuSelection: RetenueDto = new RetenueDto();
 
-viewRetenue(id: number) {
-  this.router.navigate(['/ImprimerRetenue', id]);
+viewRetenue(contextMenuSelection: RetenueDto) {
+  this.router.navigate(['/ImprimerRetenue', contextMenuSelection.id]);
 }
+
+
+
+// Stats section
+animatedTotalTTC: number = 0;
+animatedAverageNet: number = 0;
+animatedRetenueTotal: number = 0;
+animatedretenueAvg: number = 0; 
+
+animateValue(property: keyof this, end: number, baseDuration = 1000) {
+  const start = 0;
+  const range = end - start;
+  let current = start;
+
+  const duration = Math.max(500, Math.min(2000, baseDuration * (100 / Math.max(end, 1))));
+  const steps = 60;
+  const stepTime = duration / steps;
+  const increment = range / steps;
+
+  const timer = setInterval(() => {
+    current += increment;
+    if (current >= end) {
+      current = end;
+      clearInterval(timer);
+    }
+    (this[property] as unknown as number) = parseFloat(current.toFixed(0));
+  }, stepTime);
+}
+
+// Get total Montant TTC
+getTotalTTC(data: any[]): number {
+  return data.reduce((sum, item) => sum + (item.montantTTC || 0), 0);
+}
+
+// Get average Montant Net
+getAverageNet(data: any[]): number {
+  if (data.length === 0) return 0;
+  const totalNet = data.reduce((sum, item) => sum + (item.montantNet || 0), 0);
+  return totalNet / data.length;
+}
+
+// Get total Retenue Montant
+getRetenueTotal(data: any[]): number {
+  return data.reduce((sum, item) => sum + (item.retenueMontant || 0), 0);
+}
+
+// Get average Retenue Montant
+getAverageRetenueMontant(data: any[]): number {
+  if (data.length === 0) return 0;
+  const totalRetenue = data.reduce((sum, item) => sum + (item.retenueMontant || 0), 0);
+  return totalRetenue / data.length;
+}
+
+SelectedRetenues: RetenueDto[] = [];
+
+deleteSelectedRetenues(): void {
+  let idsToDelete: number[] = [];
+
+  if (this.SelectedRetenues && this.SelectedRetenues.length > 0) {
+    idsToDelete = this.SelectedRetenues.map(r => r.id);
+  } else if (this.contextMenuSelection) {
+    idsToDelete = [this.contextMenuSelection.id];
+  }
+
+  if (idsToDelete.length === 0) {
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Aucune sélection',
+      detail: 'Veuillez sélectionner au moins une retenue à supprimer.'
+    });
+    return;
+  }
+
+  this.retenuesService.deleteRetenues(idsToDelete).subscribe({
+    next: () => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Suppression réussie',
+        detail: 'Les retenues sélectionnées ont été supprimées.'
+      });
+
+      this.retenues = this.retenues.filter(r => !idsToDelete.includes(r.id));
+      this.SelectedRetenues = [];
+
+      const totalTTC = this.getTotalTTC(this.retenues);
+      const averageNet = this.getAverageNet(this.retenues);
+      const retenueTotal = this.getRetenueTotal(this.retenues);
+      const RetenueAvg = this.getAverageRetenueMontant(this.retenues);
+
+      this.animateValue('animatedTotalTTC', totalTTC);
+      this.animateValue('animatedAverageNet', averageNet);
+      this.animateValue('animatedRetenueTotal', retenueTotal);
+      this.animateValue('animatedretenueAvg', RetenueAvg);
+    },
+    error: () => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erreur',
+        detail: 'Une erreur est survenue lors de la suppression.'
+      });
+    }
+  });
+}
+
+
+onDelete(id: number): void {
+  if (confirm("Êtes-vous sûr de vouloir supprimer ce fournisseur ?")) {
+    this.ServiceF.delete(id).subscribe({
+      next: () => {
+        this.fournisseurs = this.fournisseurs.filter(f => f.id !== id);
+
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Succès',
+          detail: 'Fournisseur supprimé avec succès'
+        });
+      },
+      error: (err) => {
+        console.error("Delete failed", err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: 'La suppression du fournisseur a échoué'
+        });
+      }
+    });
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

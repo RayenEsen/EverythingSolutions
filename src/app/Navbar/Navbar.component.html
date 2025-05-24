@@ -11,11 +11,13 @@
     <input type="text" placeholder="Search">
   </div>
 
-  <div class="navbar_content">
-    <i class="bi bi-grid"></i>
-    <i class='bx' [class.bx-sun]="!themeService.isDarkMode()" [class.bx-moon]="themeService.isDarkMode()" 
-       id="darkLight" (click)="toggleDarkMode()"></i>
-    <i class='bx bx-bell'></i>
-    <img src="https://i.ibb.co/5GzXkw3/user-avatar.png" alt="" class="profile">
-  </div>
+<div class="profile-container" (click)="toggleProfileMenu()">
+  <img src="https://i.ibb.co/5GzXkw3/user-avatar.png" alt="" class="profile">
+  <ul class="profile-submenu" [class.show]="isProfileMenuOpen">
+    <li><a href="#"><i class="bx bx-user"></i> Mon Profil</a></li>
+    <li><a href="#"><i class="bx bx-cog"></i> Paramètres</a></li>
+    <li><a href="#"><i class="bx bx-log-out"></i> Déconnexion</a></li>
+  </ul>
+</div>
+
 </nav>

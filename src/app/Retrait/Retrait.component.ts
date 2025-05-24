@@ -701,7 +701,6 @@ filterRetraites() {
     this.ModifyTraiteInfo = !this.ModifyTraiteInfo;
   }
 
-
 ModifyTraite(): void {
   console.log(this.selectedRetrait)
   if (!this.selectedRetrait || !this.selectedRetrait.id) return;
@@ -712,7 +711,7 @@ ModifyTraite(): void {
     montant: this.selectedRetrait.montant ?? 0,
     fournisseurId: this.selectedFournisseur?.id || 0,
     banqueId: this.selectedBank?.id || null,
-    entrepriseId: +(localStorage.getItem('employeeId') ?? 0),
+    entrepriseId: this.stored?.id,
   };
 
   this.ServiceR.updateRetraite(this.selectedRetrait.id, updatedRetraite).subscribe({

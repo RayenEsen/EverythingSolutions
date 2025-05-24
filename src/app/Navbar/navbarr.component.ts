@@ -23,4 +23,11 @@ toggleDarkMode(): void {
   onToggleSidebar(): void {
     this.toggleSidebar.emit();
   }
+
+  isProfileMenuOpen = false;
+
+toggleProfileMenu() {
+  this.isProfileMenuOpen = !this.isProfileMenuOpen;
+}
+
 }

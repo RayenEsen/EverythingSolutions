@@ -1,4 +1,5 @@
 export class RetenueDto {
+  id: number = 0;
   numeroFacture: string = '';
   montantTTC: number = 0;
   type: string = '';

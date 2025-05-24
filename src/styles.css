@@ -144,7 +144,7 @@ body.dark {
 }
 
 .menu_dahsboard::before {
-  content: "Dashboard";
+  content: "Finances";
 }
 
 .menu_editor::before {

@@ -11,6 +11,7 @@ import { RetenueSourceComponent } from './RetenueSource/RetenueSource.component'
 import { PrintRetenueComponent } from './PrintRetenue/PrintRetenue.component';
 import { CommingSoonComponent } from './CommingSoon/CommingSoon.component';
 import { LayoutComponent } from './layout/layout.component';
+import { ProfileComponent } from './Profile/Profile.component';
 
 export const routes: Routes = [
   {
@@ -22,7 +23,8 @@ export const routes: Routes = [
   {
     path: 'reset-password',
     component: ResetPasswordComponent,
-    title: 'Réinitialiser le mot de passe'
+    title: 'Réinitialiser le mot de passe',
+    canActivate: [LoginGuard]
   },
   {
     path: '',
@@ -63,7 +65,13 @@ export const routes: Routes = [
         path: 'CommingSoon',
         component: CommingSoonComponent,
         title: 'Bientôt disponible Soon',
-      }
+      },
+      {
+        path: 'Profil',
+        component: ProfileComponent,
+        title: 'Profil',
+      },
+
     ]
   },
   // fallback to home or 404

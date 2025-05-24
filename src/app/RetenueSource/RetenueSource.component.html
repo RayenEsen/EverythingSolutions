@@ -1,19 +1,76 @@
 <p-toast />
-<div class="card">
-  <!-- Breadcrumb / Header -->
-  <div style="margin-bottom: 20px; font-size: 14px; font-weight: 500; color: #555;">
-    <a href="/" style="color: #4f46e5; text-decoration: none;">Accueil</a>
-    &nbsp; &gt; &nbsp;
-    <div style="position: absolute; top: 30px; right: 30px;">
-      <img src="https://i.ibb.co/Xfj86PzY/8a2a07a8-b6ca-4342-8173-14564dd9ab4e-removebg-preview-1-1.png" alt="Logo" width="60" height="60" />
+<div class="dashboard-header">
+  <div class="header-content"> 
+<div class="breadcrumb-nav" style="display: flex; align-items: center;    justify-content: space-between;">
+  <nav class="breadcrumb">
+    <span class="breadcrumb-item">Accueil</span>
+    <span class="breadcrumb-separator">›</span>
+    <span class="breadcrumb-item">Finances</span>
+    <span class="breadcrumb-separator">›</span>
+    <span class="breadcrumb-item active">Liste des Traites</span>
+  </nav>
+  <!-- Add your image here -->
+  <img src="https://i.ibb.co/Xfj86PzY/8a2a07a8-b6ca-4342-8173-14564dd9ab4e-removebg-preview-1-1.png" alt="Logo" width="60" height="60"alt="Traites Icon" 
+       style="margin-left: 12px; height: 50px; width: 50px;;">
+</div>
+    
+    <div class="header-main" style="margin-top: -10px;">
+      <h1 class="header-title">
+        <span class="title-gradient">Liste des Retenues </span>
+      </h1>
+      <p class="header-subtitle">Voici la liste des Retenues effectués avec leurs détails.</p>
     </div>
-    <span>Imprimer Retenue à la source</span>
   </div>
+</div>
 
-  <div style="margin-bottom: 30px;">
-    <h2>Liste des Retenues</h2>
-    <p>Voici la liste des Retenues effectuées avec leurs détails.</p>
+
+<div class="metrics-grid">
+  <!-- Total Factures Card -->
+  <div class="metric-card">
+    <div class="metric-content">
+      <h3 class="metric-label">Nombre Total</h3>
+      <p class="metric-value">{{ animatedTotalTTC | number:'1.2-2' }} <span class="currency">TND</span></p>
+      <div class="metric-decoration">
+        <i class="pi pi-file-o" style="color: black;"></i>
+      </div>
+    </div>
   </div>
+  
+  <!-- Montant Net Moyen -->
+  <div class="metric-card accent-2">
+    <div class="metric-content">
+      <h3 class="metric-label">Montant Net Moyen</h3>
+      <p class="metric-value">{{ animatedAverageNet | number:'1.2-2' }} <span class="currency">TND</span></p>
+      <div class="metric-decoration">
+        <i class="pi pi-money-bill" style="color: black;"></i>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Retenue Totale -->
+  <div class="metric-card accent-3">
+    <div class="metric-content">
+      <h3 class="metric-label">Montant Retenu Total</h3>
+      <p class="metric-value">{{ animatedRetenueTotal | number:'1.2-2' }}</p>
+      <div class="metric-decoration">
+        <i class="pi pi-clock" style="color: black;"></i>
+      </div>
+    </div>
+  </div>
+  
+  <div class="metric-card accent-4">
+    <div class="metric-content">
+      <h3 class="metric-label">Montant Retenu Moyen</h3>
+      <p class="metric-value">{{ animatedretenueAvg }}</p>
+      <div class="metric-decoration">
+        <i class="pi pi-building" style="color: black;"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="card">
 
   <div class="d-flex align-items-center justify-content-between p-2 bg-light text-dark border rounded mb-3">
     <p-menubar [model]="items" />
@@ -24,111 +81,109 @@
   </div>
 
   <p-contextMenu #cm [model]="items2" [appendTo]="'body'"></p-contextMenu>
+<p-table 
+  #dt1
+  dataKey="id" 
+  [value]="retenues"
+  [rows]="10" 
+  [rowsPerPageOptions]="[10, 25, 50]" 
+  [loading]="loading" 
+  [paginator]="true"
+  [filterDelay]="0"
+  selectionMode="multiple"
+  [(selection)]="SelectedRetenues"
+  [contextMenu]="cm"
+  [(contextMenuSelection)]="contextMenuSelection" 
+  [globalFilterFields]="['numeroFacture', 'fournisseur']">
 
-  <p-table 
-    #dt1
-    dataKey="id" 
-    [value]="retenues"
-    [rows]="10" 
-    [rowsPerPageOptions]="[10, 25, 50]" 
-    [loading]="loading" 
-    [paginator]="true"
-    [filterDelay]="0"
-    selectionMode="single"
-    values = Retenue
-    [contextMenu]="cm"
-    [globalFilterFields]="['numeroFacture', 'fournisseur']">
+  <ng-template #header>
+    <tr>
+      <th><p-tableHeaderCheckbox /></th>
 
-    <ng-template #header>
-      <tr>
-        <th><p-tableHeaderCheckbox /></th>
+      <th>
+        Numero Facture
+        <p-columnFilter type="text" field="numeroFacture" display="menu" class="ml-auto"/>
+      </th>
 
-        <th>
-          Numero Facture
-          <p-columnFilter type="text" field="numeroFacture" display="menu" class="ml-auto"/>
-        </th>
+      <th>
+        Montant TTC
+        <p-columnFilter type="numeric" field="montantTTC" display="menu" class="ml-auto"/>
+      </th>
 
-        <th>
-          Montant TTC
-          <p-columnFilter type="numeric" field="montantTTC" display="menu" class="ml-auto"/>
-        </th>
+      <th>
+        Type
+        <p-columnFilter type="text" field="type" display="menu" class="ml-auto"/>
+      </th>
 
-        <th>
-          Type
-          <p-columnFilter type="text" field="type" display="menu" class="ml-auto"/>
-        </th>
+      <th>
+        Fournisseur
+        <p-columnFilter type="text" field="fournisseur" display="menu" class="ml-auto"/>
+      </th>
 
-        <th>
-          Fournisseur
-          <p-columnFilter type="text" field="fournisseur" display="menu" class="ml-auto"/>
-        </th>
+      <th>
+        Date Creation
+        <p-columnFilter type="date" field="dateCreation" display="menu" class="ml-auto"/>
+      </th>
 
-        <th>
-          Date Creation
-          <p-columnFilter type="date" field="dateCreation" display="menu" class="ml-auto"/>
-        </th>
+      <th>
+        Retenue
+        <p-columnFilter type="numeric" field="retenue" display="menu" class="ml-auto"/>
+      </th>
 
-        <th>
-          Retenue
-          <p-columnFilter type="numeric" field="retenue" display="menu" class="ml-auto"/>
-        </th>
+      <th>
+        Montant Net
+        <p-columnFilter type="numeric" field="montantNet" display="menu" class="ml-auto"/>
+      </th>
 
-        <th>
-          Montant Net
-          <p-columnFilter type="numeric" field="montantNet" display="menu" class="ml-auto"/>
-        </th>
+      <th>Opérations</th>
+    </tr>
+  </ng-template>
 
-        <th>Opérations</th>
-      </tr>
-    </ng-template>
+  <ng-template #body let-ret>
+    <tr [pContextMenuRow]="ret" style="cursor: pointer;">
+      <td><p-tableCheckbox [value]="ret" /></td>
+      <td>{{ ret.numeroFacture }}</td>
+      <td>{{ ret.montantTTC | number:'1.2-2' }} TND</td>
+      <td>{{ ret.type }}</td>
+      <td>
+        <p-tag 
+          severity="info" 
+          value="{{ ret.fournisseurNom }}" 
+          styleClass="px-2 py-1 text-sm">
+        </p-tag>
+      </td>
+      <td>{{ ret.dateCreation | date:'dd/MM/yyyy' }}</td>
+      <td>{{ ret.retenue | number:'1.2-2' }} TND</td>
+      <td>{{ ret.montantNet | number:'1.2-2' }} TND</td>
+      <td>
+        <i 
+          class="pi pi-eye hover-blue" 
+          style="font-size: 1.25rem; padding-left: 8px; cursor: pointer;" 
+          (click)="viewRetenue(ret)">
+        </i>
+      </td>
+    </tr>
+  </ng-template>
 
-    <ng-template #body let-ret>
-      <tr [pContextMenuRow]="ret" style="cursor: pointer;">
-        <td><p-tableCheckbox [value]="ret" /></td>
-        <td>{{ ret.numeroFacture }}</td>
-        <td>{{ ret.montantTTC | number:'1.2-2' }} TND</td>
-        <td>{{ ret.type }}</td>
-     <td>
-  <p-tag 
-    severity="info" 
-    value="{{ ret.fournisseurNom }}" 
-    styleClass="px-2 py-1 text-sm">
-  </p-tag>
-</td>
+  <ng-template #emptymessage>
+    <tr>
+      <td colspan="100%" style="text-align: center;">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+          <iframe 
+            src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie" 
+            width="200" 
+            height="200" 
+            frameborder="0" 
+            allow="autoplay; encrypted-media" 
+            allowfullscreen>
+          </iframe>
+          <div>Aucune Retenue trouvée.</div>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
 
-        <td>{{ ret.dateCreation | date:'dd/MM/yyyy' }}</td>
-        <td>{{ ret.retenue | number:'1.2-2' }} TND</td>
-        <td>{{ ret.montantNet | number:'1.2-2' }} TND</td>
-        <td>
-          <i 
-            class="pi pi-eye hover-blue" 
-            style="font-size: 1.25rem; padding-left: 8px; cursor: pointer;" 
-            (click)="viewRetenue(ret.id)">
-          </i>
-        </td>
-
-      </tr>
-    </ng-template>
-
-    <ng-template #emptymessage>
-      <tr>
-        <td colspan="100%" style="text-align: center;">
-          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
-            <iframe 
-              src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie" 
-              width="200" 
-              height="200" 
-              frameborder="0" 
-              allow="autoplay; encrypted-media" 
-              allowfullscreen>
-            </iframe>
-            <div>Aucune Retenue trouvée.</div>
-          </div>
-        </td>
-      </tr>
-    </ng-template>
-
-  </p-table>
 </div>
 
 
@@ -508,6 +563,17 @@
                         rounded
                         severity="secondary"
                     ></button>
+                        <!-- Delete button -->
+                      <button
+                          pButton
+                          pRipple
+                          type="button"
+                          icon="pi pi-trash"
+                          text
+                          rounded
+                          severity="danger"
+                          (click)="onDelete(fournisseur.id)"
+                      ></button>
                 </div>
         </td>
       </tr>
