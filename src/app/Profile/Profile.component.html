@@ -1,3 +1,152 @@
-<p>
-  Profile works!
-</p>
+<p-toast />
+
+
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+
+<div class="main-content">
+
+  <!-- Header -->
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+     style="min-height: 600px; background-image: url('https://i.ibb.co/jP6G0vC3/register-company-online-1.png'); background-size: cover; background-position: center top;">
+
+    <span class="mask bg-gradient-default opacity-8"></span>
+    <div class="container-fluid d-flex align-items-center">
+      <div class="row">
+        <div class="col-lg-7 col-md-10">
+          <h1 class="display-2 text-white">Bonjour {{ defaultEntreprise.nomSociete }}</h1>
+          <p class="text-white mt-0 mb-5">Ceci est votre page de profil Entreprise. Vous pouvez consulter vos informations et les mettre à jour.</p>
+          <button class="btn btn-info" (click)="enableEdit()" *ngIf="!isEditing">Modifier le profil</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page content -->
+  <div class="container-fluid mt--7" style="margin-bottom: 5vh;">
+    <div class="row">
+
+      <!-- Profile Card -->
+      <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
+        <div class="card card-profile shadow">
+          <div class="row justify-content-center">
+            <div class="col-lg-3 order-lg-2">
+              <div class="card-profile-image">
+                <a href="#">
+                  <img src="https://i.ibb.co/5GzXkw3/user-avatar.png" class="rounded-circle" alt="Profile Image">
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+            <div class="d-flex justify-content-between">
+              <a href="#" class="btn btn-sm btn-info mr-4">Contacter</a>
+              <a href="#" class="btn btn-sm btn-default float-right">Message</a>
+            </div>
+          </div>
+          <div class="card-body pt-0 pt-md-4">
+            <div class="text-center">
+              <h3 style="margin-top: 40px;">{{ defaultEntreprise.nomSociete }}</h3>
+              <div class="h5 font-weight-300">
+                <i class="ni location_pin mr-2"></i>{{ defaultEntreprise.adresseComplete || defaultEntreprise.adresseEntreprise }}
+              </div>
+              <div class="h5 mt-4">
+                <i class="ni business_briefcase-24 mr-2"></i>{{ defaultEntreprise.matriculeFiscale }}
+              </div>
+              <div>
+                <i class="ni email-83 mr-2"></i>{{ defaultEntreprise.email }}
+              </div>
+              <hr class="my-4">
+              <p style="margin-top: -3vh;">Vous pouvez gérer vos informations d'entreprise ici.</p>
+              <a href="#" (click)="enableEdit()" *ngIf="!isEditing">Voir plus</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="col-xl-8 order-xl-1">
+        <div class="card bg-secondary shadow">
+          <div class="card-header bg-white border-0">
+            <div class="row align-items-center">
+              <div class="col-8">
+                <h3 class="mb-0">Mon Entreprise</h3>
+              </div>
+              <div class="col-4 text-right">
+                <button class="btn btn-sm btn-primary" (click)="save()" [disabled]="!isEditing">Enregistrer</button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <form>
+              <h6 class="heading-small text-muted mb-4">Informations de l'entreprise</h6>
+              <div class="pl-lg-4">
+                <div class="row">
+                  <div class="col-lg-6">
+                    <div class="form-group focused">
+                      <label for="nomSociete" class="form-control-label">Nom de la société</label>
+                      <input id="nomSociete" type="text" [(ngModel)]="entreprise.nomSociete" name="nomSociete" class="form-control form-control-alternative" placeholder="Nom de la société" [readonly]="!isEditing">
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="matriculeFiscale" class="form-control-label">Matricule fiscale</label>
+                      <input id="matriculeFiscale" type="text" [(ngModel)]="entreprise.matriculeFiscale" name="matriculeFiscale" class="form-control form-control-alternative" placeholder="Matricule fiscale" [readonly]="!isEditing">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="email" class="form-control-label">Email</label>
+                      <input id="email" type="email" [(ngModel)]="entreprise.email" name="email" class="form-control form-control-alternative" placeholder="Adresse email" [readonly]="true">
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="telephone" class="form-control-label">Téléphone</label>
+                      <input id="telephone" type="text" [(ngModel)]="entreprise.telephone" name="telephone" class="form-control form-control-alternative" placeholder="Téléphone" [readonly]="!isEditing">
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <hr class="my-4">
+
+
+
+              <hr class="my-4">
+
+              <h6 class="heading-small text-muted mb-4">Adresse</h6>
+              <div class="pl-lg-4">
+              <div class="form-group focused">
+                <label for="adresseEntreprise" class="form-control-label">Adresse</label>
+                <select id="adresseEntreprise" [(ngModel)]="entreprise.adresseEntreprise" name="adresseEntreprise"
+                        class="form-control form-control-alternative" [disabled]="!isEditing">
+                  <option *ngFor="let gov of gouvernorats" [value]="gov">{{ gov }}</option>
+                </select>
+              </div>
+                <div class="form-group focused mt-3">
+                  <label for="adresseComplete" class="form-control-label">Adresse complète</label>
+                  <input id="adresseComplete" type="text" [(ngModel)]="entreprise.adresseComplete" name="adresseComplete" class="form-control form-control-alternative" placeholder="Adresse complète" [readonly]="!isEditing">
+                </div>
+              </div>
+
+              <hr class="my-4">
+              <h6 class="heading-small text-muted mb-4">Sécurité</h6>
+              <div class="pl-lg-4">
+                <div class="form-group focused">
+                  <label for="password" class="form-control-label">Mot de passe</label>
+                  <input id="password" type="password" [(ngModel)]="entreprise.password" name="password" class="form-control form-control-alternative" placeholder="Mot de passe" [readonly]="true">
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

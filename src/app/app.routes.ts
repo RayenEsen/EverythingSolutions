@@ -12,6 +12,7 @@ import { PrintRetenueComponent } from './PrintRetenue/PrintRetenue.component';
 import { CommingSoonComponent } from './CommingSoon/CommingSoon.component';
 import { LayoutComponent } from './layout/layout.component';
 import { ProfileComponent } from './Profile/Profile.component';
+import { DashboardComponent } from './Dashboard/Dashboard.component';
 
 export const routes: Routes = [
   {
@@ -71,6 +72,11 @@ export const routes: Routes = [
         component: ProfileComponent,
         title: 'Profil',
       },
+      {
+        path: 'Dashboard',
+        component: DashboardComponent,
+        title: 'Dashboard',
+      },  
 
     ]
   },

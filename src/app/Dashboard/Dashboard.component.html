@@ -1,0 +1,294 @@
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+
+<body>
+
+
+  <!-- Contenu principal -->
+  <div class="main-content">
+    <!-- Section de bienvenue -->
+    <div class="welcome-section">
+      <div class="welcome-content">
+        <div class="row align-items-center">
+          <div class="col-lg-8">
+            <h1 class="display-5 fw-bold mb-3">Bon retour, Rayen! 👋</h1>
+            <p class="lead mb-0">Bienvenue ! Aujourd'hui, 5 nouveaux utilisateurs se sont inscrits, 3 messages attendent votre réponse et 12 commandes sont en attente de révision.</p>
+          </div>
+          <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+            <button class="btn btn-light btn-modern me-2">
+              <i class="fas fa-download me-2"></i>Exporter les données
+            </button>
+            <button class="btn btn-outline-light btn-modern">
+              <i class="fas fa-plus me-2"></i>Ajouter nouveau
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- Cartes de statistiques orientées base de données -->
+<div class="row mb-5">
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="stat-card">
+      <div class="stat-icon primary">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-number">2 543</div>
+      <div class="stat-label">Utilisateurs enregistrés</div>
+      <div class="progress progress-modern">
+        <div class="progress-bar bg-primary" style="width: 75%"></div>
+      </div>
+      <small class="text-success mt-2 d-block">
+        <i class="fas fa-arrow-up me-1"></i>+12% ce mois-ci
+      </small>
+    </div>
+  </div>
+
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="stat-card">
+      <div class="stat-icon success">
+        <i class="fas fa-file-invoice-dollar"></i>
+      </div>
+      <div class="stat-number">1 024</div>
+      <div class="stat-label">Traites créées</div>
+      <div class="progress progress-modern">
+        <div class="progress-bar bg-success" style="width: 80%"></div>
+      </div>
+      <small class="text-success mt-2 d-block">
+        <i class="fas fa-arrow-up me-1"></i>+9% ce mois-ci
+      </small>
+    </div>
+  </div>
+
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="stat-card">
+      <div class="stat-icon warning">
+        <i class="fas fa-hand-holding-usd"></i>
+      </div>
+      <div class="stat-number">675</div>
+      <div class="stat-label">Retenues créées</div>
+      <div class="progress progress-modern">
+        <div class="progress-bar bg-warning" style="width: 60%"></div>
+      </div>
+      <small class="text-warning mt-2 d-block">
+        <i class="fas fa-arrow-up me-1"></i>+5% ce mois-ci
+      </small>
+    </div>
+  </div>
+
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="stat-card">
+      <div class="stat-icon danger">
+        <i class="fas fa-percentage"></i>
+      </div>
+      <div class="stat-number">91,3%</div>
+      <div class="stat-label">Taux de conversion</div>
+      <div class="progress progress-modern">
+        <div class="progress-bar bg-danger" style="width: 91%"></div>
+      </div>
+      <small class="text-success mt-2 d-block">
+        <i class="fas fa-arrow-up me-1"></i>+2% ce mois-ci
+      </small>
+    </div>
+  </div>
+</div>
+
+
+<!-- Ligne des graphiques -->
+<div class="row mb-5">
+  <div class="col-lg-8 mb-4">
+    <div class="chart-container">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="mb-0 fw-bold">Analyse des revenus</h5>
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-outline-primary btn-sm">7J</button>
+          <button type="button" class="btn btn-primary btn-sm">30J</button>
+          <button type="button" class="btn btn-outline-primary btn-sm">90J</button>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center align-items-center h-75">
+        <div class="text-center text-muted">
+          <i class="fas fa-chart-area fa-4x mb-3" style="color: #e5e7eb;"></i>
+          <h6>Zone de graphique interactive</h6>
+          <p class="mb-0">Visualisation des tendances et analyses des revenus<br>
+            <small>Intégrer avec Chart.js ou des bibliothèques similaires</small>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4 mb-4">
+    <div class="chart-container map-chart-container">
+      <h5 class="mb-4 fw-bold" style="padding-bottom: 20px;">Sources de trafic</h5>
+      <div class="d-flex justify-content-center align-items-center h-75">
+        <div class="text-center text-muted">
+          <div id="map-container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        <!-- Recent Orders Table -->
+        <div class="row" style="margin-bottom: 5vh;">
+            <div class="col-12">
+                <div class="table-container">
+                    <div class="table-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1 fw-bold">Utilisateurs récents</h5>
+                            <p class="text-muted mb-0">Derniers utilisateurs inscrits et leur statut</p>
+                        </div>
+                        <button class="btn btn-primary btn-modern">
+                            <i class="fas fa-plus me-2"></i>Nouvel utilisateur
+                        </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID Utilisateur</th>
+                                    <th>Client</th>
+                                    <th>Adresse complète</th>
+                                    <th>Matricule</th>
+                                    <th>Abonnement</th>
+                                    <th>Téléphone</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+<tbody>
+  <tr>
+    <td><span class="fw-bold">#15478</span></td>
+    <td>
+      <div class="d-flex align-items-center">
+        <div class="avatar me-3" style="width: 35px; height: 35px; font-size: 0.875rem;">AC</div>
+        <div>
+          <div class="fw-semibold">ACME SARL</div>
+          <small class="text-muted">contactacme.com</small>
+        </div>
+      </div>
+    </td>
+    <td>123 Rue de Paris, 75001 Paris, France</td>
+    <td>MF123456789</td>
+    <td><span class="badge badge-status bg-success">Abonné</span></td>
+    <td>+33 1 23 45 67 89</td>
+    <td>
+      <button class="btn btn-sm btn-outline-primary me-1">
+        <i class="fas fa-eye"></i>
+      </button>
+      <button class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-edit"></i>
+      </button>
+    </td>
+  </tr>
+  <tr>
+    <td><span class="fw-bold">#24562</span></td>
+    <td>
+      <div class="d-flex align-items-center">
+        <div class="avatar me-3" style="width: 35px; height: 35px; font-size: 0.875rem;">BT</div>
+        <div>
+          <div class="fw-semibold">Boulangerie Thomas</div>
+          <small class="text-muted">contactbthomas.fr</small>
+        </div>
+      </div>
+    </td>
+    <td>45 Avenue Victor Hugo, 69002 Lyon, France</td>
+    <td>MF987654321</td>
+    <td><span class="badge badge-status bg-warning">Essai</span></td>
+    <td>+33 4 78 56 34 21</td>
+    <td>
+      <button class="btn btn-sm btn-outline-primary me-1">
+        <i class="fas fa-eye"></i>
+      </button>
+      <button class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-edit"></i>
+      </button>
+    </td>
+  </tr>
+  <tr>
+    <td><span class="fw-bold">#37895</span></td>
+    <td>
+      <div class="d-flex align-items-center">
+        <div class="avatar me-3" style="width: 35px; height: 35px; font-size: 0.875rem;">MG</div>
+        <div>
+          <div class="fw-semibold">Mega Group</div>
+          <small class="text-muted">infomegagroup.com</small>
+        </div>
+      </div>
+    </td>
+    <td>78 Boulevard Haussmann, 75009 Paris, France</td>
+    <td>MF555666777</td>
+    <td><span class="badge badge-status bg-danger">Non abonné</span></td>
+    <td>+33 1 45 67 89 00</td>
+    <td>
+      <button class="btn btn-sm btn-outline-primary me-1">
+        <i class="fas fa-eye"></i>
+      </button>
+      <button class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-edit"></i>
+      </button>
+    </td>
+  </tr>
+    <tr>
+    <td><span class="fw-bold">#37895</span></td>
+    <td>
+      <div class="d-flex align-items-center">
+        <div class="avatar me-3" style="width: 35px; height: 35px; font-size: 0.875rem;">MG</div>
+        <div>
+          <div class="fw-semibold">Mega Group</div>
+          <small class="text-muted">infomegagroup.com</small>
+        </div>
+      </div>
+    </td>
+    <td>78 Boulevard Haussmann, 75009 Paris, France</td>
+    <td>MF555666777</td>
+    <td><span class="badge badge-status bg-danger">Non abonné</span></td>
+    <td>+33 1 45 67 89 00</td>
+    <td>
+      <button class="btn btn-sm btn-outline-primary me-1">
+        <i class="fas fa-eye"></i>
+      </button>
+      <button class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-edit"></i>
+      </button>
+    </td>
+  </tr>
+    <tr>
+    <td><span class="fw-bold">#37895</span></td>
+    <td>
+      <div class="d-flex align-items-center">
+        <div class="avatar me-3" style="width: 35px; height: 35px; font-size: 0.875rem;">MG</div>
+        <div>
+          <div class="fw-semibold">Mega Group</div>
+          <small class="text-muted">infomegagroup.com</small>
+        </div>
+      </div>
+    </td>
+    <td>78 Boulevard Haussmann, 75009 Paris, France</td>
+    <td>MF555666777</td>
+    <td><span class="badge badge-status bg-danger">Non abonné</span></td>
+    <td>+33 1 45 67 89 00</td>
+    <td>
+      <button class="btn btn-sm btn-outline-primary me-1">
+        <i class="fas fa-eye"></i>
+      </button>
+      <button class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-edit"></i>
+      </button>
+    </td>
+  </tr>
+</tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+</body>

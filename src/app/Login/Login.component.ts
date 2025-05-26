@@ -179,191 +179,115 @@ adresseOptions = [
 
   
 
- Register() {
+// Variables at the top
+adresseComplete: string = '';
+codePostal: string = '';
 
-if (!this.acceptTerms) {
-  this.messageService.add({
-    severity: 'error',
-    summary: 'Conditions non acceptées',
-    detail: 'Veuillez accepter les Conditions Générales d’Utilisation.',
-    life: 3000
-  });
-  return;
-}
+// Updated Register() method
+Register() {
+  if (!this.acceptTerms) {
+    this.messageService.add({ severity: 'error', summary: 'Conditions non acceptées', detail: 'Veuillez accepter les CGU.', life: 3000 });
+    return;
+  }
 
-if (!this.captchaToken) {
-  this.messageService.add({
-    severity: 'error',
-    summary: 'CAPTCHA requis',
-    detail: 'Veuillez compléter le CAPTCHA.',
-    life: 3000
-  });
-  return;
-}
+  if (!this.captchaToken) {
+    this.messageService.add({ severity: 'error', summary: 'CAPTCHA requis', detail: 'Veuillez compléter le CAPTCHA.', life: 3000 });
+    return;
+  }
 
-  // Check if adresseComplete is filled
-  if (!this.registerDto.adresseComplete || this.registerDto.adresseComplete.trim() === '') {
+  if (!this.registerDto.adresseEntreprise || !this.registerDto.adresseEntreprise.trim()) {
+    this.messageService.add({ severity: 'error', summary: 'Gouvernorat manquant', detail: 'Veuillez choisir un gouvernorat.', life: 3000 });
+    return;
+  }
+
+  // Trim fields
+  const trimmedAdresseComplete = this.adresseComplete.trim();
+  const trimmedCodePostal = this.codePostal.trim();
+
+  // Validate adresseComplete (minimum 5 characters)
+  if (trimmedAdresseComplete.length < 5) {
     this.messageService.add({
       severity: 'error',
-      summary: 'Adresse complète manquante',
-      detail: 'Veuillez remplir l’adresse complète.',
+      summary: 'Adresse invalide',
+      detail: 'L\'adresse complète doit contenir au moins 5 caractères.',
       life: 3000
     });
     return;
   }
 
-// Check if adresse is selected
-if (!this.registerDto.adresseEntreprise || this.registerDto.adresseEntreprise.trim() === '') {
-  this.messageService.add({
-    severity: 'error',
-    summary: 'Adresse manquante',
-    detail: 'Veuillez choisir une adresse valide.',
-    life: 3000
-  });
-  return;
-}
-
-// Check if adresse is one of the allowed options
-const isAdresseValid = this.adresseOptions.some(
-  option => option.value === this.registerDto.adresseEntreprise
-);if (!isAdresseValid) {
-  this.messageService.add({
-    severity: 'error',
-    summary: 'Adresse invalide',
-    detail: 'L’adresse choisie n’est pas reconnue.',
-    life: 3000
-  });
-  return;
-}
-
-
-    
-  
-    // Validate email
-    if (!this.registerDto.email) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Email manquant',
-        detail: 'Veuillez saisir votre adresse e-mail.',
-        life: 3000
-      });
-      return;
-    }
-  
-    if (!this.emailPattern.test(this.registerDto.email)) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Email invalide',
-        detail: 'Veuillez saisir une adresse e-mail valide.',
-        life: 3000
-      });
-      return;
-    }
-  
-    // Validate password
-    if (!this.registerDto.password) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Mot de passe manquant',
-        detail: 'Veuillez saisir un mot de passe.',
-        life: 3000
-      });
-      return;
-    }
-  
-    if (!this.passwordPattern.test(this.registerDto.password)) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Mot de passe faible',
-        detail: 'Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.',
-        life: 3000
-      });
-      return;
-    }
-  
-    // Check if passwords match
-    if (this.registerDto.password !== this.confirmPassword) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Les mots de passe ne correspondent pas',
-        detail: 'Veuillez vérifier que les mots de passe sont identiques.',
-        life: 3000
-      });
-      return;
-    }
-
-
-
-// Validate the matricule fiscale
-const matriculeFiscalePattern = /^[0-9]{7}[A-Z]{3}$/;
-if (!matriculeFiscalePattern.test(this.registerDto.matriculeFiscale)) {
-  this.messageService.add({
-    severity: 'error',
-    summary: 'Matricule invalide',
-    detail: 'Le matricule fiscal doit contenir 7 chiffres suivis de 3 lettres majuscules (ex: 1234567ABC).',
-    life: 3000
-  });
-  return;
-}
-
-
-    // Optionally copy confirmPassword into the DTO (if your backend expects it)
-    this.registerDto.confirmPassword = this.confirmPassword;
-  
-// Proceed with registration
-this.ServiceA.register(this.registerDto).subscribe(
-  (response) => {
-    console.log("Inscription réussie", response);
-    this.ShowRegisterSection = false;
-    this.AccountVisible = false;
-    this.ShowVerificationSection = true;
+  // Validate codePostal (4 digits)
+  if (!/^[0-9]{4}$/.test(trimmedCodePostal)) {
     this.messageService.add({
-      severity: 'success',
-      summary: 'Inscription réussie',
-      detail: 'Bienvenue sur la plateforme !',
+      severity: 'error',
+      summary: 'Code postal invalide',
+      detail: 'Le code postal doit être composé de 4 chiffres.',
       life: 3000
     });
-  },
-  (error) => {
-    if (error.status === 400) {
-      // Handle specific validation error like email already in use
-      if (error.error === "Cet email est déjà utilisé.") {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erreur d’inscription',
-          detail: 'Cet email est déjà utilisé.',
-          life: 3000
-        });
-      } else if (error.error === "Ce nom de société est déjà utilisé.") {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erreur d’inscription',
-          detail: 'Ce nom de société est déjà utilisé.',
-          life: 3000
-        });
-      } else {
-        // Handle other validation errors
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erreur',
-          detail: 'Une erreur est survenue, veuillez réessayer.',
-          life: 3000
-        });
-      }
-    } else {
-      // Handle general error cases
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Erreur de serveur',
-        detail: 'Une erreur est survenue, veuillez réessayer.',
-        life: 3000
-      });
-    }
-    console.error("Échec de l’inscription", error);
+    return;
   }
-);
 
+  // Validate adresseEntreprise against options
+  const isAdresseValid = this.adresseOptions.some(opt => opt.value === this.registerDto.adresseEntreprise);
+  if (!isAdresseValid) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Adresse invalide',
+      detail: 'L’adresse choisie n’est pas reconnue.',
+      life: 3000
+    });
+    return;
+  }
+
+  if (!this.emailPattern.test(this.registerDto.email)) {
+    this.messageService.add({ severity: 'error', summary: 'Email invalide', detail: 'Adresse e-mail non valide.', life: 3000 });
+    return;
+  }
+
+  if (!this.passwordPattern.test(this.registerDto.password)) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Mot de passe faible',
+      detail: 'Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.',
+      life: 3000
+    });
+    return;
+  }
+
+  if (this.registerDto.password !== this.confirmPassword) {
+    this.messageService.add({ severity: 'error', summary: 'Mots de passe différents', detail: 'Les mots de passe ne correspondent pas.', life: 3000 });
+    return;
+  }
+
+  const matriculeFiscalePattern = /^[0-9]{7}[A-Z]{3}$/;
+  if (!matriculeFiscalePattern.test(this.registerDto.matriculeFiscale)) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Matricule invalide',
+      detail: 'Le matricule fiscal doit être au format 1234567ABC.',
+      life: 3000
+    });
+    return;
+  }
+
+  // Concatenate adresseComplete with codePostal for adresseEntreprise
+  this.registerDto.adresseComplete = `${trimmedAdresseComplete}, ${trimmedCodePostal}`;
+  this.registerDto.confirmPassword = this.confirmPassword;
+
+  this.ServiceA.register(this.registerDto).subscribe({
+    next: (response) => {
+      this.ShowRegisterSection = false;
+      this.AccountVisible = false;
+      this.ShowVerificationSection = true;
+      this.messageService.add({ severity: 'success', summary: 'Inscription réussie', detail: 'Veuillez vérifier votre compte via l’email envoyé.', life: 3000 });
+    },
+    error: (error) => {
+      const msg = error.error;
+      const detail = msg === 'Cet email est déjà utilisé.' || msg === 'Ce nom de société est déjà utilisé.' ? msg : 'Erreur inconnue.';
+      this.messageService.add({ severity: 'error', summary: 'Erreur d’inscription', detail, life: 3000 });
+    }
+  });
 }
+
 
 
   showLoginSection() {
@@ -372,6 +296,7 @@ this.ServiceA.register(this.registerDto).subscribe(
     this.ShowLoginSection = true;
     this.ShowRegisterSection = false;
     this.ShowResetPasswordSection = false;
+    this.ShowAdminLoginSection = false;
   }
   
   showRegisterSection() {
@@ -536,6 +461,34 @@ search(event: any) {
     .map(addr => addr.label);
 }
 
+
+
+
+
+adminLoginRequest = {
+  email: '',
+  password: ''
+};
+
+ShowAdminLoginSection = false;
+
+showAdminLoginSection() {
+  this.ShowLoginSection = false;
+  this.ShowRegisterSection = false;
+  this.ShowResetPasswordSection = false;
+  this.ShowVerificationSection = false;
+  this.ShowAdminLoginSection = true;
+}
+
+adminLogin() {
+  // Do your API call here
+  console.log('Admin login:', this.adminLoginRequest);
+}
+
+
+toggleAdminLogin() {
+  this.ShowAdminLoginSection = !this.ShowAdminLoginSection;
+}
 
 }
 

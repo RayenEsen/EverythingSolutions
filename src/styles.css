@@ -152,7 +152,7 @@ body.dark {
 }
 
 .menu_setting::before {
-  content: "Setting";
+  content: "Administration";
 }
 
 .sidebar.close .menu_title::before {

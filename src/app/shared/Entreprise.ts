@@ -8,6 +8,7 @@ export class Entreprise {
   matriculeFiscale: string = '';
   ribBancaire: string = '';
   adresseEntreprise: string = '';
+  adresseComplete: string = ''; // Added to match backend
   email: string = '';
   telephone: string = '';
   password: string = '';
@@ -23,5 +24,5 @@ export class Entreprise {
   fournisseurs: Fournisseur[] | null = [];
   banques: Banque[] | null = [];
 
-  // Helper methods can be added here if needed
+  // Add helper methods if needed
 }

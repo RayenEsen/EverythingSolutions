@@ -154,4 +154,66 @@ logout(): Observable<any> {
       })
     );
   }
+
+
+  // Get entreprise by id
+getEntrepriseById(entrepriseId: number): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/entreprise/${entrepriseId}`, {
+    withCredentials: true
+  }).pipe(
+    catchError(error => {
+      console.error('Get entreprise error', error);
+      throw error;
+    })
+  );
+}
+
+// Update entreprise by id
+updateEntreprise(entrepriseId: number, data: any): Observable<any> {
+  return this.http.put<any>(`${this.baseUrl}/entreprise/${entrepriseId}`, data, {
+    withCredentials: true
+  }).pipe(
+    catchError(error => {
+      console.error('Update entreprise error', error);
+      throw error;
+    })
+  );
+}
+
+// Get light list of entreprises
+getEntreprisesLight(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.baseUrl}/light`, {
+    withCredentials: true
+  }).pipe(
+    catchError(error => {
+      console.error('Get entreprises light error', error);
+      return of([]); // Return empty list on error
+    })
+  );
+}
+  // Get entreprise info from local storage
+  getEntrepriseInfo(): any {
+    const entrepriseInfo = localStorage.getItem('entrepriseInfo');
+    return entrepriseInfo ? JSON.parse(entrepriseInfo) : null;
+  }
+
+  // Clear entreprise info from local storage
+  clearEntrepriseInfo(): void {
+    localStorage.removeItem('entrepriseInfo');
+  }
+
+// Inside AuthService
+getStatsByGouvernorat(): Observable<{ gouvernorat: string, count: number }[]> {
+  const url = `${environment.apiBaseURL}/Auth/stats/by-gouvernorat`;
+  return this.http.get<{ gouvernorat: string, count: number }[]>(url, {
+    withCredentials: true
+  }).pipe(
+    catchError(error => {
+      console.error('Error fetching stats by gouvernorat', error);
+      return of([]); // fallback to empty list
+    })
+  );
+}
+
+
 }

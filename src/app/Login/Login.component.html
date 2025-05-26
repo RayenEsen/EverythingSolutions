@@ -1,8 +1,16 @@
+
+
 <div class="page-container" style="background-color: #ffa50024;">
+  
     <div class="card">
         <div class="logo-container">
             <img src="https://i.ibb.co/xKV3vddN/8a2a07a8-b6ca-4342-8173-14564dd9ab4e-removebg-preview-1-1.png" alt="Quick Soft Logo">
         </div>
+
+
+
+
+
 
         <!-- Login Section -->
         <div class="form-section" *ngIf="!companyVisible && !AccountVisible && ShowLoginSection">
@@ -64,141 +72,139 @@
             </div>
         </div>
 
-        <!-- Informations sur l'entreprise -->
-        <div class="form-section" *ngIf="companyVisible && !AccountVisible && ShowRegisterSection" style="padding-top: 0px;">
-            <h2 class="section-title">Informations sur l'entreprise</h2>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="nomSociete" class="large-label">Nom de l'entreprise</label>
-                    <input pInputText type="text" pSize="large" placeholder="Entrer le nom de l'entreprise" [(ngModel)]="registerDto.nomSociete" />
-                </div>
-                
-                <div class="form-group">
-                    <label for="matriculeFiscale" class="large-label">Matricule fiscal</label>
-                    <input 
-                        pInputText 
-                        type="text" 
-                        id="matriculeFiscale"
-                        pSize="large" 
-                        placeholder="Entrer l'identifiant fiscal (ex: 1234567ABC)" 
-                        [(ngModel)]="registerDto.matriculeFiscale"
-                        name="matriculeFiscale"
-                        title="7 chiffres suivis de 3 lettres majuscules (ex: 1234567ABC)"
-                        required
-                        #matriculeFiscaleInput="ngModel"
-                        [ngClass]="{'ng-invalid': matriculeFiscaleInput.invalid && matriculeFiscaleInput.touched}"
-                    />
-                </div>
-            </div>
+        
+        
 
-            <div class="form-row">
-<div class="form-group">
-  <label for="adresseEntreprise" class="large-label">Gouvernorat</label>
-<p-autoComplete 
-  [dropdown]="true" 
-  [suggestions]="filteredAdresses" 
-  (completeMethod)="search($event)" 
-  [(ngModel)]="registerDto.adresseEntreprise" 
-  placeholder="Choisir l'adresse" [forceSelection]="true"
-  [style]="{'width':'100%'}">
-</p-autoComplete>
-</div>
+ <!-- Informations sur l'entreprise -->
+<div class="form-section" *ngIf="companyVisible && !AccountVisible && ShowRegisterSection" style="padding-top: 0px;">
+  <h2 class="section-title" style="    margin-top: 40px;">Informations sur l'entreprise</h2>
 
-                
-                <div class="form-group">
-                    <label for="email" class="large-label">Email</label>
-                    <input pInputText type="text" pSize="large" placeholder="Entrer l'email de l'entreprise" [(ngModel)]="registerDto.email" />
-                </div>
-            </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label class="large-label">Nom de l'entreprise</label>
+      <input pInputText pSize="large" placeholder="Entrer le nom de l'entreprise" [(ngModel)]="registerDto.nomSociete" />
+    </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="telephone" class="large-label">Numéro de téléphone</label>
-                    <input pInputText type="text" pSize="large" placeholder="Entrer le numéro de téléphone" [(ngModel)]="registerDto.telephone" />
-                </div>
-                <div class="form-group">
-                <label for="telephone" class="large-label">Adresse Complete</label>
-                <input pInputText type="text" pSize="large" placeholder="Ex: 12 Rue Habib Bourguiba, Tunis 1000" [(ngModel)]="registerDto.adresseComplete" />
-                </div>
-            </div>
+    <div class="form-group">
+      <label class="large-label">Matricule fiscal</label>
+      <input
+        pInputText
+        pSize="large"
+        placeholder="Ex: 1234567ABC"
+        [(ngModel)]="registerDto.matriculeFiscale"
+        name="matriculeFiscale"
+        title="7 chiffres suivis de 3 lettres majuscules"
+        required
+      />
+    </div>
+  </div>
 
-            
+  <div class="form-row">
+    <div class="form-group">
+      <label class="large-label">Gouvernorat</label>
+      <p-autoComplete 
+        [dropdown]="true"
+        [suggestions]="filteredAdresses"
+        (completeMethod)="search($event)"
+        [(ngModel)]="registerDto.adresseEntreprise"
+        placeholder="Choisir le gouvernorat"
+        [forceSelection]="true"
+        [style]="{'width':'100%'}">
+      </p-autoComplete>
+    </div>
 
-<div class="form-row" style="display: flex; gap: 16rem; align-items: flex-start;">
-  <div class="form-group" style="position: relative;">
-    <label for="password" class="large-label" style="display: flex; align-items: center; gap: 0.5rem;">
-      Mot de passe
-      <p-button icon="pi pi-question-circle" [text]="true"  severity="secondary" class="p-button-text p-button-rounded p-button-sm"
-                (click)="passwordPopover.toggle($event)">
-      </p-button>
-    </label>
+    <div class="form-group">
+      <label class="large-label">Email</label>
+      <input pInputText pSize="large" placeholder="Entrer l'email" [(ngModel)]="registerDto.email" />
+    </div>
+  </div>
 
-    <p-popover #passwordPopover>
-      <div class="flex flex-col gap-2" style="max-width: 250px;">
-        <span class="font-medium text-surface-900 block mb-2">Conseils pour le mot de passe</span>
-        <ul class="list-disc list-inside">
-          <li>Au moins 8 caractères</li>
-          <li>Au moins une majuscule</li>
-          <li>Au moins une minuscule</li>
-          <li>Au moins un chiffre</li>
-        </ul>
-      </div>
-    </p-popover>
-
-    <input pInputText type="password" pSize="large" placeholder="Entrer le mot de passe" [(ngModel)]="registerDto.password" />
+<div class="form-row">
+  <div class="form-group">
+    <label class="large-label">Numéro de téléphone</label>
+    <input pInputText pSize="large" placeholder="Entrer le numéro" [(ngModel)]="registerDto.telephone" />
   </div>
 
   <div class="form-group">
-    <label for="confirm-password" class="large-label">Confirmer le mot de passe</label>
-    <input pInputText type="password" pSize="large" placeholder="Confirmer le mot de passe" [(ngModel)]="confirmPassword" />
+    <label class="large-label">Adresse complète</label>
+    <input pInputText pSize="large" placeholder="Adresse complète (ex: Rue, avenue, bâtiment...)" [(ngModel)]="adresseComplete" />
   </div>
 </div>
 
-<div style="margin-top: 20px;">
-  <input 
-    type="checkbox" 
-    id="acceptCheckbox" 
-    [(ngModel)]="acceptTerms"
-    (change)="onCheckboxChange()"
-    style="width: 16px; height: 16px; margin: 0;"
-  />
-    <label for="termsCheckbox" style="margin-left: 8px;margin-bottom: 30px;">
-        J'accepte les <a href="#" (click)="showTerms($event)">Conditions Générales d'Utilisation</a>
-    </label>
-        <!-- Check icon (visible only when accepted) -->
+<div class="form-row">
+  <div class="form-group">
+    <label class="large-label">Code postal</label>
+    <input pInputText pSize="large" placeholder="Ex: 1000" [(ngModel)]="codePostal" />
+  </div>
+    <div class="form-group">
 
+  </div>
 </div>
 
-
-            
-<div class="captcha-wrapper">
-  <re-captcha
-    siteKey="6Ld1gDsrAAAAAB9jNGrZNkmy_7Hs9oiDseebfUTH"
-    (resolved)="handleCaptcha($event)">
-  </re-captcha>
-</div>
-
-
-
-
-            <div style="margin-top: 35px;">
-            <p-button 
-            label="Enregistrer" 
-            icon="pi pi-sign-in" 
-            severity="primary" 
-            (click)="Register()"
-            [disabled]="
-            !acceptTerms || 
-            !registerDto.email || 
-            !registerDto.password || 
-            !confirmPassword || 
-            !registerDto.matriculeFiscale || 
-            !captchaToken
-            ">
-            </p-button>
-            </div>
+  <div class="form-row" style="display: flex; gap: 16rem; align-items: flex-start;">
+    <div class="form-group" style="position: relative;">
+      <label class="large-label" style="display: flex; align-items: center; gap: 0.5rem;">
+        Mot de passe
+        <p-button icon="pi pi-question-circle" [text]="true" severity="secondary"
+                  class="p-button-text p-button-rounded "
+                  (click)="passwordPopover.toggle($event)">
+        </p-button>
+      </label>
+      <p-popover #passwordPopover>
+        <div class="flex flex-col gap-2" style="max-width: 250px;">
+          <span class="font-medium text-surface-900 block mb-2">Conseils pour le mot de passe</span>
+          <ul class="list-disc list-inside">
+            <li>Au moins 8 caractères</li>
+            <li>Au moins une majuscule</li>
+            <li>Au moins une minuscule</li>
+            <li>Au moins un chiffre</li>
+          </ul>
         </div>
+      </p-popover>
+      <input pInputText type="password" pSize="large" placeholder="Mot de passe" [(ngModel)]="registerDto.password" />
+    </div>
+
+    <div class="form-group">
+      <label class="large-label" style="    padding-bottom: 18px;">Confirmer le mot de passe</label>
+      <input pInputText type="password" pSize="large" placeholder="Confirmer" [(ngModel)]="confirmPassword" />
+    </div>
+  </div>
+
+  <div style="margin-top: 20px;margin-bottom: 20px;">
+    <input type="checkbox" id="acceptCheckbox" [(ngModel)]="acceptTerms" (change)="onCheckboxChange()" />
+    <label for="acceptCheckbox" style="margin-left: 8px;">
+      J'accepte les <a href="#" (click)="showTerms($event)">Conditions Générales d'Utilisation</a>
+    </label>
+  </div>
+
+  <div class="captcha-wrapper">
+    <re-captcha siteKey="6Ld1gDsrAAAAAB9jNGrZNkmy_7Hs9oiDseebfUTH" (resolved)="handleCaptcha($event)">
+    </re-captcha>
+  </div>
+
+  <div style="margin-top: 35px;">
+    <p-button 
+      label="Enregistrer" 
+      icon="pi pi-sign-in" 
+      severity="primary" 
+      (click)="Register()"
+      [disabled]="
+        !acceptTerms || 
+        !registerDto.email || 
+        !registerDto.password || 
+        !confirmPassword || 
+        !registerDto.matriculeFiscale || 
+        !captchaToken
+      ">
+    </p-button>
+  </div>
+</div>
+
+
+
+
+
+
 
 <!-- Vérification de l'email -->
 <div class="form-section" *ngIf="ShowVerificationSection">
