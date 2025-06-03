@@ -45,4 +45,12 @@ export class SidebarComponent {
     this.isCollapsed = window.innerWidth < 768;
     this.isCollapsedChange.emit(this.isCollapsed); // 🔥 notify parent
   }
+
+
+  isAdmin: boolean = false;
+
+ngOnInit() {
+  this.isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+}
+
 }

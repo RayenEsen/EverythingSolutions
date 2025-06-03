@@ -13,6 +13,7 @@ import { CommingSoonComponent } from './CommingSoon/CommingSoon.component';
 import { LayoutComponent } from './layout/layout.component';
 import { ProfileComponent } from './Profile/Profile.component';
 import { DashboardComponent } from './Dashboard/Dashboard.component';
+import { AdminGuard } from './Guards/admin.guard'; 
 
 export const routes: Routes = [
   {
@@ -76,8 +77,8 @@ export const routes: Routes = [
         path: 'Dashboard',
         component: DashboardComponent,
         title: 'Dashboard',
-      },  
-
+        canActivate: [AdminGuard]  // Only admin users
+      }
     ]
   },
   // fallback to home or 404
