@@ -149,6 +149,7 @@ adresseOptions = [
           detail: 'Vous êtes connecté avec succès !',
           life: 3000
         });
+        console.log("Local Storage contents:", localStorage);
         this.router.navigate(['']);
       },
      (error) => {
@@ -296,7 +297,6 @@ Register() {
     this.ShowLoginSection = true;
     this.ShowRegisterSection = false;
     this.ShowResetPasswordSection = false;
-    this.ShowAdminLoginSection = false;
   }
   
   showRegisterSection() {
@@ -465,30 +465,7 @@ search(event: any) {
 
 
 
-adminLoginRequest = {
-  email: '',
-  password: ''
-};
 
-ShowAdminLoginSection = false;
-
-showAdminLoginSection() {
-  this.ShowLoginSection = false;
-  this.ShowRegisterSection = false;
-  this.ShowResetPasswordSection = false;
-  this.ShowVerificationSection = false;
-  this.ShowAdminLoginSection = true;
-}
-
-adminLogin() {
-  // Do your API call here
-  console.log('Admin login:', this.adminLoginRequest);
-}
-
-
-toggleAdminLogin() {
-  this.ShowAdminLoginSection = !this.ShowAdminLoginSection;
-}
 
 }
 

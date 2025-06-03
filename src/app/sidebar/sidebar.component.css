@@ -65,15 +65,6 @@
 }
 
 
-.nav_link {
-  color: var(--text-color);
-  display: flex;
-  align-items: center;
-  padding: 10px 15px;
-  text-decoration: none;
-  transition: background 0.3s, color 0.3s;
-}
-
 .nav_link:hover {
   background: var(--primary-color);
   color: white !important;
@@ -84,7 +75,17 @@
   color: white !important;
 }
 
-.sublink {
-  padding-left: 30px;
-  font-size: 14px;
+
+
+/* When sidebar is collapsed/close */
+.sidebar.close .menu_title,
+.sidebar.collapsed .menu_title {
+  opacity: 0;
+  visibility: hidden;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
 }
+
+

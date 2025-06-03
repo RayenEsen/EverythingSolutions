@@ -47,10 +47,21 @@ export class SidebarComponent {
   }
 
 
-  isAdmin: boolean = false;
+isAdmin: boolean = false;
 
 ngOnInit() {
-  this.isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+  const entrepriseInfoStr = localStorage.getItem('entrepriseInfo');
+  if (entrepriseInfoStr) {
+    try {
+      const entrepriseInfo = JSON.parse(entrepriseInfoStr);
+      this.isAdmin = entrepriseInfo.isAdmin === true;
+    } catch (e) {
+      console.error('Error parsing entrepriseInfo from localStorage', e);
+      this.isAdmin = false;
+    }
+  } else {
+    this.isAdmin = false;
+  }
 }
 
 }
