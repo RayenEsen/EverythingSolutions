@@ -7,7 +7,7 @@ import { LoginRequest } from '../DTO/LoginRequest';
 import { LoginResponse } from '../DTO/LoginResponse';
 import { RegisterRequest } from '../DTO/RegisterRequest';
 import { ResetPasswordRequest } from '../DTO/ResetPasswordRequest';
-
+import { EntreprisesProgress } from '../DTO/EntreprisesProgress';
 @Injectable({
   providedIn: 'root'
 })
@@ -214,6 +214,46 @@ getStatsByGouvernorat(): Observable<{ gouvernorat: string, count: number }[]> {
     })
   );
 }
+
+
+// Delete entreprise by id
+deleteEntreprise(entrepriseId: number): Observable<any> {
+  return this.http.delete(`${this.baseUrl}/entreprise/${entrepriseId}`, {
+    withCredentials: true
+  }).pipe(
+    catchError(error => {
+      console.error('Delete entreprise error', error);
+      throw error;
+    })
+  );
+}
+
+
+
+
+getEntreprisesProgress(): Observable<EntreprisesProgress> {
+  return this.http.get<EntreprisesProgress>(`${environment.apiBaseURL}/Auth/entreprises/progress`, {
+    withCredentials: true
+  }).pipe(
+    catchError(error => {
+      console.error('Error fetching entreprises progress', error);
+      throw error;
+    })
+  );
+}
+
+getEntreprisesCreatedTodayCount(): Observable<{ count: number }> {
+  return this.http.get<{ count: number }>(`${environment.apiBaseURL}/Auth/entreprises/created-today/count`, {
+    withCredentials: true
+  }).pipe(
+    catchError(error => {
+      console.error('Error fetching entreprises created today count', error);
+      throw error;
+    })
+  );
+}
+
+
 
 
 }

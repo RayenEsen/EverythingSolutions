@@ -89,3 +89,78 @@
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+/* Menu items */
+.nav_link {
+  display: flex;
+  align-items: center;
+  color: #333;
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+  border-radius: 6px;
+  margin: 2px 12px;
+}
+
+
+
+
+.menu_items.blocked {
+  pointer-events: none;     /* Disables all interaction */
+  opacity: 0.6;             /* Makes it look disabled */
+  filter: grayscale(1);     /* Optional: make it look visually inactive */
+  user-select: none;        /* Prevent text selection */
+}
+
+
+
+.menu_wrapper {
+  position: relative;
+}
+
+/* Locking the section */
+.blocked-section {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.6;
+  user-select: none;
+  
+  filter: grayscale(1);
+}
+
+
+/* Premium badge overlay */
+.blocked-section::after {
+  content: "🔒 PREMIUM";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #dc3545;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  z-index: 11;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none; /* allows mouse to pass through to the wrapper for visual only */
+}
+
+
+.sidebar.close .blocked-section::after,
+.sidebar.collapsed .blocked-section::after {
+  display: none !important;
+}

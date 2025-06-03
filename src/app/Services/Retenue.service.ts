@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from './../Environments/environment';
 import { RetenueDto } from '../DTO/RetenueDto';
 import { AddRetenueDTO } from '../DTO/AddRetenue';
+import { CountResponse, RetenuesProgress } from '../DTO/RetenuesProgress';
 @Injectable({
   providedIn: 'root'
 })
@@ -36,6 +37,8 @@ export class RetenuesService {
     });
   }
 
+  
+
   deleteRetenue(id: number): Observable<string> {
     return this.http.delete(`${this.baseUrl}/${id}`, {
       withCredentials: true,
@@ -49,4 +52,19 @@ export class RetenuesService {
       responseType: 'text'
     });
   }
+
+
+  getRetenuesProgress(): Observable<RetenuesProgress> {
+  return this.http.get<RetenuesProgress>(`${this.baseUrl}/progress`, {
+    withCredentials: true
+  });
+}
+
+getRetenuesCreatedTodayCount(): Observable<CountResponse> {
+  return this.http.get<CountResponse>(`${this.baseUrl}/created-today/count`, {
+    withCredentials: true
+  });
+}
+
+
 }

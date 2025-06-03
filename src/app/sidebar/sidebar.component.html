@@ -1,8 +1,35 @@
 <nav class="sidebar" [class.close]="isCollapsed" [class.hoverable]="hoverable">
   <div class="menu_content">
 
+<ul class="menu_items">
+  <div class="menu_title">Gratuit</div>
+
+<!-- Traite -->
+<li class="item">
+  <a class="nav_link submenu_item" href="/Trait">
+    <span class="navlink_icon"><i class="bx bx-money"></i></span>
+    <span class="navlink">Traite</span>
+  </a>
+</li>
+
+<!-- Retenue à la source -->
+<li class="item">
+  <a class="nav_link submenu_item" href="/Retenue">
+    <span class="navlink_icon"><i class="bx bx-receipt"></i></span>
+    <span class="navlink">Retenue</span>
+  </a>
+</li>
+
+</ul>
+
+    
+    <div class="menu_wrapper blocked-section">
+
     <!-- GESTION COMMERCIALE -->
-    <ul class="menu_items">
+    <ul class="menu_items blocked">
+
+
+
       <div class="menu_title">Gestion Commerciale</div>
 
       <!-- Listes -->
@@ -135,6 +162,8 @@
         </ul>
       </li>
     </ul>
+    </div>
+
 
 <!-- ADMINISTRATION -->
 <ul class="menu_items" *ngIf="isAdmin">
@@ -146,6 +175,19 @@
       <span class="navlink">Utilisateurs</span>
     </a>
   </li>
+  <li class="item">
+    <a class="nav_link" href="CommingSoon">
+      <span class="navlink_icon"><i class="bx bx-cog"></i></span>
+      <span class="navlink">Paramètres</span>
+    </a>
+  </li>
+</ul>
+
+
+<!-- Parametre -->
+<ul class="menu_items" >
+  <div class="menu_title">Avancée </div>
+
   <li class="item">
     <a class="nav_link" href="CommingSoon">
       <span class="navlink_icon"><i class="bx bx-cog"></i></span>

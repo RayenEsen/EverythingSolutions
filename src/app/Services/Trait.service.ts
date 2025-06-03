@@ -52,5 +52,25 @@ updateRetraite(id: number, retraite: AddRetraiteDTO): Observable<RetraiteLightDt
   });
 }
 
+ getRetraitesProgress(): Observable<{ countThisMonth: number; countLastMonth: number; growth: number }> {
+    return this.http.get<{ countThisMonth: number; countLastMonth: number; growth: number }>(`${this.baseUrl}/progress`, {
+      withCredentials: true
+    });
+  }
 
+  getRetraitesCreatedTodayCount(): Observable<{ count: number }> {
+    return this.http.get<{ count: number }>(`${this.baseUrl}/created-today/count`, {
+      withCredentials: true
+    });
+  }
+
+  
+getMonthlySummary(): Observable<{ year: number, month: number, count: number }[]> {
+  return this.http.get<{ year: number, month: number, count: number }[]>(
+    `${this.baseUrl}/monthly-summary`,
+    { withCredentials: true }
+  );
+}
+
+  
 }
