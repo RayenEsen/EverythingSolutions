@@ -11,6 +11,16 @@
   --card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.2);
   --transition-fast: 0.2s ease;
   --transition-medium: 0.3s ease;
+  --bs-light-rgb: 248, 249, 250;
+  --bs-bg-opacity: 1;
+  --bs-border-width: 1px;
+  --bs-border-style: solid;
+  --bs-border-color: #dee2e6;
+  --input-bg: #ffffff;
+  --input-color: #333333;
+  --input-border: #e2e8f0;
+  --input-focus-border: #4a6ced;
+  --input-focus-shadow: rgba(74, 108, 237, 0.25);
 }
 
 /* ========== BASE LAYOUT STRUCTURE ========== */
@@ -22,6 +32,217 @@
   font-family: 'Poppins', sans-serif;
   background-color: #f3f4f6;
   color: #333;
+}
+
+/* Light mode bg-light */
+.bg-light {
+  --bs-bg-opacity: 1;
+  background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+:host-context(body.dark) {
+  background-color: #1a202c;
+  color: #ffffff;
+
+  /* Override bg-light in dark mode */
+  .bg-light {
+    --bs-light-rgb: 30, 41, 59;  /* Dark blue-grey */
+    background-color: #1e293b !important;
+    color: #e2e8f0;
+    border-color: #4a5568;
+  }
+
+  /* Additional bg-light child element styles */
+  .bg-light {
+    .text-dark {
+      color: #e2e8f0 !important;
+    }
+
+    .btn-outline-secondary {
+      color: #e2e8f0;
+      border-color: #4a5568;
+      background-color: transparent;
+
+      &:hover {
+        background-color: #4a5568;
+        color: #ffffff;
+      }
+    }
+
+    .btn-primary {
+      background-color: #3b82f6;
+      border-color: #3b82f6;
+      color: #ffffff;
+
+      &:hover {
+        background-color: #2563eb;
+        border-color: #2563eb;
+      }
+    }
+
+    /* Form elements within bg-light */
+    .form-control,
+    .p-autocomplete-input {
+      background-color: #2d3748;
+      border-color: #dee2e6;
+      color: #ffffff;
+
+      &::placeholder {
+        color: #9ca3af;
+      }
+
+      &:focus {
+        border-color: #60a5fa;
+        box-shadow: 0 0 0 0.2rem rgba(96, 165, 250, 0.25);
+      }
+    }
+
+    /* Links within bg-light */
+    a {
+      color: #60a5fa;
+
+      &:hover {
+        color: #93c5fd;
+      }
+    }
+
+    /* Headers within bg-light */
+    h1, h2, h3, h4, h5, h6 {
+      color: #ffffff;
+    }
+
+    /* Borders within bg-light */
+    .border,
+    .border-top,
+    .border-bottom,
+    .border-start,
+    .border-end {
+      border-color: #4a5568 !important;
+    }
+  }
+
+  /* Update form control variables for dark mode */
+  --input-bg: #2d3748;
+  --input-color: #ffffff;
+  --input-border: #dee2e6;
+  --input-focus-border: #60a5fa;
+  --input-focus-shadow: rgba(96, 165, 250, 0.25);
+
+  /* Form controls in dark mode */
+  .form-control,
+  .p-autocomplete-input {
+    background-color: var(--input-bg);
+    color: var(--input-color);
+    border-color: #dee2e6;
+
+    &:focus {
+      border-color: var(--input-focus-border);
+      box-shadow: 0 0 0 0.2rem var(--input-focus-shadow);
+    }
+
+    &::placeholder {
+      color: #9ca3af;
+    }
+
+    &:disabled {
+      background-color: #374151;
+      color: #9ca3af;
+      border-color: #dee2e6;
+    }
+  }
+
+  /* Border styles for dark mode */
+  --bs-border-color: #4a5568;
+  
+  .border {
+    border-color: #4a5568 !important;
+  }
+
+  .border-top {
+    border-top-color: #4a5568 !important;
+  }
+
+  .border-bottom {
+    border-bottom-color: #4a5568 !important;
+  }
+
+  .border-start {
+    border-start-color: #4a5568 !important;
+  }
+
+  .border-end {
+    border-end-color: #4a5568 !important;
+  }
+
+  /* Rounded border styles */
+  .border.rounded,
+  .border.rounded-1,
+  .border.rounded-2,
+  .border.rounded-3 {
+    border-color: #4a5568 !important;
+  }
+
+  /* Style text in bg-light elements */
+  .bg-light .text-dark {
+    color: #ffffff !important;
+  }
+
+  /* Style buttons in bg-light elements */
+  .bg-light .btn-outline-secondary {
+    color: #e2e8f0;
+    border-color: #4a5568;
+  }
+
+  .bg-light .btn-outline-secondary:hover {
+    background-color: #4a5568;
+    color: #ffffff;
+  }
+
+  .bg-light .btn-primary {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+  }
+
+  .bg-light .btn-primary:hover {
+    background-color: #2563eb;
+    border-color: #2563eb;
+  }
+
+  /* Input groups in dark mode */
+  .input-group {
+    .input-group-text {
+      background-color: #374151;
+      border-color: #4a5568;
+      color: #ffffff;
+    }
+  }
+
+  /* Form labels in dark mode */
+  .form-label {
+    color: #ffffff !important;
+  }
+
+  /* Form validation states */
+  .form-control.is-invalid,
+  .p-autocomplete-input.is-invalid {
+    border-color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
+
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba(239, 68, 68, 0.25);
+    }
+  }
+
+  .form-control.is-valid,
+  .p-autocomplete-input.is-valid {
+    border-color: #10b981;
+    background-color: rgba(16, 185, 129, 0.1);
+
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
+    }
+  }
 }
 
 .main-content {
@@ -98,8 +319,24 @@
   padding: 0.5rem 0.75rem;
   font-size: 0.9rem;
   width: 100%;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--input-border);
   border-radius: 4px;
+  background-color: var(--input-bg);
+  color: var(--input-color);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus,
+.p-autocomplete-input:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 0.2rem var(--input-focus-shadow);
+  outline: none;
+}
+
+.form-control::placeholder,
+.p-autocomplete-input::placeholder {
+  color: var(--text-medium);
+  opacity: 0.7;
 }
 
 /* ========== DRAWER STYLES ========== */
@@ -237,8 +474,6 @@
   max-width: 100%;
 }
 
-
-
 /* ========== DASHBOARD HEADER ========== */
 .dashboard-header {
   padding: 1.5rem 2rem;
@@ -307,7 +542,7 @@
   margin: 0;
 }
 
-/* ========== MODERN METRICS GRID ========== */
+/* ========== METRICS GRID ========== */
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -377,7 +612,6 @@
 
 .metric-decoration i {
   font-size: 2rem;
-  
 }
 
 /* Color variants with modern pastel tones */
@@ -430,7 +664,168 @@
   opacity: 1;
 }
 
-/* ========== RESPONSIVE ADJUSTMENTS ========== */
+/* ========== DARK MODE STYLES ========== */
+:host-context(body.dark) .dark-mode {
+  background-color: #1a202c;
+  color: #ffffff;
+
+  .dashboard-header {
+    background: #2d3748;
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .breadcrumb-item {
+    color: #e2e8f0;
+  }
+
+  .breadcrumb-item.active {
+    color: #ffffff;
+  }
+
+  .header-subtitle {
+    color: #e2e8f0;
+  }
+
+  .card {
+    background: #2d3748;
+    color: #ffffff;
+    border-color: #4a5568;
+  }
+
+  .metric-card {
+    background: #2d3748;
+    border-color: #4a5568;
+  }
+
+  .metric-label {
+    color: #e2e8f0;
+  }
+
+  .metric-value {
+    color: #ffffff;
+  }
+
+  .metric-decoration {
+    opacity: 0.7;
+  }
+
+  .metric-decoration i {
+    color: #e2e8f0 !important;
+  }
+
+  /* PrimeNG component styles */
+  .p-datatable {
+    background-color: #2d3748;
+    
+    .p-datatable-header {
+      background-color: #2d3748;
+      color: #ffffff;
+      border-color: #4a5568;
+    }
+
+    .p-datatable-tbody > tr {
+      background-color: #2d3748;
+      color: #ffffff;
+
+      &:hover {
+        background-color: #374151 !important;
+      }
+    }
+
+    .p-datatable-tbody > tr > td {
+      border-color: #4a5568;
+    }
+
+    .p-column-header-content {
+      color: #ffffff;
+    }
+  }
+
+  .p-inputtext {
+    background-color: #374151;
+    color: #ffffff;
+    border-color: #4a5568;
+
+    &:enabled:hover {
+      border-color: var(--primary-color);
+    }
+
+    &::placeholder {
+      color: #9ca3af;
+    }
+  }
+
+  .p-button {
+    &.p-button-secondary {
+      background-color: #4a5568;
+      border-color: #4a5568;
+      color: #ffffff;
+
+      &:hover {
+        background-color: #374151;
+        border-color: #374151;
+      }
+    }
+  }
+
+  .p-dialog {
+    .p-dialog-header {
+      background-color: #2d3748;
+      color: #ffffff;
+      border-bottom: 1px solid #4a5568;
+    }
+
+    .p-dialog-content {
+      background-color: #2d3748;
+      color: #ffffff;
+    }
+  }
+
+  .p-sidebar {
+    background-color: #2d3748;
+    color: #ffffff;
+
+    .p-sidebar-header {
+      background-color: #374151;
+      border-bottom: 1px solid #4a5568;
+    }
+  }
+
+  .p-tag {
+    &.p-tag-info {
+      background-color: #3b82f6;
+      color: #ffffff;
+    }
+  }
+
+  .p-autocomplete-panel {
+    background-color: #2d3748;
+    border-color: #4a5568;
+
+    .p-autocomplete-items {
+      .p-autocomplete-item {
+        color: #ffffff;
+
+        &:hover {
+          background-color: #374151;
+        }
+      }
+    }
+  }
+}
+
+/* ========== RESPONSIVE STYLES ========== */
+@media (max-width: 992px) {
+  .main-content {
+    margin-left: 80px;
+  }
+  
+  .main-content.collapsed {
+    margin-left: 80px;
+  }
+}
+
 @media (max-width: 768px) {
   .metrics-grid {
     grid-template-columns: 1fr 1fr;
@@ -457,17 +852,49 @@
   }
 }
 
-
-
-
-
 :ng-deep .p-autocomplete-list {
-    margin: 0;
-    list-style-type: none;
-    display: flex
-;
-    flex-direction: column;
-    gap: var(--p-autocomplete-list-gap);
-    padding: var(--p-autocomplete-list-padding);
-    margin-left: 67px;
+  margin: 0;
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-autocomplete-list-gap);
+  padding: var(--p-autocomplete-list-padding);
+  margin-left: 67px;
+}
+
+/* Action buttons container */
+.d-flex.justify-content-end.gap-2.p-3.bg-light {
+  transition: all 0.3s ease;
+}
+
+:host-context(body.dark) {
+  /* Action buttons container in dark mode */
+  .d-flex.justify-content-end.gap-2.p-3.bg-light {
+    background-color: #1e293b !important;
+    border-top: 1px solid #4a5568;
+  }
+
+  /* Outline button in dark mode */
+  .btn-outline-secondary {
+    color: #e2e8f0;
+    border-color: #4a5568;
+    background-color: transparent;
+
+    &:hover {
+      background-color: #4a5568;
+      color: #ffffff;
+    }
+  }
+
+  /* Primary button in dark mode */
+  .btn-primary {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: #ffffff;
+
+    &:hover {
+      background-color: #2563eb;
+      border-color: #2563eb;
+    }
+  }
 }

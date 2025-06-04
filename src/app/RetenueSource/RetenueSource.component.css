@@ -11,6 +11,25 @@
   --card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.2);
   --transition-fast: 0.2s ease;
   --transition-medium: 0.3s ease;
+  --dark-bg: #1e293b;
+  --dark-border: #4a5568;
+}
+
+/* Custom dark background class */
+.custom-bg-dark {
+  background-color: var(--dark-bg) !important;
+  color: #ffffff;
+}
+
+/* Dark mode border styles */
+:host-context(body.dark) {
+  .border,
+  .border.rounded,
+  .border.rounded-1,
+  .border.rounded-2,
+  .border.rounded-3 {
+    border-color: var(--dark-border) !important;
+  }
 }
 
 /* ========== BASE LAYOUT STRUCTURE ========== */
@@ -22,6 +41,151 @@
   font-family: 'Poppins', sans-serif;
   background-color: #f3f4f6;
   color: #333;
+  transition: all 0.3s ease;
+}
+
+:host-context(body.dark) {
+  background-color: #1a202c;
+  color: #ffffff;
+
+  /* Card styles in dark mode */
+  .card {
+    background: #2d3748;
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Dashboard header in dark mode */
+  .dashboard-header {
+    background: #2d3748;
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Breadcrumb colors in dark mode */
+  .breadcrumb-item {
+    color: #e2e8f0;
+  }
+
+  .breadcrumb-item.active {
+    color: #ffffff;
+  }
+
+  .breadcrumb-separator {
+    color: #e2e8f0;
+  }
+
+  /* Header text in dark mode */
+  .header-subtitle {
+    color: #e2e8f0;
+  }
+
+  /* Metric cards in dark mode */
+  .metric-card {
+    background: #2d3748;
+    border-color: #4a5568;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .metric-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  .metric-label {
+    color: #e2e8f0;
+  }
+
+  .metric-value {
+    color: #ffffff;
+  }
+
+  .currency {
+    color: #e2e8f0;
+  }
+
+  /* Form controls in dark mode */
+  .form-control, 
+  .p-autocomplete-input {
+    background-color: #1a202c;
+    color: #ffffff;
+    border-color: #4a5568;
+  }
+
+  .form-control:focus, 
+  .p-autocomplete-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+  }
+
+  /* Table styles in dark mode */
+  .p-table {
+    th {
+      background-color: #1a202c;
+      color: #ffffff;
+      border-color: #4a5568;
+    }
+
+    td {
+      color: #ffffff;
+      border-color: #4a5568;
+    }
+  }
+
+  /* Dialog/Drawer in dark mode */
+  .p-drawer .p-drawer-content,
+  .p-dialog .p-dialog-content {
+    background: #2d3748;
+    color: #ffffff;
+  }
+
+  .p-drawer .form-actions,
+  .p-dialog .p-dialog-footer {
+    background: #2d3748;
+    border-color: #4a5568;
+  }
+
+  /* Context menu in dark mode */
+  .p-contextmenu {
+    background: #2d3748;
+    border-color: #4a5568;
+
+    .p-menuitem-link {
+      color: #ffffff;
+
+      &:hover {
+        background: #4a5568;
+      }
+    }
+  }
+
+  /* Tags in dark mode */
+  .p-tag {
+    &.p-tag-info {
+      background: #3b82f6;
+      color: #ffffff;
+    }
+  }
+
+  /* Buttons in dark mode */
+  .p-button.p-button-secondary {
+    background: #4a5568;
+    border-color: #4a5568;
+    color: #ffffff;
+
+    &:hover {
+      background: #374151;
+      border-color: #374151;
+    }
+  }
+
+  /* Empty state in dark mode */
+  .empty-state {
+    color: #e2e8f0;
+  }
 }
 
 .main-content {

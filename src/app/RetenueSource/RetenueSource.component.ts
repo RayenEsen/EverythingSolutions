@@ -32,6 +32,7 @@ import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { Retenue } from '../shared/Retenue';
 import { AddRetenueDTO } from '../DTO/AddRetenue';
+import { ThemeService } from '../Services/theme.service';
 
 @Component({
   selector: 'app-RetenueSource',
@@ -48,6 +49,7 @@ export class RetenueSourceComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private ServiceF : FournisseurService,
     private router: Router,
+    public themeService: ThemeService,
   ) {}
 
 

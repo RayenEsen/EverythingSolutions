@@ -72,7 +72,7 @@
 
 <div class="card">
 
-  <div class="d-flex align-items-center justify-content-between p-2 bg-light text-dark border rounded mb-3">
+  <div class="d-flex align-items-center justify-content-between p-2 text-dark border rounded mb-3" [ngClass]="themeService.isDarkMode() ? 'custom-bg-dark' : 'bg-light'">
     <p-menubar [model]="items" />
     <p-iconfield class="d-flex align-items-center">
       <p-inputicon styleClass="pi pi-search" />
@@ -208,7 +208,7 @@
   <div class="p-4">
 <!-- Numéro de Facture -->
 <div class="mb-3">
-  <label for="facture" class="form-label" style="color: #223167;">Numéro de Facture</label>
+  <label for="facture" class="form-label" >Numéro de Retenue</label>
   <input 
     type="text" 
     class="form-control" 
@@ -296,7 +296,7 @@
   </div>
 
         <!-- Action Buttons -->
-      <div class="d-flex justify-content-end gap-2 p-3 bg-light" style="position: absolute; bottom: 0; left: 0; width: 100%;">
+      <div class="d-flex justify-content-end gap-2 p-3" [ngClass]="themeService.isDarkMode() ? 'custom-bg-dark' : 'bg-light'" style="position: absolute; bottom: 0; left: 0; width: 100%;">
         <button 
           type="button" 
           class="btn btn-outline-secondary"
@@ -406,7 +406,7 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="d-flex justify-content-end gap-2 p-3 bg-light" style="position: absolute; bottom: 0; left: 0; width: 100%;">
+      <div class="d-flex justify-content-end gap-2 p-3" [ngClass]="themeService.isDarkMode() ? 'custom-bg-dark' : 'bg-light'" style="position: absolute; bottom: 0; left: 0; width: 100%;">
         <button 
           type="button" 
           class="btn btn-outline-secondary"

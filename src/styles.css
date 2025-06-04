@@ -21,19 +21,39 @@
   --text-light: #e2e8f0;
   --shadow-color: rgba(123, 146, 226, 0.15);
   --border-color: #e2e8f0;
+  --background-secondary: #ffffff;
+  --hover-color: var(--primary-color);
+  --hover-text: white;
 }
 
 body {
   background-color: var(--white-color);
   transition: all 0.5s ease;
+  color: var(--text-dark);
 }
 
 body.dark {
   background-color: #1a202c;
-  --text-dark: #f7fafc;
-  --text-medium: #cbd5e0;
+  --text-dark: #ffffff;
+  --text-medium: #ffffff;
+  --text-light: #ffffff;
   --white-color: #1a202c;
   --border-color: #2d3748;
+  --background-secondary: #2d3748;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --hover-color: rgba(255, 255, 255, 0.1);
+  --hover-text: #ffffff;
+}
+
+/* Ensure text colors are enforced in dark mode */
+body.dark .navlink_icon,
+body.dark .menu_title,
+body.dark .nav_link,
+body.dark .submenu .sublink,
+body.dark .bottom,
+body.dark .bottom span,
+body.dark .navbar_content i {
+  color: #ffffff;
 }
 
 /* navbar */
@@ -42,7 +62,7 @@ body.dark {
   top: 0;
   width: 100%;
   left: 0;
-  background-color: var(--white-color);
+  background-color: var(--background-secondary);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -101,7 +121,7 @@ body.dark {
 
 /* sidebar */
 .sidebar {
-  background-color: var(--white-color);
+  background-color: var(--background-secondary);
   width: 260px;
   position: fixed;
   top: 0;
@@ -189,8 +209,8 @@ body.dark {
 }
 
 .navlink_icon:hover {
-  background: var(--primary-color);
-  color: white;
+  background: var(--hover-color);
+  color: var(--hover-text);
 }
 
 .sidebar .nav_link {
@@ -209,8 +229,8 @@ body.dark {
 }
 
 .nav_link:hover {
-  color: white;
-  background: var(--primary-color);
+  color: var(--hover-text);
+  background: var(--hover-color);
 }
 
 .sidebar.close .nav_link:hover {
@@ -252,7 +272,8 @@ body.dark {
 }
 
 .submenu .sublink:hover {
-  color: var(--primary-color);
+  color: var(--hover-text);
+  background: var(--hover-color);
 }
 
 .bottom_content {

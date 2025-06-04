@@ -4,9 +4,20 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #F7FAFC 0%, #e6f9fc 50%, #d0f5fa 100%);  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  width: 100%;
+  margin: 0;
+  background: #f8fafc;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   padding: 2rem;
   text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+/* Dark mode styles */
+.welcome-container.dark-mode {
+  background: #1a202c;
 }
 
 .animation-container {
@@ -20,6 +31,10 @@
   filter: drop-shadow(0 4px 12px rgba(123, 146, 226, 0.15));
 }
 
+.dark-mode .lottie-animation {
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+}
+
 .content-section {
   max-width: 600px;
 }
@@ -27,9 +42,14 @@
 .app-title {
   font-size: 2.25rem;
   font-weight: 600;
-  color: #2d3748;
   margin-bottom: 1rem;
   background: linear-gradient(90deg, #7b92e2 0%, #3cbfae 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark-mode .app-title {
+  background: linear-gradient(90deg, #e2e8f0 0%, #ffffff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -39,6 +59,10 @@
   line-height: 1.6;
   color: #4a5568;
   margin-bottom: 2rem;
+}
+
+.dark-mode .app-description {
+  color: #e2e8f0;
 }
 
 .action-buttons {
@@ -59,10 +83,20 @@
   box-shadow: 0 2px 4px rgba(123, 146, 226, 0.3);
 }
 
+.dark-mode .primary-btn {
+  background-color: #60a5fa;
+  box-shadow: 0 2px 4px rgba(96, 165, 250, 0.3);
+}
+
 .primary-btn:hover {
   background-color: #6a83d8;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(123, 146, 226, 0.3);
+}
+
+.dark-mode .primary-btn:hover {
+  background-color: #3b82f6;
+  box-shadow: 0 4px 8px rgba(96, 165, 250, 0.3);
 }
 
 .secondary-btn {
@@ -76,10 +110,21 @@
   transition: all 0.2s ease;
 }
 
+.dark-mode .secondary-btn {
+  background-color: transparent;
+  color: #60a5fa;
+  border: 2px solid #60a5fa;
+}
+
 .secondary-btn:hover {
   background-color: #f0fdfa;
   transform: translateY(-2px);
   box-shadow: 0 2px 4px rgba(60, 191, 174, 0.2);
+}
+
+.dark-mode .secondary-btn:hover {
+  background-color: rgba(96, 165, 250, 0.1);
+  box-shadow: none;
 }
 
 /* Responsive adjustments */
@@ -102,8 +147,6 @@
     width: 100%;
   }
 }
-
-
 
 ngx-spinner .spinner {
   border: 5px solid #ccc;

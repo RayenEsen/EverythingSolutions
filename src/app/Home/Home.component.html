@@ -1,4 +1,4 @@
-<div class="welcome-container">
+<div class="welcome-container" [ngClass]="{'dark-mode': themeService.isDarkMode()}">
   <!-- Animation Container -->
   <div class="animation-container">
     <iframe 

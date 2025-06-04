@@ -1,272 +1,271 @@
-<p-toast />
-<div class="dashboard-header">
-  <div class="header-content"> 
-<div class="breadcrumb-nav" style="display: flex; align-items: center;    justify-content: space-between;">
-  <nav class="breadcrumb">
-    <span class="breadcrumb-item">Accueil</span>
-    <span class="breadcrumb-separator">›</span>
-    <span class="breadcrumb-item">Finances</span>
-    <span class="breadcrumb-separator">›</span>
-    <span class="breadcrumb-item active">Liste des Traites</span>
-  </nav>
-  <!-- Add your image here -->
-  <img src="https://i.ibb.co/Xfj86PzY/8a2a07a8-b6ca-4342-8173-14564dd9ab4e-removebg-preview-1-1.png" alt="Logo" width="60" height="60"alt="Traites Icon" 
-       style="margin-left: 12px; height: 50px; width: 50px;;">
-</div>
+<div [class.dark-mode]="themeService.isDarkMode()">
+  <p-toast />
+  <div class="dashboard-header">
+    <div class="header-content"> 
+      <div class="breadcrumb-nav" style="display: flex; align-items: center;    justify-content: space-between;">
+        <nav class="breadcrumb">
+          <span class="breadcrumb-item">Accueil</span>
+          <span class="breadcrumb-separator">›</span>
+          <span class="breadcrumb-item">Finances</span>
+          <span class="breadcrumb-separator">›</span>
+          <span class="breadcrumb-item active">Liste des Traites</span>
+        </nav>
+        <!-- Add your image here -->
+        <img src="https://i.ibb.co/Xfj86PzY/8a2a07a8-b6ca-4342-8173-14564dd9ab4e-removebg-preview-1-1.png" alt="Logo" width="60" height="60"alt="Traites Icon" 
+             style="margin-left: 12px; height: 50px; width: 50px;;">
+      </div>
+      
+      <div class="header-main" style="margin-top: -10px;">
+        <h1 class="header-title">
+          <span class="title-gradient">Liste des Traites</span>
+        </h1>
+        <p class="header-subtitle">Voici la liste des Traites effectués avec leurs détails.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <!-- Total Traites Card -->
+    <div class="metric-card">
+      <div class="metric-content">
+        <h3 class="metric-label">Total Traites</h3>
+        <p class="metric-value">{{ animatedTotalAmount  }} <span class="currency"></span></p>
+        <div class="metric-decoration">
+          <i class="pi pi-file-o" style="color: black;"></i>
+        </div>
+      </div>
+    </div>
     
-    <div class="header-main" style="margin-top: -10px;">
-      <h1 class="header-title">
-        <span class="title-gradient">Liste des Traites</span>
-      </h1>
-      <p class="header-subtitle">Voici la liste des Traites effectués avec leurs détails.</p>
-    </div>
-  </div>
-</div>
-
-<div class="metrics-grid">
-  <!-- Total Traites Card -->
-  <div class="metric-card">
-    <div class="metric-content">
-      <h3 class="metric-label">Total Traites</h3>
-      <p class="metric-value">{{ animatedTotalAmount  }} <span class="currency"></span></p>
-      <div class="metric-decoration">
-        <i class="pi pi-file-o" style="color: black;"></i>
+    <!-- Montant Total Card -->
+    <div class="metric-card accent-2">
+      <div class="metric-content">
+        <h3 class="metric-label">Montant Total</h3>
+        <p class="metric-value">{{ animatedAverageAmount | number:'1.2-2' }} <span class="currency">TND</span></p>
+        <div class="metric-decoration">
+          <i class="pi pi-money-bill" style="color: black;"></i>
+        </div>
       </div>
     </div>
-  </div>
-  
-  <!-- Montant Total Card -->
-  <div class="metric-card accent-2">
-    <div class="metric-content">
-      <h3 class="metric-label">Montant Total</h3>
-      <p class="metric-value">{{ animatedAverageAmount | number:'1.2-2' }} <span class="currency">TND</span></p>
-      <div class="metric-decoration">
-        <i class="pi pi-money-bill" style="color: black;"></i>
-      </div>
-    </div>
-  </div>
-  
-  <!-- En Attente Card -->
-  <div class="metric-card accent-3">
-    <div class="metric-content">
-      <h3 class="metric-label">En Attente</h3>
-      <p class="metric-value">{{ animatedPendingCount }}</p>
-      <div class="metric-decoration">
-        <i class="pi pi-clock" style="color: black;"></i>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Banques Card -->
-  <div class="metric-card accent-4">
-    <div class="metric-content">
-      <h3 class="metric-label">Banques</h3>
-      <p class="metric-value">{{ animatedUniqueBanks }}</p>
-      <div class="metric-decoration">
-        <i class="pi pi-building" style="color: black;"></i>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="card" >
-
-
-
-
- 
-
-<div class="d-flex align-items-center justify-content-between p-2 bg-light text-dark border rounded mb-3">
-  <p-menubar [model]="items" />
-  
-<p-iconfield class="d-flex align-items-center">
-  <p-inputicon styleClass="pi pi-search" />
-  <input
-    type="text"
-    pInputText
-    placeholder="Rechercher"
-    class="form-control"
-    [(ngModel)]="searchText"
-    (input)="filterRetraites()"
-/>
-</p-iconfield>
-
-</div>
-
-
-  
-
-
-  <p-contextMenu #cm [model]="items2" [appendTo]="'body'"></p-contextMenu>
-
-
-  <p-table 
-    #dt1 
-    [value]="retraitesLightData" 
-    dataKey="id" 
-    [rows]="10" 
-    [rowsPerPageOptions]="[10, 25, 50]" 
-    [loading]="loading" 
-    [paginator]="true" 
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
-    [filterDelay]="0" 
-    selectionMode="single"
-    [(selection)]="SelectedTraits"
-    [contextMenu]="cm"
-    [(contextMenuSelection)]="selectedRetrait" 
-    [globalFilterFields]="['numeroCheque', 'entreprise.nom']">
     
+    <!-- En Attente Card -->
+    <div class="metric-card accent-3">
+      <div class="metric-content">
+        <h3 class="metric-label">En Attente</h3>
+        <p class="metric-value">{{ animatedPendingCount }}</p>
+        <div class="metric-decoration">
+          <i class="pi pi-clock" style="color: black;"></i>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Banques Card -->
+    <div class="metric-card accent-4">
+      <div class="metric-content">
+        <h3 class="metric-label">Banques</h3>
+        <p class="metric-value">{{ animatedUniqueBanks }}</p>
+        <div class="metric-decoration">
+          <i class="pi pi-building" style="color: black;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
 
 
-    <ng-template #header>
-      <tr>
-        <th style="width: 1rem">
-            <p-tableHeaderCheckbox pReorderableColumn class="printable"/>
-        </th>
-        
-        <th style="width: 15rem">
-            Numéro
-            <p-columnFilter type="text" field="numeroCheque" display="menu" class="ml-auto"/>
-        </th>
-        
-        <th style="width: 16rem">
-            Montant
-            <p-columnFilter type="numeric" field="montant" display="menu" class="ml-auto"/>
-        </th>
-        
-        <th style="width: 25rem">
-            Echéance
-            <p-columnFilter type="date" field="dateEcheance" display="menu" class="ml-auto"/>
-        </th>
 
-        <th style="width: 25rem">
-            Creation
-            <p-columnFilter type="date" field="DateCreation" display="menu" class="ml-auto"/>
-        </th>
-        
-        <th style="width: 25rem">
-            Fournisseurs
-            <p-columnFilter type="text" field="fournisseurs.nom" display="menu" class="ml-auto"/>
-        </th>
-         
-        <th style="width: 30rem">
-            Banques
-            <p-columnFilter type="text" field="banques.nom" display="menu" class="ml-auto"/>
-        </th>
+
+    <div class="d-flex align-items-center justify-content-between p-2 bg-light text-dark border rounded mb-3">
+      <p-menubar [model]="items" />
+      
+    <p-iconfield class="d-flex align-items-center">
+      <p-inputicon styleClass="pi pi-search" />
+      <input
+        type="text"
+        pInputText
+        placeholder="Rechercher"
+        class="form-control"
+        [(ngModel)]="searchText"
+        (input)="filterRetraites()"
+    />
+    </p-iconfield>
+
+    </div>
+
+
+      
+
+
+      <p-contextMenu #cm [model]="items2" [appendTo]="'body'"></p-contextMenu>
+
+
+      <p-table 
+        #dt1 
+        [value]="retraitesLightData" 
+        dataKey="id" 
+        [rows]="10" 
+        [rowsPerPageOptions]="[10, 25, 50]" 
+        [loading]="loading" 
+        [paginator]="true" 
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
+        [filterDelay]="0" 
+        selectionMode="single"
+        [(selection)]="SelectedTraits"
+        [contextMenu]="cm"
+        [(contextMenuSelection)]="selectedRetrait" 
+        [globalFilterFields]="['numeroCheque', 'entreprise.nom']">
         
 
-        
-        <th>
-            Voir
-        </th>
-    </tr>
-    </ng-template>
 
-    <ng-template #body let-ret>
-      <tr style="cursor: pointer;"     [pContextMenuRow]="ret">
-        <td >
-          <p-tableCheckbox pReorderableRowHandle class="printable" [value]="ret"/>
-        </td>
-        <td>{{ ret.numeroCheque }}</td>
-        <td>{{ ret.montant | number:'1.2-2' }} TND</td>
-        <td>{{ getFormattedEcheance(ret.dateEcheance) }}</td>
-        <td>{{ ret.dateCreation | date:'dd/MM/yyyy ' }}</td>
-          <td>
-            <p-tag [severity]="'info'" [value]=" ret.fournisseurNom  || 'N/A'"></p-tag>
-          </td>
+        <ng-template #header>
+          <tr>
+            <th style="width: 1rem">
+                <p-tableHeaderCheckbox pReorderableColumn class="printable"/>
+            </th>
+            
+            <th style="width: 15rem">
+                Numéro
+                <p-columnFilter type="text" field="numeroCheque" display="menu" class="ml-auto"/>
+            </th>
+            
+            <th style="width: 16rem">
+                Montant
+                <p-columnFilter type="numeric" field="montant" display="menu" class="ml-auto"/>
+            </th>
+            
+            <th style="width: 25rem">
+                Echéance
+                <p-columnFilter type="date" field="dateEcheance" display="menu" class="ml-auto"/>
+            </th>
 
-          <td>
-            <p-tag [severity]="'info'" [value]="ret.banqueNom || 'N/A'"></p-tag>
-          </td>
-          
-        <td style="width: 7%; " (click)="NavigateToRetraiteDetails(ret)">
-          <i class="pi pi-eye hover-blue" style="font-size: 1.25rem;padding-left: 8px;"  ></i>
-        </td>
-        
-      </tr>
-    </ng-template>
-      <ng-template #emptymessage>
-        <tr>
-          <td colspan="100%" style="text-align: center; width: 100%;">
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
-              <iframe 
-                src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie" 
-                width="200" 
-                height="200" 
-                frameborder="0" 
-                allow="autoplay; encrypted-media" 
-                allowfullscreen>
-              </iframe>
-              <div>Aucune Traite trouvée.</div>
-            </div>
-          </td>
+            <th style="width: 25rem">
+                Creation
+                <p-columnFilter type="date" field="DateCreation" display="menu" class="ml-auto"/>
+            </th>
+            
+            <th style="width: 25rem">
+                Fournisseurs
+                <p-columnFilter type="text" field="fournisseurs.nom" display="menu" class="ml-auto"/>
+            </th>
+             
+            <th style="width: 30rem">
+                Banques
+                <p-columnFilter type="text" field="banques.nom" display="menu" class="ml-auto"/>
+            </th>
+            
+
+            
+            <th>
+                Voir
+            </th>
         </tr>
-      </ng-template>
-    
-    
-  </p-table>
-</div>
+        </ng-template>
+
+        <ng-template #body let-ret>
+          <tr style="cursor: pointer;"     [pContextMenuRow]="ret">
+            <td >
+              <p-tableCheckbox pReorderableRowHandle class="printable" [value]="ret"/>
+            </td>
+            <td>{{ ret.numeroCheque }}</td>
+            <td>{{ ret.montant | number:'1.2-2' }} TND</td>
+            <td>{{ getFormattedEcheance(ret.dateEcheance) }}</td>
+            <td>{{ ret.dateCreation | date:'dd/MM/yyyy ' }}</td>
+              <td>
+                <p-tag [severity]="'info'" [value]=" ret.fournisseurNom  || 'N/A'"></p-tag>
+              </td>
+
+              <td>
+                <p-tag [severity]="'info'" [value]="ret.banqueNom || 'N/A'"></p-tag>
+              </td>
+              
+            <td style="width: 7%; " (click)="NavigateToRetraiteDetails(ret)">
+              <i class="pi pi-eye hover-blue" style="font-size: 1.25rem;padding-left: 8px;"  ></i>
+            </td>
+            
+          </tr>
+        </ng-template>
+          <ng-template #emptymessage>
+            <tr>
+              <td colspan="100%" style="text-align: center; width: 100%;">
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+                  <iframe 
+                    src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie" 
+                    width="200" 
+                    height="200" 
+                    frameborder="0" 
+                    allow="autoplay; encrypted-media" 
+                    allowfullscreen>
+                  </iframe>
+                  <div>Aucune Traite trouvée.</div>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        
+        
+      </p-table>
+    </div>
 
 
 
-<p-drawer [(visible)]="AddRetraitInfo" header="Ajouter un Nouveau Traite" position="right" [style]="{width: '450px'}">
-  <div class="p-4">
-    <!-- Form without reactive forms -->
-    <div>
+    <p-drawer [(visible)]="AddRetraitInfo" header="Ajouter un Nouveau Traite" position="right" [style]="{width: '450px'}">
+      <div class="p-4">
+        <!-- Form without reactive forms -->
+        <div>
 
 
-      <!-- Numéro de Chèque Field -->
-      <div class="mb-3">
-        <label for="cheque" class="form-label" style="color: #223167;">Numéro de Traite</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          id="cheque"
-          #chequeInput
-          [(ngModel)]="AddRetrait.numCheque"
-          placeholder="Ex: CHK123456">
-        <div *ngIf="showChequeError" class="text-danger small mt-1">Le numéro de chèque est requis</div>
-      </div>
-
-      <div class="mb-4">
-        <label for="echeance" class="form-label d-block mb-2">Date d'Échéance</label>
-        <div class="w-100 d-block">
+          <!-- Numéro de Chèque Field -->
+          <div class="mb-3">
+            <label for="cheque" class="form-label" >Numéro de Traite</label>
             <input 
-            type="date" 
-            class="form-control" 
-            id="cheque"
-            #chequeInput
-            placeholder="Ex: CHK123456"
-            [(ngModel)]="AddRetrait.dateEcheance"
-            >
-        </div>
-        <div *ngIf="showDateError" class="text-danger small mt-1">
-          Veuillez sélectionner une date valide
-        </div>
-      </div>
+              type="text" 
+              class="form-control" 
+              id="cheque"
+              #chequeInput
+              [(ngModel)]="AddRetrait.numCheque"
+              placeholder="Ex: CHK123456">
+            <div *ngIf="showChequeError" class="text-danger small mt-1">Le numéro de chèque est requis</div>
+          </div>
 
-            <!-- Montant Field -->
-            <div class="mb-3">
-              <label for="montant" class="form-label">Montant (TND)</label>
-              <p-inputNumber 
-                id="montant" 
-                #montantInput
-                [(ngModel)]="AddRetrait.montant"
-                mode="currency" 
-                placeholder="0.00 TND" 
-                currency="TND" 
-                locale="fr-FR"
-                [min]="0"
-                class="w-100"
-                inputStyleClass="form-control"
-                [showButtons]="true">
-              </p-inputNumber>
-              <div *ngIf="showMontantError" class="text-danger small mt-1">Veuillez entrer un montant valide</div>
+          <div class="mb-4">
+            <label for="echeance" class="form-label d-block mb-2">Date d'Échéance</label>
+            <div class="w-100 d-block">
+                <input 
+                type="date" 
+                class="form-control" 
+                id="cheque"
+                #chequeInput
+                placeholder="Ex: CHK123456"
+                [(ngModel)]="AddRetrait.dateEcheance"
+                >
             </div>
+            <div *ngIf="showDateError" class="text-danger small mt-1">
+              Veuillez sélectionner une date valide
+            </div>
+          </div>
 
-            <div class="mb-3">
-              <label for="fournisseur-autocomplete" class="form-label d-block mb-2">Fournisseur</label>
-              <div style="display: flex;">
-                             <p-autocomplete 
+                <!-- Montant Field -->
+                <div class="mb-3">
+                  <label for="montant" class="form-label">Montant (TND)</label>
+                  <p-inputNumber 
+                    id="montant" 
+                    #montantInput
+                    [(ngModel)]="AddRetrait.montant"
+                    mode="currency" 
+                    placeholder="0.00 TND" 
+                    currency="TND" 
+                    locale="fr-FR"
+                    [min]="0"
+                    class="w-100"
+                    inputStyleClass="form-control"
+                    [showButtons]="true">
+                  </p-inputNumber>
+                  <div *ngIf="showMontantError" class="text-danger small mt-1">Veuillez entrer un montant valide</div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="fournisseur-autocomplete" class="form-label d-block mb-2">Fournisseur</label>
+                  <div style="display: flex;">
+                                 <p-autocomplete 
                 id="fournisseur-autocomplete"
                 inputId="fournisseur-input"
                 [(ngModel)]="selectedFournisseur"
@@ -358,7 +357,7 @@
 
 
       <!-- Action Buttons -->
-      <div class="d-flex justify-content-end gap-2 p-3 bg-light" style="position: absolute; bottom: 0; left: 0; width: 100%;">
+      <div class="d-flex justify-content-end gap-2 p-3 " style="position: absolute; bottom: 0; left: 0; width: 100%;" [ngClass]="themeService.isDarkMode() ? 'custom-bg-dark' : 'bg-light'" style="position: absolute; bottom: 0; left: 0; width: 100%;">
         <button 
           type="button" 
           class="btn btn-outline-secondary"
@@ -374,653 +373,640 @@
       </div>
 
       
-    </div>
-  </div>
-</p-drawer>
+        </div>
+      </div>
+    </p-drawer>
 
 
 
-<p-drawer [(visible)]="AddBanqueInfo" header="Ajouter une Banque" position="right" [style]="{width: '450px'}">
-  <div class="p-4 d-flex flex-column" style="height: 100%; position: relative;">
-    <!-- Formulaire -->
-    <div style="flex-grow: 1; overflow-y: auto; padding-bottom: 60px;"> 
+    <p-drawer [(visible)]="AddBanqueInfo" header="Ajouter une Banque" position="right" [style]="{width: '450px'}">
+      <div class="p-4 d-flex flex-column" style="height: 100%; position: relative;">
+        <!-- Formulaire -->
+        <div style="flex-grow: 1; overflow-y: auto; padding-bottom: 60px;"> 
+          
+          <!-- Nom de la banque -->
+          <div class="mb-3">
+            <label class="form-label">Nom de la Banque</label>
+    <p-autoComplete 
+      [(ngModel)]="banque.nom"
+      [suggestions]="filteredBanques"
+      (completeMethod)="filterBanques($event)"
+      [dropdown]="true"
+      placeholder="Ex: Banque Nationale"
+      name="banqueNom"
+      [forceSelection]="true"
+      [minLength]="0"
+      [autoHighlight]="true"
+      [style]="{'width':'100%'}">
+    </p-autoComplete>
+
+
+            <div *ngIf="showNomBanqueError" class="text-danger small mt-1">
+              Le nom de la banque est requis
+            </div>
+          </div>
+
+          <!-- Adresse de la banque -->
+          <div class="mb-3">
+            <label class="form-label">Adresse</label>
+            <input 
+              type="text" 
+              class="form-control"
+              [(ngModel)]="banque.adresse"
+              name="banqueAdresse"
+              placeholder="Ex: 12 Rue de Paris, 75000 Paris, France">
+            <div *ngIf="showAdresseError" class="text-danger small mt-1">
+              L'adresse est requise
+            </div>
+          </div>
+
+          <!-- RIB -->
+          <div class="mb-3">
+            <label class="form-label">RIB</label>
+            <input 
+              type="text" 
+              class="form-control"
+              [(ngModel)]="banque.rib"
+              name="banqueRIB"
+              placeholder="Ex: 12345678912345678912">
+            <div *ngIf="showRibError" class="text-danger small mt-1">
+              Le RIB est requis
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="d-flex justify-content-end gap-2 p-3 " style="position: absolute; bottom: 0; left: 0; width: 100%;" [ngClass]="themeService.isDarkMode() ? 'custom-bg-dark' : 'bg-light'" style="position: absolute; bottom: 0; left: 0; width: 100%;">
+          <button type="button" class="btn btn-outline-secondary" (click)="AddBanqueInfo = false">
+            <i class="pi pi-times me-2"></i>Annuler
+          </button>
+          <button type="button" class="btn btn-primary" (click)="onSaveBanque()">
+            <i class="pi pi-check me-2"></i>Enregistrer
+          </button>
+        </div>
+      </div>
+    </p-drawer>
+
+
+
+
+    <p-drawer [(visible)]="AddFournisseurInfo" header="Ajouter un Nouveau Fournisseur" position="right" [style]="{width: '450px'}">
+      <div class="p-4">
+        <div>
+          <!-- ✅ Matricule Fournisseur -->
+    <div class="mb-3">
+      <label class="form-label">Matricule du Fournisseur</label>
+      <input 
+        type="text" 
+        class="form-control"
+        [(ngModel)]="FournisseurAjouter.matriculeFournisseur"
+        name="fournisseurMatricule"
+        placeholder="Ex: 1234567ABC">
       
-      <!-- Nom de la banque -->
-      <div class="mb-3">
-        <label class="form-label">Nom de la Banque</label>
-<p-autoComplete 
-  [(ngModel)]="banque.nom"
-  [suggestions]="filteredBanques"
-  (completeMethod)="filterBanques($event)"
-  [dropdown]="true"
-  placeholder="Ex: Banque Nationale"
-  name="banqueNom"
-  [forceSelection]="true"
-  [minLength]="0"
-  [autoHighlight]="true"
-  [style]="{'width':'100%'}">
-</p-autoComplete>
-
-
-        <div *ngIf="showNomBanqueError" class="text-danger small mt-1">
-          Le nom de la banque est requis
-        </div>
+      <!-- Erreur si vide -->
+      <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.matriculeFournisseur === 'empty'">
+        Le matricule du fournisseur est requis
       </div>
 
-      <!-- Adresse de la banque -->
-      <div class="mb-3">
-        <label class="form-label">Adresse</label>
-        <input 
-          type="text" 
-          class="form-control"
-          [(ngModel)]="banque.adresse"
-          name="banqueAdresse"
-          placeholder="Ex: 12 Rue de Paris, 75000 Paris, France">
-        <div *ngIf="showAdresseError" class="text-danger small mt-1">
-          L'adresse est requise
-        </div>
+      <!-- Erreur si format incorrect -->
+      <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.matriculeFournisseur === 'invalid'">
+        Le matricule doit être au format 1234567ABC (7 chiffres + 3 lettres majuscules)
       </div>
-
-      <!-- RIB -->
-      <div class="mb-3">
-        <label class="form-label">RIB</label>
-        <input 
-          type="text" 
-          class="form-control"
-          [(ngModel)]="banque.rib"
-          name="banqueRIB"
-          placeholder="Ex: 12345678912345678912">
-        <div *ngIf="showRibError" class="text-danger small mt-1">
-          Le RIB est requis
-        </div>
-      </div>
-
     </div>
 
-    <!-- Boutons d'action -->
-    <div class="d-flex justify-content-end gap-2 p-3 bg-light" style="position: absolute; bottom: 0; left: 0; width: 100%;">
-      <button type="button" class="btn btn-outline-secondary" (click)="AddBanqueInfo = false">
-        <i class="pi pi-times me-2"></i>Annuler
-      </button>
-      <button type="button" class="btn btn-primary" (click)="onSaveBanque()">
-        <i class="pi pi-check me-2"></i>Enregistrer
-      </button>
+
+        <div class="mb-3">
+          <label class="form-label">Nom du Fournisseur</label>
+          <input 
+            type="text" 
+            class="form-control"
+            [(ngModel)]="FournisseurAjouter.nom"
+            name="fournisseurNom"
+            placeholder="Ex: Société ABC">
+          <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.nom">
+            Le nom du fournisseur est requis
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email du Fournisseur</label>
+          <input 
+            type="text" 
+            class="form-control"
+            [(ngModel)]="FournisseurAjouter.email"
+            name="fournisseurEmail"
+            placeholder="Ex: contact@abc.com">
+          <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.email">
+            L'email du fournisseur est requis
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Téléphone du Fournisseur</label>
+          <input 
+            type="text" 
+            class="form-control"
+            [(ngModel)]="FournisseurAjouter.telephone"
+            name="fournisseurTelephone"
+            placeholder="Ex: +216 99 999 999">
+          <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.telephone">
+            Le téléphone du fournisseur est requis
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Adresse du Fournisseur</label>
+          <input 
+            type="text" 
+            class="form-control"
+            [(ngModel)]="FournisseurAjouter.adresse"
+            name="fournisseurAdresse"
+            placeholder="Ex: 12 Rue de Tunis">
+          <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.adresse">
+            L'adresse du fournisseur est requise
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex justify-content-end gap-2 p-3 " style="position: absolute; bottom: 0; left: 0; width: 100%;" [ngClass]="themeService.isDarkMode() ? 'custom-bg-dark' : 'bg-light'" style="position: absolute; bottom: 0; left: 0; width: 100%;">
+          <button 
+            type="button" 
+            class="btn btn-outline-secondary"
+            (click)="AddFournisseurInfo = false">
+            <i class="pi pi-times me-2"></i>Annuler
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-primary"
+            (click)="onSaveFournisseur()">
+            <i class="pi pi-check me-2"></i>Enregistrer
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-</p-drawer>
+  </p-drawer>
 
 
+  <p-dialog
+    header="Liste des Fournisseurs"
+    [(visible)]="dialogVisible"
+    [modal]="true"
+    [resizable]="false"
+    [maximizable]="true"
+    appendTo="body"
+    [style]="{ width: '75vw' }"
+    [contentStyle]="{ height: '350px' }">
+    <p-table
+      #dt
+      [value]="fournisseursData"
+      dataKey="id"
+      [paginator]="true"
+      editMode="row" 
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [loading]="loading"
+      [scrollable]="true"
+      scrollHeight="flex"
+      [tableStyle]="{ 'min-width': '60rem' }"
+      [globalFilterFields]="['nom', 'email', 'telephone', 'adresse']"
+    >
+      <!-- Header -->
+      <ng-template pTemplate="header">
+        <tr>
+            <th style="width: 15rem">
+            Matricule
+            <p-columnFilter type="text" field="matriculeFournisseur" display="menu" class="ml-auto" />
+          </th>
+          <th style="width: 15rem">
+            Nom
+            <p-columnFilter type="text" field="nom" display="menu" class="ml-auto" />
+          </th>
+          <th style="width: 20rem">
+            Email
+            <p-columnFilter type="text" field="email" display="menu" class="ml-auto" />
+          </th>
+          <th style="width: 15rem">
+            Téléphone
+            <p-columnFilter type="text" field="telephone" display="menu" class="ml-auto" />
+          </th>
+          <th style="width: 25rem">
+            Adresse
+            <p-columnFilter type="text" field="adresse" display="menu" class="ml-auto" />
+          </th>
+          <th style="width: 10rem">Actions</th>
+        </tr>
+      </ng-template>
+
+      <!-- Body -->
+      <ng-template pTemplate="body" let-fournisseur let-editing="editing" let-ri="rowIndex">
+        <tr [pEditableRow]="fournisseur">
+              <td>
+
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText [(ngModel)]="fournisseur.matriculeFournisseur"/>
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{ fournisseur.matriculeFournisseur }}
+          </ng-template>
+        </p-cellEditor>
+        </td>
+        <td>
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText [(ngModel)]="fournisseur.nom" />
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{ fournisseur.nom }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+         <td>
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText [(ngModel)]="fournisseur.email" />
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{ fournisseur.email }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+           <td>
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText [(ngModel)]="fournisseur.telephone" />
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{ fournisseur.telephone }}
+          </ng-template>
+        </p-cellEditor>
+          <td>
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText [(ngModel)]="fournisseur.adresse" />
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{ fournisseur.adresse }}
+          </ng-template>
+        </p-cellEditor>
+        
+      </td>
+          <td style="display: flex">
+   <div class="flex items-center justify-center gap-2">
+                     <button
+                         *ngIf="!editing"
+                         pButton
+                         pRipple
+                         type="button"
+                         pInitEditableRow
+                         icon="pi pi-pencil"
+                         (click)="onRowEditInitFournisseur(fournisseur)"
+                         text
+                         rounded
+                         severity="secondary"
+                     ></button>
+                     <button
+                         *ngIf="editing"
+                         pButton
+                         pRipple
+                         type="button"
+                         pSaveEditableRow
+                         icon="pi pi-check"
+                         (click)="onRowEditSaveFournisseur(fournisseur)"
+                         text
+                         rounded
+                         severity="secondary"
+                     ></button>
+                     <button
+                         *ngIf="editing"
+                         pButton
+                         pRipple
+                         type="button"
+                         pCancelEditableRow
+                         icon="pi pi-times"
+                         (click)="onRowEditCancelFournisseur(fournisseur, ri)"
+                         text
+                         rounded
+                         severity="secondary"
+                     ></button>
+                 </div>
+         <button
+           pButton
+           icon="pi pi-trash"
+           class="p-button-sm p-button-rounded p-button-text p-button-danger"
+           (click)="confirmDeleteFournisseur(fournisseur);"
+           title="Supprimer"
+         ></button>
+       </td>
+      </tr>
+      </ng-template>
+
+      <!-- Empty Message -->
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center">
+            <div class="d-flex flex-column align-items-center justify-content-center w-100">
+              <iframe
+                src="https://lottie.host/embed/9001f2fe-ee47-47a4-bc9b-a4f3899d0d13/CoC7Gm9nvK.lottie"
+                width="200"
+                height="200"
+                frameborder="0"
+                allow="autoplay; encrypted-media"
+                allowfullscreen
+              ></iframe>
+              <div>Aucun fournisseur trouvé.</div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <!-- Footer -->
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        label="Fermer"
+        icon="pi pi-times"
+        (click)="dialogVisible = false"
+        class="p-button-text"
+      ></button>
+    </ng-template>
+  </p-dialog>
+
+  <p-dialog
+    header="Liste des Banques"
+    [resizable]="false"
+    [modal]="true"
+    [maximizable]="true"
+    appendTo="body"
+    [(visible)]="dialogVisibleBanque"
+    [style]="{ width: '75vw' }"
+    [contentStyle]="{ height: '300px' }">
+    <p-table
+      #dtBanque
+      [value]="banquesData"
+      dataKey="id"
+      editMode="row" 
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [paginator]="true"
+      [scrollable]="true"
+      scrollHeight="flex"
+      [tableStyle]="{ 'min-width': '60rem' }"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      [filterDelay]="0"
+      [globalFilterFields]="['nom', 'adresses.rue', 'adresses.ville', 'adresses.pays']"
+    >
+      <ng-template pTemplate="header" >
+        <tr>
+          <th style="width: 45rem">
+            Nom
+            <p-columnFilter type="text" field="nom" display="menu" class="ml-auto"/>
+          </th>
+          <th style="width: 45rem">
+            Adresses
+            <p-columnFilter type="text" field="adresses.ville" display="menu" class="ml-auto"/>
+          </th>
+          <th style="width: 45rem">
+            Rib
+            <p-columnFilter type="text" field="adresses.rib" display="menu" class="ml-auto"/>
+          </th>
+          <th style="width: 10rem">Outils</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-banque let-editing="editing" let-ri="rowIndex">
+        <tr [pEditableRow]="banque">
+          <td>
+    <p-cellEditor>
+      <ng-template pTemplate="input">
+        <input pInputText [(ngModel)]="banque.nom" />
+      </ng-template>
+      <ng-template pTemplate="output">
+        {{ banque.nom }}
+      </ng-template>
+    </p-cellEditor>
+  </td>
+
+  <td>
+    <p-cellEditor>
+      <ng-template pTemplate="input">
+        <input pInputText [(ngModel)]="banque.adresse" />
+      </ng-template>
+      <ng-template pTemplate="output">
+        {{ banque.adresse }}
+      </ng-template>
+    </p-cellEditor>
+  </td>
+
+  <td>
+    <p-cellEditor>
+      <ng-template pTemplate="input">
+        <input pInputText [(ngModel)]="banque.rib" />
+      </ng-template>
+      <ng-template pTemplate="output">
+        {{ banque.rib }}
+      </ng-template>
+    </p-cellEditor>
+  </td>
 
 
-<p-drawer [(visible)]="AddFournisseurInfo" header="Ajouter un Nouveau Fournisseur" position="right" [style]="{width: '450px'}">
-  <div class="p-4">
-    <div>
-      <!-- ✅ Matricule Fournisseur -->
-<div class="mb-3">
-  <label class="form-label">Matricule du Fournisseur</label>
-  <input 
-    type="text" 
-    class="form-control"
-    [(ngModel)]="FournisseurAjouter.matriculeFournisseur"
-    name="fournisseurMatricule"
-    placeholder="Ex: 1234567ABC">
-  
-  <!-- Erreur si vide -->
-  <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.matriculeFournisseur === 'empty'">
-    Le matricule du fournisseur est requis
-  </div>
+          <td style="display: flex">
+   <div class="flex items-center justify-center gap-2">
+                     <button
+                         *ngIf="!editing"
+                         pButton
+                         pRipple
+                         type="button"
+                         pInitEditableRow
+                         icon="pi pi-pencil"
+                         (click)="onRowEditInit(banque)"
+                         text
+                         rounded
+                         severity="secondary"
+                     ></button>
+                     <button
+                         *ngIf="editing"
+                         pButton
+                         pRipple
+                         type="button"
+                         pSaveEditableRow
+                         icon="pi pi-check"
+                         (click)="onRowEditSave(banque)"
+                         text
+                         rounded
+                         severity="secondary"
+                     ></button>
+                     <button
+                         *ngIf="editing"
+                         pButton
+                         pRipple
+                         type="button"
+                         pCancelEditableRow
+                         icon="pi pi-times"
+                         (click)="onRowEditCancel(banque, ri)"
+                         text
+                         rounded
+                         severity="secondary"
+                     ></button>
+                 </div>
+         <button
+           pButton
+           icon="pi pi-trash"
+           class="p-button-sm p-button-rounded p-button-text p-button-danger"
+           (click)="confirmDeleteBanque(banque);"
+           title="Supprimer"
+         ></button>
+       </td>
+      </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="100%" style="text-align: center; width: 100%;">
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+              <iframe
+                src="https://lottie.host/embed/9001f2fe-ee47-47a4-bc9b-a4f3899d0d13/CoC7Gm9nvK.lottie"
+                width="200"
+                height="200"
+                frameborder="0"
+                allow="autoplay; encrypted-media"
+                allowfullscreen>
+              </iframe>
+              <div>Aucune Banque trouvée.</div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    
+    <ng-template pTemplate="footer">
+      <p-button label="Fermer" icon="pi pi-times" (onClick)="dialogVisibleBanque = false" />
+    </ng-template>
+  </p-dialog>
 
-  <!-- Erreur si format incorrect -->
-  <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.matriculeFournisseur === 'invalid'">
-    Le matricule doit être au format 1234567ABC (7 chiffres + 3 lettres majuscules)
-  </div>
-</div>
-
-
+  <p-drawer 
+    [(visible)]="ModifyTraiteInfo" 
+    header="Modifier une Traite" 
+    position="right" 
+    [style]="{ width: '450px' }">
+    <div class="p-4">
+      
+      <!-- Numéro de Traite -->
       <div class="mb-3">
-        <label class="form-label">Nom du Fournisseur</label>
+        <label for="cheque" class="form-label" >Numéro de Traite</label>
         <input 
-          type="text" 
+          id="cheque"
+          type="text"
           class="form-control"
-          [(ngModel)]="FournisseurAjouter.nom"
-          name="fournisseurNom"
-          placeholder="Ex: Société ABC">
-        <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.nom">
-          Le nom du fournisseur est requis
+          [(ngModel)]="selectedRetrait.numeroCheque"
+          placeholder="Ex: CHK123456"
+          maxlength="10"
+        />
+      </div>
+
+      <!-- Date d'Échéance -->
+      <div class="mb-3">
+        <label for="echeance" class="form-label" style="color: #223167;">Date d'Échéance</label>
+        <input 
+          id="echeance"
+          type="date"
+          class="form-control"
+          [(ngModel)]="dateEcheanceFormatted"
+        />
+      </div>
+
+      <!-- Montant -->
+      <div class="mb-3">
+        <label for="montant" class="form-label" style="color: #223167;">Montant (TND)</label>
+        <p-inputNumber 
+          id="montant"
+          [(ngModel)]="selectedRetrait.montant"
+          mode="currency"
+          currency="TND"
+          locale="fr-FR"
+          [min]="0"
+          class="w-100"
+          inputStyleClass="form-control"
+          [showButtons]="true"
+        ></p-inputNumber>
+      </div>
+
+      <!-- Fournisseur -->
+      <div class="mb-3">
+        <label class="form-label" style="color: #223167;">Fournisseur</label>
+        <div class="d-flex align-items-start gap-2">
+          <p-autocomplete
+            [(ngModel)]="selectedFournisseur"
+            [suggestions]="filteredFournisseurs"
+            (completeMethod)="filterFournisseurs($event)"
+            field="nom"
+            [dropdown]="true"
+            placeholder="Sélectionner un fournisseur"
+            class="flex-grow-1"
+            >
+            <ng-template let-f pTemplate="item">
+              <div class="p-2">
+                <strong>{{ f.nom }}</strong><br />
+                <small class="text-muted">{{ f.email }} - {{ f.telephone }}</small>
+              </div>
+            </ng-template>
+          </p-autocomplete>
+          <div class="d-flex  gap-2 mt-1">
+            <button pButton icon="pi pi-plus" (click)="toggleAddFournisseurInfo()" class="p-button-rounded p-button-sm" severity="secondary" text></button>
+            <button pButton icon="pi pi-eye" (click)="toggleDialog()" class="p-button-rounded p-button-sm" severity="secondary" text></button>
+          </div>
         </div>
       </div>
 
+      <!-- Banque -->
       <div class="mb-3">
-        <label class="form-label">Email du Fournisseur</label>
-        <input 
-          type="text" 
-          class="form-control"
-          [(ngModel)]="FournisseurAjouter.email"
-          name="fournisseurEmail"
-          placeholder="Ex: contact@abc.com">
-        <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.email">
-          L'email du fournisseur est requis
+        <label class="form-label" style="color: #223167;">Banque</label>
+        <div class="d-flex align-items-start gap-2">
+          <p-autocomplete
+            [(ngModel)]="selectedBank"
+            [suggestions]="filteredBanks"
+            (completeMethod)="filterBanks($event)"
+            field="nom"
+            [dropdown]="true"
+            placeholder="Sélectionner une banque"
+            class="flex-grow-1"
+          >
+            <ng-template let-bank pTemplate="item">
+              <div class="p-2">{{ bank.nom }}</div>
+            </ng-template>
+          </p-autocomplete>
+          <div class="d-flex  gap-2 mt-1">
+            <button pButton icon="pi pi-plus" (click)="toggleAddBanqueInfo()" class="p-button-rounded p-button-sm" severity="secondary" text></button>
+            <button pButton icon="pi pi-eye" (click)="toggleDialogBanque()" class="p-button-rounded p-button-sm" severity="secondary" text></button>
+          </div>
         </div>
       </div>
 
-      <div class="mb-3">
-        <label class="form-label">Téléphone du Fournisseur</label>
-        <input 
-          type="text" 
-          class="form-control"
-          [(ngModel)]="FournisseurAjouter.telephone"
-          name="fournisseurTelephone"
-          placeholder="Ex: +216 99 999 999">
-        <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.telephone">
-          Le téléphone du fournisseur est requis
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Adresse du Fournisseur</label>
-        <input 
-          type="text" 
-          class="form-control"
-          [(ngModel)]="FournisseurAjouter.adresse"
-          name="fournisseurAdresse"
-          placeholder="Ex: 12 Rue de Tunis">
-        <div class="text-danger small mt-1" *ngIf="showFournisseurErrors.adresse">
-          L'adresse du fournisseur est requise
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="d-flex justify-content-end gap-2 p-3 bg-light" style="position: absolute; bottom: 0; left: 0; width: 100%;">
+      <!-- Footer Buttons -->
+      <div 
+        class="d-flex justify-content-end gap-2 p-3 bg-dark"
+        style="position: absolute; bottom: 0; left: 0; width: 100%;"
+      >
         <button 
           type="button" 
           class="btn btn-outline-secondary"
-          (click)="AddFournisseurInfo = false">
-          <i class="pi pi-times me-2"></i>Annuler
+          (click)="ModifyTraiteInfo = false"
+        >
+          <i class="pi pi-times me-2"></i>Fermer
         </button>
         <button 
           type="button" 
           class="btn btn-primary"
-          (click)="onSaveFournisseur()">
-          <i class="pi pi-check me-2"></i>Enregistrer
+          (click)="ModifyTraite()"
+        >
+          <i class="pi pi-check me-2"></i>Modifier
         </button>
       </div>
+
     </div>
-  </div>
-</p-drawer>
+  </p-drawer>
 
-
-<p-dialog
-  header="Liste des Fournisseurs"
-  [(visible)]="dialogVisible"
-  [modal]="true"
-  [resizable]="false"
-  [maximizable]="true"
-  appendTo="body"
-  [style]="{ width: '75vw' }"
-  [contentStyle]="{ height: '350px' }"
->
-  <p-table
-    #dt
-    [value]="fournisseursData"
-    dataKey="id"
-    [paginator]="true"
-    editMode="row" 
-    [rows]="10"
-    [rowsPerPageOptions]="[10, 25, 50]"
-    [loading]="loading"
-    [scrollable]="true"
-    scrollHeight="flex"
-    [tableStyle]="{ 'min-width': '60rem' }"
-    [globalFilterFields]="['nom', 'email', 'telephone', 'adresse']"
-  >
-    <!-- Header -->
-    <ng-template pTemplate="header">
-      <tr>
-          <th style="width: 15rem">
-          Matricule
-          <p-columnFilter type="text" field="matriculeFournisseur" display="menu" class="ml-auto" />
-        </th>
-        <th style="width: 15rem">
-          Nom
-          <p-columnFilter type="text" field="nom" display="menu" class="ml-auto" />
-        </th>
-        <th style="width: 20rem">
-          Email
-          <p-columnFilter type="text" field="email" display="menu" class="ml-auto" />
-        </th>
-        <th style="width: 15rem">
-          Téléphone
-          <p-columnFilter type="text" field="telephone" display="menu" class="ml-auto" />
-        </th>
-        <th style="width: 25rem">
-          Adresse
-          <p-columnFilter type="text" field="adresse" display="menu" class="ml-auto" />
-        </th>
-        <th style="width: 10rem">Actions</th>
-      </tr>
-    </ng-template>
-
-    <!-- Body -->
-    <ng-template pTemplate="body" let-fournisseur let-editing="editing" let-ri="rowIndex">
-      <tr [pEditableRow]="fournisseur">
-            <td>
-
-      <p-cellEditor>
-        <ng-template pTemplate="input">
-          <input pInputText [(ngModel)]="fournisseur.matriculeFournisseur"/>
-        </ng-template>
-        <ng-template pTemplate="output">
-          {{ fournisseur.matriculeFournisseur }}
-        </ng-template>
-      </p-cellEditor>
-      </td>
-      <td>
-      <p-cellEditor>
-        <ng-template pTemplate="input">
-          <input pInputText [(ngModel)]="fournisseur.nom" />
-        </ng-template>
-        <ng-template pTemplate="output">
-          {{ fournisseur.nom }}
-        </ng-template>
-      </p-cellEditor>
-    </td>
-       <td>
-      <p-cellEditor>
-        <ng-template pTemplate="input">
-          <input pInputText [(ngModel)]="fournisseur.email" />
-        </ng-template>
-        <ng-template pTemplate="output">
-          {{ fournisseur.email }}
-        </ng-template>
-      </p-cellEditor>
-    </td>
-         <td>
-      <p-cellEditor>
-        <ng-template pTemplate="input">
-          <input pInputText [(ngModel)]="fournisseur.telephone" />
-        </ng-template>
-        <ng-template pTemplate="output">
-          {{ fournisseur.telephone }}
-        </ng-template>
-      </p-cellEditor>
-            <td>
-      <p-cellEditor>
-        <ng-template pTemplate="input">
-          <input pInputText [(ngModel)]="fournisseur.adresse" />
-        </ng-template>
-        <ng-template pTemplate="output">
-          {{ fournisseur.adresse }}
-        </ng-template>
-      </p-cellEditor>
-      
-    </td>
-        <td style="display: flex">
- <div class="flex items-center justify-center gap-2">
-                    <button
-                        *ngIf="!editing"
-                        pButton
-                        pRipple
-                        type="button"
-                        pInitEditableRow
-                        icon="pi pi-pencil"
-                        (click)="onRowEditInitFournisseur(fournisseur)"
-                        text
-                        rounded
-                        severity="secondary"
-                    ></button>
-                    <button
-                        *ngIf="editing"
-                        pButton
-                        pRipple
-                        type="button"
-                        pSaveEditableRow
-                        icon="pi pi-check"
-                        (click)="onRowEditSaveFournisseur(fournisseur)"
-                        text
-                        rounded
-                        severity="secondary"
-                    ></button>
-                    <button
-                        *ngIf="editing"
-                        pButton
-                        pRipple
-                        type="button"
-                        pCancelEditableRow
-                        icon="pi pi-times"
-                        (click)="onRowEditCancelFournisseur(fournisseur, ri)"
-                        text
-                        rounded
-                        severity="secondary"
-                    ></button>
-                </div>
-          <button
-            pButton
-            icon="pi pi-trash"
-            class="p-button-sm p-button-rounded p-button-text p-button-danger"
-            (click)="confirmDeleteFournisseur(fournisseur);"
-            title="Supprimer"
-          ></button>
-        </td>
-      </tr>
-    </ng-template>
-
-    <!-- Empty Message -->
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="5" class="text-center">
-          <div class="d-flex flex-column align-items-center justify-content-center w-100">
-            <iframe
-              src="https://lottie.host/embed/9001f2fe-ee47-47a4-bc9b-a4f3899d0d13/CoC7Gm9nvK.lottie"
-              width="200"
-              height="200"
-              frameborder="0"
-              allow="autoplay; encrypted-media"
-              allowfullscreen
-            ></iframe>
-            <div>Aucun fournisseur trouvé.</div>
-          </div>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-
-  <!-- Footer -->
-  <ng-template pTemplate="footer">
-    <button
-      pButton
-      label="Fermer"
-      icon="pi pi-times"
-      (click)="dialogVisible = false"
-      class="p-button-text"
-    ></button>
-  </ng-template>
-</p-dialog>
-
-<p-dialog
-  header="Liste des Banques"
-  [resizable]="false"
-  [modal]="true"
-  [maximizable]="true"
-  appendTo="body"
-  [(visible)]="dialogVisibleBanque"
-  [style]="{ width: '75vw' }"
-  [contentStyle]="{ height: '300px' }"
->
-  <p-table
-    #dtBanque
-    [value]="banquesData"
-    dataKey="id"
-    editMode="row" 
-    [rows]="10"
-    [rowsPerPageOptions]="[10, 25, 50]"
-    [paginator]="true"
-    [scrollable]="true"
-    scrollHeight="flex"
-    [tableStyle]="{ 'min-width': '60rem' }"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-    [filterDelay]="0"
-    [globalFilterFields]="['nom', 'adresses.rue', 'adresses.ville', 'adresses.pays']"
-  >
-    <ng-template pTemplate="header" >
-      <tr>
-        <th style="width: 45rem">
-          Nom
-          <p-columnFilter type="text" field="nom" display="menu" class="ml-auto"/>
-        </th>
-        <th style="width: 45rem">
-          Adresses
-          <p-columnFilter type="text" field="adresses.ville" display="menu" class="ml-auto"/>
-        </th>
-        <th style="width: 45rem">
-          Rib
-          <p-columnFilter type="text" field="adresses.rib" display="menu" class="ml-auto"/>
-        </th>
-        <th style="width: 10rem">Outils</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-banque let-editing="editing" let-ri="rowIndex">
-      <tr [pEditableRow]="banque">
-        <td>
-  <p-cellEditor>
-    <ng-template pTemplate="input">
-      <input pInputText [(ngModel)]="banque.nom" />
-    </ng-template>
-    <ng-template pTemplate="output">
-      {{ banque.nom }}
-    </ng-template>
-  </p-cellEditor>
-</td>
-
-<td>
-  <p-cellEditor>
-    <ng-template pTemplate="input">
-      <input pInputText [(ngModel)]="banque.adresse" />
-    </ng-template>
-    <ng-template pTemplate="output">
-      {{ banque.adresse }}
-    </ng-template>
-  </p-cellEditor>
-</td>
-
-<td>
-  <p-cellEditor>
-    <ng-template pTemplate="input">
-      <input pInputText [(ngModel)]="banque.rib" />
-    </ng-template>
-    <ng-template pTemplate="output">
-      {{ banque.rib }}
-    </ng-template>
-  </p-cellEditor>
-</td>
-
-
-        <td style="display: flex">
- <div class="flex items-center justify-center gap-2">
-                    <button
-                        *ngIf="!editing"
-                        pButton
-                        pRipple
-                        type="button"
-                        pInitEditableRow
-                        icon="pi pi-pencil"
-                        (click)="onRowEditInit(banque)"
-                        text
-                        rounded
-                        severity="secondary"
-                    ></button>
-                    <button
-                        *ngIf="editing"
-                        pButton
-                        pRipple
-                        type="button"
-                        pSaveEditableRow
-                        icon="pi pi-check"
-                        (click)="onRowEditSave(banque)"
-                        text
-                        rounded
-                        severity="secondary"
-                    ></button>
-                    <button
-                        *ngIf="editing"
-                        pButton
-                        pRipple
-                        type="button"
-                        pCancelEditableRow
-                        icon="pi pi-times"
-                        (click)="onRowEditCancel(banque, ri)"
-                        text
-                        rounded
-                        severity="secondary"
-                    ></button>
-                </div>
-          <button
-            pButton
-            icon="pi pi-trash"
-            class="p-button-sm p-button-rounded p-button-text p-button-danger"
-            (click)="confirmDeleteBanque(banque);"
-            title="Supprimer"
-          ></button>
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="100%" style="text-align: center; width: 100%;">
-          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
-            <iframe
-              src="https://lottie.host/embed/9001f2fe-ee47-47a4-bc9b-a4f3899d0d13/CoC7Gm9nvK.lottie"
-              width="200"
-              height="200"
-              frameborder="0"
-              allow="autoplay; encrypted-media"
-              allowfullscreen>
-            </iframe>
-            <div>Aucune Banque trouvée.</div>
-          </div>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-  
-  <ng-template pTemplate="footer">
-    <p-button label="Fermer" icon="pi pi-times" (onClick)="dialogVisibleBanque = false" />
-  </ng-template>
-</p-dialog>
-
-<p-toast></p-toast>
-<p-confirmDialog></p-confirmDialog>
-
-
-
-
-
-
-
-
-
-
-
-
-<p-drawer 
-  [(visible)]="ModifyTraiteInfo" 
-  header="Modifier une Traite" 
-  position="right" 
-  [style]="{ width: '450px' }"
->
-  <div class="p-4">
-    
-    <!-- Numéro de Traite -->
-    <div class="mb-3">
-      <label for="cheque" class="form-label" style="color: #223167;">Numéro de Traite</label>
-      <input 
-        id="cheque"
-        type="text"
-        class="form-control"
-        [(ngModel)]="selectedRetrait.numeroCheque"
-        placeholder="Ex: CHK123456"
-        maxlength="10"
-      />
-    </div>
-
-    <!-- Date d'Échéance -->
-    <div class="mb-3">
-      <label for="echeance" class="form-label" style="color: #223167;">Date d'Échéance</label>
-      <input 
-        id="echeance"
-        type="date"
-        class="form-control"
-        [(ngModel)]="dateEcheanceFormatted"
-      />
-    </div>
-
-    <!-- Montant -->
-    <div class="mb-3">
-      <label for="montant" class="form-label" style="color: #223167;">Montant (TND)</label>
-      <p-inputNumber 
-        id="montant"
-        [(ngModel)]="selectedRetrait.montant"
-        mode="currency"
-        currency="TND"
-        locale="fr-FR"
-        [min]="0"
-        class="w-100"
-        inputStyleClass="form-control"
-        [showButtons]="true"
-      ></p-inputNumber>
-    </div>
-
-    <!-- Fournisseur -->
-    <div class="mb-3">
-      <label class="form-label" style="color: #223167;">Fournisseur</label>
-      <div class="d-flex align-items-start gap-2">
-        <p-autocomplete
-          [(ngModel)]="selectedFournisseur"
-          [suggestions]="filteredFournisseurs"
-          (completeMethod)="filterFournisseurs($event)"
-          field="nom"
-          [dropdown]="true"
-          placeholder="Sélectionner un fournisseur"
-          class="flex-grow-1"
-          >
-          <ng-template let-f pTemplate="item">
-            <div class="p-2">
-              <strong>{{ f.nom }}</strong><br />
-              <small class="text-muted">{{ f.email }} - {{ f.telephone }}</small>
-            </div>
-          </ng-template>
-        </p-autocomplete>
-        <div class="d-flex  gap-2 mt-1">
-          <button pButton icon="pi pi-plus" (click)="toggleAddFournisseurInfo()" class="p-button-rounded p-button-sm" severity="secondary" text></button>
-          <button pButton icon="pi pi-eye" (click)="toggleDialog()" class="p-button-rounded p-button-sm" severity="secondary" text></button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Banque -->
-    <div class="mb-3">
-      <label class="form-label" style="color: #223167;">Banque</label>
-      <div class="d-flex align-items-start gap-2">
-        <p-autocomplete
-          [(ngModel)]="selectedBank"
-          [suggestions]="filteredBanks"
-          (completeMethod)="filterBanks($event)"
-          field="nom"
-          [dropdown]="true"
-          placeholder="Sélectionner une banque"
-          class="flex-grow-1"
-        >
-          <ng-template let-bank pTemplate="item">
-            <div class="p-2">{{ bank.nom }}</div>
-          </ng-template>
-        </p-autocomplete>
-        <div class="d-flex  gap-2 mt-1">
-          <button pButton icon="pi pi-plus" (click)="toggleAddBanqueInfo()" class="p-button-rounded p-button-sm" severity="secondary" text></button>
-          <button pButton icon="pi pi-eye" (click)="toggleDialogBanque()" class="p-button-rounded p-button-sm" severity="secondary" text></button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Footer Buttons -->
-    <div 
-      class="d-flex justify-content-end gap-2 p-3 bg-light border-top"
-      style="position: absolute; bottom: 0; left: 0; width: 100%;"
-    >
-      <button 
-        type="button" 
-        class="btn btn-outline-secondary"
-        (click)="ModifyTraiteInfo = false"
-      >
-        <i class="pi pi-times me-2"></i>Fermer
-      </button>
-      <button 
-        type="button" 
-        class="btn btn-primary"
-        (click)="ModifyTraite()"
-      >
-        <i class="pi pi-check me-2"></i>Modifier
-      </button>
-    </div>
-
-  </div>
-</p-drawer>
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+</div>
 
