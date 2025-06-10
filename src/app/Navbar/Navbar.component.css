@@ -89,3 +89,91 @@
 .profile-submenu.show {
   display: block;
 }
+
+.dark-mode-toggle {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.dark-mode-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark-mode-toggle i.bx-sun {
+  color: #ffd43b;
+  font-size: 24px;
+  filter: drop-shadow(0 0 2px rgba(255, 212, 59, 0.3));
+}
+
+.dark-mode-toggle i.bx-moon {
+  color: #3b82f6;
+  font-size: 24px;
+  filter: drop-shadow(0 0 2px rgba(59, 130, 246, 0.3));
+}
+
+/* Dark mode specific styles */
+body.dark .dark-mode-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 768px) {
+  .dark-mode-toggle {
+    width: 36px;
+    height: 36px;
+  }
+
+  .dark-mode-toggle i.bx-sun,
+  .dark-mode-toggle i.bx-moon {
+    font-size: 20px;
+  }
+}
+
+.navbar_content {
+  display: flex;
+  align-items: center;
+  column-gap: 25px;
+}
+
+/* Responsive styles for navbar content */
+@media screen and (max-width: 768px) {
+  .navbar_content {
+    column-gap: 15px; /* Reduce spacing on mobile */
+    margin-left: auto; /* Push content to the right */
+  }
+
+  .navbar_content i.bi-grid {
+    display: none; /* Hide the grid icon on mobile to save space */
+  }
+
+  .search_bar {
+    display: none; /* Hide search bar on mobile */
+  }
+
+  .navbar {
+    padding: 10px 15px !important; /* Reduce padding on mobile */
+  }
+
+  .logo_item span {
+    display: none; /* Hide the text logo on mobile */
+  }
+
+  .logo_item img {
+    width: 35px; /* Make logo smaller on mobile */
+    height: auto;
+  }
+}
+
+/* Even smaller screens */
+@media screen and (max-width: 480px) {
+  .navbar_content {
+    column-gap: 10px; /* Further reduce spacing */
+  }
+}

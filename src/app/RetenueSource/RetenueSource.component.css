@@ -621,3 +621,192 @@
   }
 }
 
+/* ========== RESPONSIVE DIALOG STYLES ========== */
+:host ::ng-deep {
+  /* Confirmation Dialog Styles */
+  .custom-confirm-dialog {
+    .p-dialog-content {
+      padding: 1.5rem;
+    }
+    
+    .p-confirm-dialog-message {
+      margin: 1rem 0;
+      line-height: 1.5;
+    }
+    
+    .p-confirm-dialog-icon {
+      font-size: 2rem;
+      color: var(--yellow-600);
+    }
+    
+    .p-dialog-footer {
+      padding: 1rem 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+    }
+  }
+
+  /* Custom Dialog Styles */
+  .custom-dialog {
+    .p-dialog-header {
+      padding: 1.25rem;
+    }
+    
+    .p-dialog-content {
+      padding: 0 1.25rem 1.25rem 1.25rem;
+    }
+    
+    .p-dialog-footer {
+      padding: 1rem 1.25rem;
+    }
+  }
+
+  /* Custom Drawer Styles */
+  .custom-drawer {
+    .p-drawer-header {
+      padding: 1.25rem;
+    }
+    
+    .p-drawer-content {
+      padding: 0;
+    }
+  }
+
+  /* Mobile Responsive Adjustments */
+  @media screen and (max-width: 640px) {
+    .p-dialog {
+      .p-dialog-header {
+        padding: 1rem;
+      }
+      
+      .p-dialog-content {
+        padding: 0 1rem 1rem 1rem;
+      }
+      
+      .p-dialog-footer {
+        padding: 1rem;
+        flex-direction: column;
+        
+        button {
+          width: 100%;
+          margin: 0.25rem 0;
+        }
+      }
+    }
+
+    .p-drawer {
+      .p-drawer-header {
+        padding: 1rem;
+      }
+      
+      .p-drawer-content {
+        padding: 0;
+      }
+    }
+
+    .p-confirm-dialog {
+      .p-dialog-content {
+        padding: 1rem;
+      }
+      
+      .p-dialog-footer {
+        padding: 1rem;
+        flex-direction: column;
+        
+        button {
+          width: 100%;
+          margin: 0.25rem 0;
+        }
+      }
+    }
+
+    /* Table adjustments in dialog */
+    .p-dialog .p-datatable {
+      .p-datatable-thead > tr > th,
+      .p-datatable-tbody > tr > td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+  }
+}
+
+/* Dark mode adjustments for dialogs */
+:host-context(body.dark) ::ng-deep {
+  .custom-confirm-dialog,
+  .custom-dialog,
+  .custom-drawer {
+    .p-dialog-header,
+    .p-dialog-content,
+    .p-dialog-footer,
+    .p-drawer-header,
+    .p-drawer-content {
+      background: var(--dark-bg);
+      color: #ffffff;
+    }
+
+    .p-dialog-header-icon {
+      color: #ffffff;
+    }
+  }
+
+  /* Make all PrimeNG icons white in dark mode */
+  .pi {
+    color: #ffffff;
+  }
+
+  /* Specific icon overrides if needed */
+  .pi-exclamation-triangle {
+    color: var(--yellow-500); /* Keep warning icon yellow */
+  }
+
+  .pi-check-circle {
+    color: var(--green-500); /* Keep success icon green */
+  }
+
+  .pi-times-circle {
+    color: var(--red-500); /* Keep error icon red */
+  }
+
+  /* Icon adjustments in specific components */
+  .p-button .pi {
+    color: inherit; /* Keep button icons matching button text color */
+  }
+
+  .p-inputicon .pi {
+    color: #ffffff;
+    opacity: 0.7;
+  }
+
+  .p-menubar .pi {
+    color: #ffffff;
+  }
+
+  .p-datatable {
+    .pi-sort,
+    .pi-sort-up,
+    .pi-sort-down {
+      color: #ffffff;
+      opacity: 0.8;
+    }
+  }
+
+  /* Hover states */
+  .p-button:not(.p-disabled):hover .pi,
+  .p-menuitem-link:hover .pi {
+    color: #ffffff;
+    opacity: 1;
+  }
+
+  /* Active/Selected states */
+  .p-menuitem.p-highlight .pi,
+  .p-tabview-selected .pi {
+    color: #ffffff;
+    opacity: 1;
+  }
+}
+
+        /* Dark mode style for select label */
+        :host-context(.dark-mode) :host ::ng-deep .p-select-label {
+          color: #ffffff !important;
+      }

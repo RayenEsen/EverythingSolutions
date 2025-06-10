@@ -207,7 +207,13 @@
 
 
 
-    <p-drawer [(visible)]="AddRetraitInfo" header="Ajouter un Nouveau Traite" position="right" [style]="{width: '450px'}">
+    <p-drawer 
+      [(visible)]="AddRetraitInfo" 
+      header="Ajouter un Nouveau Traite" 
+      position="right" 
+      [style]="{width: '90vw', maxWidth: '450px'}"
+      [baseZIndex]="10000"
+      styleClass="custom-drawer">
       <div class="p-4">
         <!-- Form without reactive forms -->
         <div>
@@ -379,7 +385,13 @@
 
 
 
-    <p-drawer [(visible)]="AddBanqueInfo" header="Ajouter une Banque" position="right" [style]="{width: '450px'}">
+    <p-drawer 
+      [(visible)]="AddBanqueInfo" 
+      header="Ajouter une Banque" 
+      position="right" 
+      [style]="{width: '90vw', maxWidth: '450px'}"
+      [baseZIndex]="10000"
+      styleClass="custom-drawer">
       <div class="p-4 d-flex flex-column" style="height: 100%; position: relative;">
         <!-- Formulaire -->
         <div style="flex-grow: 1; overflow-y: auto; padding-bottom: 60px;"> 
@@ -451,7 +463,13 @@
 
 
 
-    <p-drawer [(visible)]="AddFournisseurInfo" header="Ajouter un Nouveau Fournisseur" position="right" [style]="{width: '450px'}">
+    <p-drawer 
+      [(visible)]="AddFournisseurInfo" 
+      header="Ajouter un Nouveau Fournisseur" 
+      position="right" 
+      [style]="{width: '90vw', maxWidth: '450px'}"
+      [baseZIndex]="10000"
+      styleClass="custom-drawer">
       <div class="p-4">
         <div>
           <!-- ✅ Matricule Fournisseur -->
@@ -888,7 +906,9 @@
     [(visible)]="ModifyTraiteInfo" 
     header="Modifier une Traite" 
     position="right" 
-    [style]="{ width: '450px' }">
+    [style]="{width: '90vw', maxWidth: '450px'}"
+    [baseZIndex]="10000"
+    styleClass="custom-drawer">
     <div class="p-4">
       
       <!-- Numéro de Traite -->

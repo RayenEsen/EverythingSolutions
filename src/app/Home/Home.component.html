@@ -1,9 +1,12 @@
 <div class="welcome-container" [ngClass]="{'dark-mode': themeService.isDarkMode()}">
   <!-- Animation Container -->
-  <div class="animation-container">
+  <div class="animation-container" [ngClass]="{'dark-mode': themeService.isDarkMode()}">
     <iframe 
-      src="https://lottie.host/embed/1567d7f9-1170-415a-b174-9985f1126721/kPDyPGCn6o.lottie" 
-      class="lottie-animation">
+      #lottieFrame
+      [src]="lottieUrl"
+      class="lottie-animation"
+      sandbox="allow-scripts"
+      loading="lazy">
     </iframe>
   </div>
 

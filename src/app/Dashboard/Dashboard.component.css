@@ -1,6 +1,9 @@
         :root {
             --primary-color: #4f46e5;
             --navbar-bg: #1f2937;
+            --secondary-color: #8b5cf6;
+            --chart-grid-color: #e5e7eb;
+            --chart-text-color: #4b5563;
         }
 
         body {
@@ -62,22 +65,27 @@
             color: white;
         }
 
-        .main-content {
+        .main-content[_ngcontent-ng-c4140409694] {
+            background-color: white;
             padding: 2rem;
         }
 
-        .stat-card {
+        .dark-mode .main-content[_ngcontent-ng-c4140409694] {
+            background-color: var(--bg-main);
+        }
+
+        .stat-card[_ngcontent-ng-c4140409694] {
             background: white;
             border-radius: 16px;
             padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             border: 1px solid #e5e7eb;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .stat-card::before {
+        .stat-card[_ngcontent-ng-c4140409694]::before {
             content: '';
             position: absolute;
             top: 0;
@@ -87,9 +95,25 @@
             background: linear-gradient(90deg, var(--primary-color), #8b5cf6);
         }
 
-        .stat-card:hover {
+        .stat-card[_ngcontent-ng-c4140409694]:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .dark-mode .stat-card[_ngcontent-ng-c4140409694] {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .dark-mode .stat-card[_ngcontent-ng-c4140409694]:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .dark-mode .stat-card[_ngcontent-ng-c4140409694]::before {
+            background: linear-gradient(90deg, #4f46e5, #6366f1);
+            opacity: 0.8;
         }
 
         .stat-icon {
@@ -131,13 +155,21 @@
             margin-bottom: 1rem;
         }
 
-        .chart-container {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border: 1px solid #e5e7eb;
-            height: 450px;
+        .chart-container[_ngcontent-ng-c4140409694] {
+            width: 100%;
+            background: #fff;
+            padding: 1rem;
+            border-radius: 6px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dark-mode .chart-container[_ngcontent-ng-c4140409694] {
+            background: var(--bg-card);
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
         }
 
         .table-container {
@@ -206,7 +238,9 @@
             font-weight: 600;
         }
 
-        .welcome-section {
+        /* Welcome section styles */
+        :host .welcome-section,
+        .welcome-section[_ngcontent-ng-c4140409694] {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             padding: 3rem 2rem;
@@ -236,6 +270,23 @@
             height: 200px;
             background: rgba(255,255,255,0.05);
             border-radius: 50%;
+        }
+
+        /* Dark mode welcome section */
+        :host-context(.dark-mode) .welcome-section,
+        .dark-mode .welcome-section[_ngcontent-ng-c4140409694] {
+            background: linear-gradient(135deg, #1e1b4b, #3730a3) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        :host-context(.dark-mode) .welcome-section::before,
+        .dark-mode .welcome-section[_ngcontent-ng-c4140409694]::before {
+            opacity: 0.15;
+        }
+
+        :host-context(.dark-mode) .welcome-section::after,
+        .dark-mode .welcome-section[_ngcontent-ng-c4140409694]::after {
+            opacity: 0.1;
         }
 
         .welcome-content {
@@ -276,30 +327,295 @@
             }
         }
 
+        .map-chart-container .d-flex.h-75 {
+            height: 300px;  /* fix map container height */
+        }
 
+        #map-container {
+            height: 100%;
+            min-width: 310px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
 
+        /* Dark mode variables */
+        .dark-mode {
+            --bg-main: #111827;
+            --bg-card: #1f2937;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --border-color: #374151;
+            --hover-bg: #2d3748;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --chart-grid-color: #374151;
+            --chart-text-color: #9ca3af;
+        }
 
-    .chart-container {
-    width: 100%;
-    background: #fff;
-    padding: 1rem;
-    border-radius: 6px;
-    box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
+        /* Add dark mode styles */
+        .dark-mode body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+        }
 
-  .map-chart-container .d-flex.h-75 {
-    height: 300px;  /* fix map container height */
-  }
+        .dark-mode .top-navbar {
+            background: #111827;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
 
-  #map-container {
-    height: 100%;
-    min-width: 310px;
-    max-width: 100%;
-    margin: 0 auto;
-  }
+        .dark-mode .stat-number {
+            color: var(--text-primary);
+        }
 
+        .dark-mode .stat-label {
+            color: var(--text-secondary);
+        }
 
+        .dark-mode .table thead th {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .dark-mode .table tbody td {
+            color: var(--text-secondary);
+        }
+
+        .dark-mode .table tbody tr:hover {
+            background-color: var(--hover-bg);
+        }
+
+        .dark-mode .progress-modern {
+            background-color: var(--hover-bg);
+        }
+
+        .dark-mode .welcome-section {
+            background: linear-gradient(135deg, #1e1b4b, #3730a3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .dark-mode .welcome-section::before {
+            opacity: 0.15;
+        }
+
+        .dark-mode .welcome-section::after {
+            opacity: 0.1;
+        }
+
+        /* Dark mode map styles */
+        .dark-mode #map-container {
+            background-color: var(--bg-card);
+        }
+
+        .dark-mode .highcharts-background {
+            fill: var(--bg-card);
+        }
+
+        .dark-mode .highcharts-title,
+        .dark-mode .highcharts-axis-labels text,
+        .dark-mode .highcharts-axis-title {
+            fill: var(--text-primary) !important;
+        }
+
+        .dark-mode .highcharts-grid-line {
+            stroke: var(--border-color);
+        }
+
+        .dark-mode .highcharts-point {
+            fill-opacity: 0.8;
+        }
+
+        .dark-mode .p-datatable {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .dark-mode .p-datatable .p-datatable-thead > tr > th {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+
+        .dark-mode .p-datatable .p-datatable-tbody > tr {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .dark-mode .p-datatable .p-datatable-tbody > tr > td {
+            border-color: var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .dark-mode .p-datatable .p-datatable-tbody > tr:hover {
+            background-color: var(--hover-bg);
+        }
+
+        .dark-mode .p-button {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .dark-mode .p-button:hover {
+            background-color: #4338ca;
+            border-color: #4338ca;
+        }
+
+        /* Dark mode for badges and other elements */
+        .dark-mode .badge-status {
+            background-color: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .dark-mode .avatar {
+            background-color: var(--primary-color);
+        }
+
+        /* Chart styles */
+        .p-chart {
+            background: transparent;
+        }
+
+        .p-chart canvas {
+            background: transparent;
+        }
+
+        /* Only add dark mode styles */
+        :host-context(.dark-mode) .main-content {
+            background-color: #111827;
+        }
+
+        :host-context(.dark-mode) .chart-container {
+            background: #1f2937;
+            border-color: #374151;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+        }
+
+        :host-context(.dark-mode) .stat-card {
+            background: #1f2937;
+            border-color: #374151;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        :host-context(.dark-mode) .stat-card:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        :host-context(.dark-mode) .stat-number {
+            color: #ffffff;
+        }
+
+        :host-context(.dark-mode) .stat-label {
+            color: #9ca3af;
+        }
+
+        :host-context(.dark-mode) .welcome-section {
+            background: linear-gradient(135deg, #1e1b4b, #3730a3);
+        }
+
+        /* Dark mode map styles */
+        :host-context(.dark-mode) #map-container {
+            background-color: #1f2937;
+        }
+
+        :host-context(.dark-mode) .highcharts-background {
+            fill: #1f2937;
+        }
+
+        :host-context(.dark-mode) .highcharts-title,
+        :host-context(.dark-mode) .highcharts-axis-labels text {
+            fill: #ffffff !important;
+        }
+
+        :host-context(.dark-mode) .highcharts-grid-line {
+            stroke: #374151;
+        }
+
+        /* Table dark mode */
+        :host-context(.dark-mode) .p-datatable {
+            background-color: #1f2937;
+            color: #ffffff;
+        }
+
+        :host-context(.dark-mode) .p-datatable .p-datatable-thead > tr > th {
+            background-color: #111827;
+            color: #ffffff;
+            border-color: #374151;
+        }
+
+        :host-context(.dark-mode) .p-datatable .p-datatable-tbody > tr {
+            background-color: #1f2937;
+            color: #ffffff;
+        }
+
+        :host-context(.dark-mode) .p-datatable .p-datatable-tbody > tr > td {
+            border-color: #374151;
+            color: #9ca3af;
+        }
+
+        :host-context(.dark-mode) .p-datatable .p-datatable-tbody > tr:hover {
+            background-color: #2d3748;
+        }
+
+        /* Add to your existing dark mode styles */
+        :host-context(.dark-mode) .fw-bold {
+            color: #ffffff !important;
+        }
+
+        :host-context(.dark-mode) .table-header {
+            background: linear-gradient(135deg, #1f2937, #111827);
+            border-bottom: 1px solid #374151;
+        }
+
+        /* Dark mode style for select label */
+        :host-context(.dark-mode) :host ::ng-deep .p-select-label {
+            color: #ffffff !important;
+        }
+
+        /* Add to your existing styles */
+        :host ::ng-deep .p-chart {
+            .p-chart-axis-label {
+                color: var(--chart-axis-color) !important;
+            }
+            .p-chart-grid-line {
+                stroke: var(--chart-grid-color) !important;
+            }
+        }
+
+        /* Only target Chart.js elements in dark mode */
+        :host-context(.dark-mode) .chart-container {
+            & .chartjs-render-monitor {
+                & .chartjs-size-monitor {
+                    background: transparent;
+                }
+            }
+        }
+
+        :host-context(.dark-mode) .chart-container canvas {
+            filter: brightness(1.2);
+        }
+
+        /* Card body dark mode styles */
+        :host-context(.dark-mode) .card-body[_ngcontent-ng-c3636181545],
+        .dark-mode .card-body[_ngcontent-ng-c3636181545] {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        :host-context(.dark-mode) .card-body[_ngcontent-ng-c3636181545] p,
+        .dark-mode .card-body[_ngcontent-ng-c3636181545] p {
+            color: var(--text-secondary);
+        }
+
+        :host-context(.dark-mode) .card-body[_ngcontent-ng-c3636181545] h1,
+        :host-context(.dark-mode) .card-body[_ngcontent-ng-c3636181545] h2,
+        :host-context(.dark-mode) .card-body[_ngcontent-ng-c3636181545] h3,
+        :host-context(.dark-mode) .card-body[_ngcontent-ng-c3636181545] h4,
+        :host-context(.dark-mode) .card-body[_ngcontent-ng-c3636181545] h5,
+        :host-context(.dark-mode) .card-body[_ngcontent-ng-c3636181545] h6,
+        .dark-mode .card-body[_ngcontent-ng-c3636181545] h1,
+        .dark-mode .card-body[_ngcontent-ng-c3636181545] h2,
+        .dark-mode .card-body[_ngcontent-ng-c3636181545] h3,
+        .dark-mode .card-body[_ngcontent-ng-c3636181545] h4,
+        .dark-mode .card-body[_ngcontent-ng-c3636181545] h5,
+        .dark-mode .card-body[_ngcontent-ng-c3636181545] h6 {
+            color: var(--text-primary);
+        }
   

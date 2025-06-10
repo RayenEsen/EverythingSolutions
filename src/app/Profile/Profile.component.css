@@ -1029,9 +1029,28 @@ textarea.form-control {
   margin-left: 0;
 }
 
-.card-body {
-  padding: 1.5rem;
-  flex: 1 1 auto;
+/* Card body dark mode styles */
+:host ::ng-deep .card-body {
+    padding: 1.5rem;
+    flex: 1 1 auto;
+}
+
+:host-context(.dark-mode) ::ng-deep .card-body {
+    background-color: #1f2937;
+    color: #ffffff;
+}
+
+:host-context(.dark-mode) ::ng-deep .card-body p {
+    color: #9ca3af;
+}
+
+:host-context(.dark-mode) ::ng-deep .card-body h1,
+:host-context(.dark-mode) ::ng-deep .card-body h2,
+:host-context(.dark-mode) ::ng-deep .card-body h3,
+:host-context(.dark-mode) ::ng-deep .card-body h4,
+:host-context(.dark-mode) ::ng-deep .card-body h5,
+:host-context(.dark-mode) ::ng-deep .card-body h6 {
+    color: #ffffff;
 }
 
 .card-header {
@@ -2030,4 +2049,56 @@ p {
 
 #navbar .navbar {
   margin-bottom: 20px;
+}
+
+/* Dark mode styles */
+:host-context(.dark-mode) ::ng-deep .card-header.bg-white[_ngcontent-ng-c3636181545] {
+    background-color: #111827 !important;
+    border-color: #374151 !important;
+}
+
+:host-context(.dark-mode) ::ng-deep .card-header[_ngcontent-ng-c3636181545] h3 {
+    color: #ffffff !important;
+}
+
+:host-context(.dark-mode) ::ng-deep .text-center[_ngcontent-ng-c3636181545] {
+    text-align: center !important;
+    color: #ffffff !important;
+    background-color: #111827 !important;
+}
+
+:host-context(.dark-mode) ::ng-deep .form-control-alternative[_ngcontent-ng-c3636181545] {
+    transition: box-shadow .15s ease;
+    border: 0;
+    background-color: #111827;
+    color: #ffffff !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+:host-context(.dark-mode) ::ng-deep .form-control-alternative[_ngcontent-ng-c3636181545]::placeholder {
+    color: #9ca3af !important;
+}
+
+:host-context(.dark-mode) ::ng-deep .form-control-alternative[_ngcontent-ng-c3636181545]:focus {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+:host-context(.dark-mode) ::ng-deep .form-control-label[_ngcontent-ng-c3636181545] {
+    color: #ffffff !important;
+}
+
+:host-context(.dark-mode) ::ng-deep input[_ngcontent-ng-c3636181545],
+:host-context(.dark-mode) ::ng-deep textarea[_ngcontent-ng-c3636181545],
+:host-context(.dark-mode) ::ng-deep select[_ngcontent-ng-c3636181545] {
+    color: #ffffff !important;
+}
+
+:host-context(.dark-mode) ::ng-deep .text-muted[_ngcontent-ng-c3636181545] {
+    color: #ffffff !important;
+}
+
+:host-context(.dark-mode) ::ng-deep h5[_ngcontent-ng-c3636181545],
+:host-context(.dark-mode) ::ng-deep .h5[_ngcontent-ng-c3636181545] {
+    font-size: .8125rem;
+    color: #ffffff !important;
 }

@@ -24,6 +24,7 @@
   --background-secondary: #ffffff;
   --hover-color: var(--primary-color);
   --hover-text: white;
+  --p-icon-size: 1rem; /* Default icon size */
 }
 
 body {
@@ -43,6 +44,12 @@ body.dark {
   --shadow-color: rgba(0, 0, 0, 0.3);
   --hover-color: rgba(255, 255, 255, 0.1);
   --hover-text: #ffffff;
+}
+
+/* PrimeIcons styling in dark mode */
+body.dark .pi {
+  color: white;
+  font-size: var(--p-icon-size);
 }
 
 /* Ensure text colors are enforced in dark mode */
@@ -345,3 +352,4 @@ body.dark .navbar_content i {
     left: -100%;
   }
 }
+

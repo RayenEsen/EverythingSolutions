@@ -263,27 +263,40 @@ export class RetraitComponent implements OnInit {
       return;
     }
 
-    this.ServiceR.deleteRetraite(this.selectedRetrait.id).subscribe({
-      next: () => {
-        // 1) Remove from local list
-        this.retraitesLightData = this.retraitesLightData.filter(r => r.id !== this.selectedRetrait!.id);
+    this.confirmationService.confirm({
+      message: `Êtes-vous sûr de vouloir supprimer la traite ${this.selectedRetrait.numeroCheque} ?`,
+      header: 'Confirmation de suppression',
+      icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-danger p-button-raised',
+      rejectButtonStyleClass: 'p-button-text p-button-raised',
+      acceptIcon: 'pi pi-trash',
+      rejectIcon: 'pi pi-times',
+      acceptLabel: 'Supprimer',
+      rejectLabel: 'Annuler',
+      accept: () => {
+        this.ServiceR.deleteRetraite(this.selectedRetrait!.id).subscribe({
+          next: () => {
+            // 1) Remove from local list
+            this.retraitesLightData = this.retraitesLightData.filter(r => r.id !== this.selectedRetrait!.id);
 
-        // 2) Show success message
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Succès',
-          detail: 'Retraite supprimée avec succès'
-        });
-        
-        // Optionally clear selection
-        this.selectedRetrait = new  Retraite ;
-      },
-      error: err => {
-        console.error('Error deleting retraite:', err);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erreur',
-          detail: 'Échec de la suppression de la retraite'
+            // 2) Show success message
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Succès',
+              detail: 'Retraite supprimée avec succès'
+            });
+            
+            // Optionally clear selection
+            this.selectedRetrait = new Retraite;
+          },
+          error: err => {
+            console.error('Error deleting retraite:', err);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erreur',
+              detail: 'Échec de la suppression de la retraite'
+            });
+          }
         });
       }
     });
@@ -604,26 +617,39 @@ export class RetraitComponent implements OnInit {
       return;
     }
 
-    this.ServiceR.deleteRetraites(idsToDelete).subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Suppression réussie',
-          detail: 'Les retraites sélectionnées ont été supprimées.'
-        });
+    this.confirmationService.confirm({
+      message: `Êtes-vous sûr de vouloir supprimer ${idsToDelete.length} traite(s) ?`,
+      header: 'Confirmation de suppression',
+      icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-danger p-button-raised',
+      rejectButtonStyleClass: 'p-button-text p-button-raised',
+      acceptIcon: 'pi pi-trash',
+      rejectIcon: 'pi pi-times',
+      acceptLabel: 'Supprimer',
+      rejectLabel: 'Annuler',
+      accept: () => {
+        this.ServiceR.deleteRetraites(idsToDelete).subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Suppression réussie',
+              detail: 'Les retraites sélectionnées ont été supprimées.'
+            });
 
-        // Filter retraites locally
-        this.retraitesLightData = this.retraitesLightData.filter(
-          r => !idsToDelete.includes(r.id)
-        );
+            // Filter retraites locally
+            this.retraitesLightData = this.retraitesLightData.filter(
+              r => !idsToDelete.includes(r.id)
+            );
 
-        this.SelectedTraits = [];
-      },
-      error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erreur',
-          detail: 'Une erreur est survenue lors de la suppression.'
+            this.SelectedTraits = [];
+          },
+          error: () => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erreur',
+              detail: 'Une erreur est survenue lors de la suppression.'
+            });
+          }
         });
       }
     });

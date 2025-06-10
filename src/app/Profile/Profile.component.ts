@@ -6,6 +6,7 @@ import { Entreprise } from '../shared/Entreprise';
 import { CommonModule } from '@angular/common';
 import { Console } from 'console';
 import { ToastModule } from 'primeng/toast';
+import { ThemeService } from '../Services/theme.service';
 
 @Component({
   selector: 'app-profile',
@@ -17,13 +18,19 @@ import { ToastModule } from 'primeng/toast';
 })
 export class ProfileComponent implements OnInit {
   isEditing = false;
+  isDarkMode = false;
 
   entreprise : Entreprise = new Entreprise(); 
 
   constructor(
     private authService: AuthService,
-    private messageService: MessageService
-  ) {}
+    private messageService: MessageService,
+    private themeService: ThemeService
+  ) {
+    this.themeService.darkMode$.subscribe(isDark => {
+      this.isDarkMode = isDark;
+    });
+  }
 
 
   gouvernorats: string[] = [
@@ -95,11 +102,7 @@ save(): void {
   }
   
 
-  // Validate adresseEntreprise (required, min length 5)
-  if (!this.entreprise.adresseEntreprise || this.entreprise.adresseEntreprise.trim().length < 5) {
-    this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'L\'adresse de l\'entreprise est requise.' });
-    return;
-  }
+
   
   // Validate adresseComplete (required, min length 5)
   if (!this.entreprise.adresseComplete || this.entreprise.adresseComplete.trim().length < 5) {

@@ -13,8 +13,10 @@
 
 <div class="navbar_content">
   <i class="bi bi-grid"></i>
-  <i class='bx' [class.bx-sun]="!themeService.isDarkMode()" [class.bx-moon]="themeService.isDarkMode()" 
-     id="darkLight" (click)="toggleDarkMode()"></i>
+  <div class="dark-mode-toggle" (click)="toggleDarkMode()">
+    <i class='bx' [class.bx-sun]="!themeService.isDarkMode()" [class.bx-moon]="themeService.isDarkMode()" 
+       id="darkLight"></i>
+  </div>
   <i class='bx bx-bell'></i>
 
   <div class="profile-container" (click)="toggleProfileMenu()">

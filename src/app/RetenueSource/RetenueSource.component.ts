@@ -33,12 +33,14 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 import { Retenue } from '../shared/Retenue';
 import { AddRetenueDTO } from '../DTO/AddRetenue';
 import { ThemeService } from '../Services/theme.service';
+import { Table } from 'primeng/table';
+import { RippleModule } from 'primeng/ripple';
 
 @Component({
   selector: 'app-RetenueSource',
   templateUrl: './RetenueSource.component.html',
   styleUrls: ['./RetenueSource.component.css'],
-  imports: [ ConfirmDialog , SplitButtonModule , DialogModule, AutoCompleteModule , FormsModule,DatePickerModule,InputNumberModule,DrawerModule, ContextMenuModule, MenubarModule  , ToastModule , CommonModule, Menubar, TableModule, ButtonModule, InputTextModule, IconFieldModule, InputIconModule, TagModule],
+  imports: [ RippleModule, ConfirmDialog , SplitButtonModule , DialogModule, AutoCompleteModule , FormsModule,DatePickerModule,InputNumberModule,DrawerModule, ContextMenuModule, MenubarModule  , ToastModule , CommonModule, Menubar, TableModule, ButtonModule, InputTextModule, IconFieldModule, InputIconModule, TagModule],
   providers: [ConfirmationService , MessageService],
 })
 export class RetenueSourceComponent implements OnInit {
@@ -54,7 +56,8 @@ export class RetenueSourceComponent implements OnInit {
 
 
 items2: any[] = [
-  { label: 'Voir Retenue', icon: 'pi pi-eye' , command: () => this.viewRetenue(this.contextMenuSelection) },
+  { label: 'Voir Retenue', icon: 'pi pi-eye', command: () => this.viewRetenue(this.contextMenuSelection) },
+  { label: 'Modifier', icon: 'pi pi-pencil', command: () => this.onRowClick(this.contextMenuSelection) },
   { 
     label: 'Supprimer', 
     icon: 'pi pi-trash', 
@@ -437,32 +440,39 @@ deleteSelectedRetenues(): void {
     return;
   }
 
-  this.retenuesService.deleteRetenues(idsToDelete).subscribe({
-    next: () => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Suppression réussie',
-        detail: 'Les retenues sélectionnées ont été supprimées.'
-      });
+  this.confirmationService.confirm({
+    message: 'Êtes-vous sûr de vouloir supprimer les retenues sélectionnées ?',
+    header: 'Confirmation de suppression',
+    icon: 'pi pi-exclamation-triangle',
+    accept: () => {
+      this.retenuesService.deleteRetenues(idsToDelete).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Suppression réussie',
+            detail: 'Les retenues sélectionnées ont été supprimées.'
+          });
 
-      this.retenues = this.retenues.filter(r => !idsToDelete.includes(r.id));
-      this.SelectedRetenues = [];
+          this.retenues = this.retenues.filter(r => !idsToDelete.includes(r.id));
+          this.SelectedRetenues = [];
 
-      const totalTTC = this.getTotalTTC(this.retenues);
-      const averageNet = this.getAverageNet(this.retenues);
-      const retenueTotal = this.getRetenueTotal(this.retenues);
-      const RetenueAvg = this.getAverageRetenueMontant(this.retenues);
+          const totalTTC = this.getTotalTTC(this.retenues);
+          const averageNet = this.getAverageNet(this.retenues);
+          const retenueTotal = this.getRetenueTotal(this.retenues);
+          const RetenueAvg = this.getAverageRetenueMontant(this.retenues);
 
-      this.animateValue('animatedTotalTTC', totalTTC);
-      this.animateValue('animatedAverageNet', averageNet);
-      this.animateValue('animatedRetenueTotal', retenueTotal);
-      this.animateValue('animatedretenueAvg', RetenueAvg);
-    },
-    error: () => {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Erreur',
-        detail: 'Une erreur est survenue lors de la suppression.'
+          this.animateValue('animatedTotalTTC', totalTTC);
+          this.animateValue('animatedAverageNet', averageNet);
+          this.animateValue('animatedRetenueTotal', retenueTotal);
+          this.animateValue('animatedretenueAvg', RetenueAvg);
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'Une erreur est survenue lors de la suppression.'
+          });
+        }
       });
     }
   });
@@ -470,43 +480,243 @@ deleteSelectedRetenues(): void {
 
 
 onDelete(id: number): void {
-  if (confirm("Êtes-vous sûr de vouloir supprimer ce fournisseur ?")) {
-    this.ServiceF.delete(id).subscribe({
-      next: () => {
-        this.fournisseurs = this.fournisseurs.filter(f => f.id !== id);
+  this.confirmationService.confirm({
+    message: 'Êtes-vous sûr de vouloir supprimer ce fournisseur ?',
+    header: 'Confirmation de suppression',
+    icon: 'pi pi-exclamation-triangle',
+    accept: () => {
+      this.ServiceF.delete(id).subscribe({
+        next: () => {
+          this.fournisseurs = this.fournisseurs.filter(f => f.id !== id);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Succès',
+            detail: 'Fournisseur supprimé avec succès'
+          });
+        },
+        error: (err) => {
+          console.error("Delete failed", err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'La suppression du fournisseur a échoué'
+          });
+        }
+      });
+    }
+  });
+}
 
+// Add these new properties
+clonedFournisseurs: { [s: string]: Fournisseur } = {};
+editingFournisseur: Fournisseur | null = null;
+
+// Add these new methods
+onRowEditInit(fournisseur: Fournisseur) {
+  this.clonedFournisseurs[fournisseur.id] = { ...fournisseur };
+}
+
+onRowEditSave(fournisseur: Fournisseur) {
+  if (this.validateFournisseurEdit(fournisseur)) {
+    delete this.clonedFournisseurs[fournisseur.id];
+    this.ServiceF.update(fournisseur.id, fournisseur).subscribe({
+      next: () => {
+        const index = this.fournisseursData.findIndex(f => f.id === fournisseur.id);
+        if (index !== -1) {
+          this.fournisseursData[index] = { ...fournisseur };
+        }
         this.messageService.add({
           severity: 'success',
           summary: 'Succès',
-          detail: 'Fournisseur supprimé avec succès'
+          detail: 'Fournisseur mis à jour avec succès'
         });
       },
-      error: (err) => {
-        console.error("Delete failed", err);
+      error: (error) => {
+        console.error('Update failed:', error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erreur',
-          detail: 'La suppression du fournisseur a échoué'
+          detail: 'La mise à jour du fournisseur a échoué'
         });
       }
     });
   }
 }
 
+onRowEditCancel(fournisseur: Fournisseur, index: number) {
+  if (this.clonedFournisseurs[fournisseur.id]) {
+    this.fournisseursData[index] = { ...this.clonedFournisseurs[fournisseur.id] };
+    delete this.clonedFournisseurs[fournisseur.id];
+  }
+}
 
+validateFournisseurEdit(fournisseur: Fournisseur): boolean {
+  // Skip full validation during typing/editing
+  if (this.editingFournisseur !== fournisseur) {
+    return true;
+  }
 
+  const matriculeRegex = /^[0-9]{7}[A-Z]{3}$/;
+  
+  if (!fournisseur.matriculeFournisseur || !matriculeRegex.test(fournisseur.matriculeFournisseur)) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Erreur',
+      detail: 'Le matricule du fournisseur doit contenir 7 chiffres suivis de 3 lettres majuscules'
+    });
+    return false;
+  }
 
+  if (!fournisseur.nom?.trim()) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Erreur',
+      detail: 'Le nom du fournisseur est requis'
+    });
+    return false;
+  }
 
+  if (!fournisseur.email?.trim()) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Erreur',
+      detail: 'L\'email du fournisseur est requis'
+    });
+    return false;
+  }
 
+  if (!fournisseur.telephone?.trim()) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Erreur',
+      detail: 'Le téléphone du fournisseur est requis'
+    });
+    return false;
+  }
 
+  if (!fournisseur.adresse?.trim()) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Erreur',
+      detail: 'L\'adresse du fournisseur est requise'
+    });
+    return false;
+  }
 
+  return true;
+}
 
+// Add these new properties
+updateRetenueInfo: boolean = false;
+selectedRetenue: RetenueDto | null = null;
+updateRetenue: AddRetenueDTO = new AddRetenueDTO();
 
+// Add this new method
+onRowClick(retenue: RetenueDto) {
+  this.selectedRetenue = retenue;
+  this.updateRetenue = {
+    numeroFacture: retenue.numeroFacture,
+    montantTTC: retenue.montantTTC,
+    type: retenue.type,
+    dateCreation: retenue.dateCreation,
+    retenue: retenue.retenueMontant,
+    montantNet: retenue.montantNet,
+    fournisseurId: this.fournisseursData.find(f => f.nom === retenue.fournisseurNom)?.id || 0
+  };
+  this.selectedFournisseur = this.fournisseursData.find(f => f.nom === retenue.fournisseurNom) || null;
+  this.updateRetenueInfo = true;
+}
 
+onUpdateSubmit() {
+  if (!this.selectedRetenue) return;
 
+  // Reset error flags
+  this.showNumeroFactureError = false;
+  this.showMontantTTCError = false;
+  this.showTypeError = false;
+  this.showFournisseurError = false;
 
+  let isValid = true;
+  const numeroFactureRegex = /^[0-9]{7}[A-Z]{3}$/;
 
+  // Validation checks
+  if (!this.updateRetenue.numeroFacture || !numeroFactureRegex.test(this.updateRetenue.numeroFacture.trim())) {
+    this.showNumeroFactureError = true;
+    isValid = false;
+  }
 
+  if (
+    this.updateRetenue.montantTTC === null ||
+    this.updateRetenue.montantTTC === undefined ||
+    this.updateRetenue.montantTTC <= 0
+  ) {
+    this.showMontantTTCError = true;
+    isValid = false;
+  }
 
+  if (!this.updateRetenue.type || this.updateRetenue.type.trim() === '') {
+    this.showTypeError = true;
+    isValid = false;
+  }
 
+  if (!this.selectedFournisseur || !this.selectedFournisseur.nom) {
+    this.showFournisseurError = true;
+    isValid = false;
+  }
+
+  if (isValid) {
+    const retenueDto: RetenueDto = {
+      ...this.selectedRetenue,
+      numeroFacture: this.updateRetenue.numeroFacture,
+      montantTTC: this.updateRetenue.montantTTC,
+      type: this.updateRetenue.type,
+      dateCreation: this.updateRetenue.dateCreation,
+      retenueMontant: this.updateRetenue.retenue,
+      montantNet: this.updateRetenue.montantNet,
+      fournisseurNom: this.selectedFournisseur?.nom || '',
+      fournisseurAdresse: this.selectedFournisseur?.adresse || '',
+      fournisseurMatricule: this.selectedFournisseur?.matriculeFournisseur || '',
+      entrepriseNom: this.selectedRetenue.entrepriseNom,
+      entrepriseAdresse: this.selectedRetenue.entrepriseAdresse
+    };
+
+    this.retenuesService.updateRetenue(this.selectedRetenue.id, retenueDto).subscribe({
+      next: (response) => {
+        // Update the retenue in the table
+        const index = this.retenues.findIndex(r => r.id === this.selectedRetenue?.id);
+        if (index !== -1) {
+          this.retenues[index] = response;
+        }
+
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Succès',
+          detail: 'Retenue mise à jour avec succès'
+        });
+
+        this.updateRetenueInfo = false;
+        this.selectedRetenue = null;
+
+        // Recalculate totals and averages
+        const totalTTC = this.getTotalTTC(this.retenues);
+        const averageNet = this.getAverageNet(this.retenues);
+        const retenueTotal = this.getRetenueTotal(this.retenues);
+        const RetenueAvg = this.getAverageRetenueMontant(this.retenues);
+
+        this.animateValue('animatedTotalTTC', totalTTC);
+        this.animateValue('animatedAverageNet', averageNet);
+        this.animateValue('animatedRetenueTotal', retenueTotal);
+        this.animateValue('animatedretenueAvg', RetenueAvg);
+      },
+      error: (err) => {
+        console.error('Error updating retenue:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: 'La mise à jour de la retenue a échoué'
+        });
+      }
+    });
+  }
+}
 }

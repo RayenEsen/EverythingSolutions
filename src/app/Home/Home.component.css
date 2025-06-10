@@ -22,17 +22,26 @@
 
 .animation-container {
   margin-bottom: 2rem;
+  position: relative;
+  width: 320px;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .lottie-animation {
-  width: 320px;
-  height: 320px;
+  width: 100%;
+  height: 100%;
   border: none;
-  filter: drop-shadow(0 4px 12px rgba(123, 146, 226, 0.15));
+  transition: background-color 0.3s ease;
+  filter: none;
+  box-shadow: none;
 }
 
 .dark-mode .lottie-animation {
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+  filter: none;
+  box-shadow: none;
 }
 
 .content-section {

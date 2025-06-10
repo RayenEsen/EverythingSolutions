@@ -1,5 +1,6 @@
 /* Modern styling */
 :host {
+  /* Light mode variables */
   --primary-color: #4f46e5;
   --secondary-color: #10b981;
   --accent-color: #3b82f6;
@@ -7,6 +8,25 @@
   --light-gray: #f3f4f6;
   --medium-gray: #e5e7eb;
   --dark-gray: #6b7280;
+  --background-color: #ffffff;
+  --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  --divider-color: #e5e7eb;
+  --header-gradient: linear-gradient(135deg, #4a6ced 0%, #4a6ced 99%, #FCAA23 100%);
+}
+
+:host-context(.dark-mode) {
+  /* Dark mode variables */
+  --primary-color: #6366f1;
+  --secondary-color: #34d399;
+  --accent-color: #60a5fa;
+  --text-color: #e5e7eb;
+  --light-gray: #374151;
+  --medium-gray: #4b5563;
+  --dark-gray: #9ca3af;
+  --background-color: #1f2937;
+  --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  --divider-color: #374151;
+  --header-gradient: linear-gradient(135deg, #312e81 0%, #3730a3 99%, #854d0e 100%);
 }
 
 .print-container {
@@ -16,17 +36,16 @@
 }
 
 .modern-card {
-  background: white;
+  background: var(--background-color);
   border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--card-shadow);
   overflow: hidden;
   position: relative;
   color: var(--text-color);
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .modern-card:hover {
-  
   transform: translateY(-5px);
 }
 
@@ -34,7 +53,7 @@
   display: flex;
   align-items: center;
   padding: 1.5rem 2rem;
-  background: linear-gradient(135deg, #4a6ced 0%, #4a6ced 99%, #FCAA23 100%);
+  background: var(--header-gradient);
   color: white;
 }
 
@@ -72,6 +91,7 @@
   position: relative;
   z-index: 1;
   padding: 2rem;
+  background-color: var(--background-color);
 }
 
 .amount-section {
@@ -102,7 +122,7 @@
 .divider-line {
   flex: 1;
   height: 1px;
-  background-color: var(--medium-gray);
+  background-color: var(--divider-color);
 }
 
 .divider-text {
@@ -124,6 +144,7 @@
   background: var(--light-gray);
   padding: 1rem;
   border-radius: 8px;
+  transition: background-color 0.3s ease;
 }
 
 .detail-label {
@@ -138,6 +159,7 @@
 .detail-value {
   font-size: 1rem;
   font-weight: 500;
+  color: var(--text-color);
 }
 
 .parties-section {
@@ -148,11 +170,12 @@
 }
 
 .party-card {
-  background: white;
+  background: var(--background-color);
   border: 1px solid var(--medium-gray);
   border-radius: 8px;
   padding: 1.25rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .party-header {
@@ -168,6 +191,7 @@
 
 .party-name {
   font-weight: 600;
+  color: var(--text-color);
   margin-bottom: 0.5rem;
 }
 
@@ -204,70 +228,42 @@
 }
 
 .issuer-stamp {
-  background: var(--primary-color); /* Solid color */
+  background: var(--primary-color);
   color: white;
-  padding: 0.9rem 2rem; /* Increased padding for bigger size */
-  border-radius: 8px; /* Slightly larger radius */
-  font-weight: 700; /* Bolder text */
-  font-size: 1rem; /* Larger font */
+  padding: 0.9rem 2rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1); /* Smoother animation */
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
   box-shadow: 
-    0 3px 6px rgba(0,0,0,0.1), /* Base shadow */
-    0 2px 3px rgba(0,0,0,0.06); /* Secondary shadow for depth */
+    0 3px 6px rgba(0,0,0,0.1),
+    0 2px 3px rgba(0,0,0,0.06);
   border: none;
   outline: none;
   position: relative;
   overflow: hidden;
-  font-family: 'Poppins', sans-serif;
-  min-width: 120px; /* Minimum width */
-  height: 48px; /* Fixed height */
-  letter-spacing: 0.5px; /* Slightly spaced letters */
+  min-width: 120px;
+  height: 48px;
+  letter-spacing: 0.5px;
 }
 
-/* Hover effect - more pronounced */
 .issuer-stamp:hover {
-  background: #3a7bd5;
+  background: var(--accent-color);
   box-shadow: 
     0 6px 12px rgba(0,0,0,0.12),
     0 4px 6px rgba(0,0,0,0.1);
   transform: translateY(-2px);
 }
 
-/* Active state - solid press feel */
 .issuer-stamp:active {
   transform: translateY(1px);
   box-shadow: 
     0 2px 3px rgba(0,0,0,0.1),
     0 1px 2px rgba(0,0,0,0.06);
-}
-
-/* Focus state */
-.issuer-stamp:focus {
-  outline: 3px solid rgba(255,255,255,0.3);
-  outline-offset: 2px;
-}
-
-/* Thick border effect */
-.issuer-stamp::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border: 2px solid rgba(255,255,255,0.15);
-  border-radius: 6px;
-  transition: all 0.3s ease;
-}
-
-/* Press effect */
-.issuer-stamp:active::before {
-  border-width: 3px;
-  border-color: rgba(255,255,255,0.25);
 }
 
 .issuer-details {
@@ -276,6 +272,7 @@
 
 .issuer-name {
   font-weight: 600;
+  color: var(--text-color);
   margin-bottom: 0.25rem;
 }
 
@@ -284,13 +281,14 @@
   color: var(--dark-gray);
 }
 
-/* Loading state */
+/* Loading state styles */
 .loading-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 300px;
+  background-color: var(--background-color);
 }
 
 .loading-spinner {
@@ -329,6 +327,23 @@
 .loading-text {
   color: var(--dark-gray);
   font-size: 0.875rem;
+}
+
+/* Dialog styles */
+:host ::ng-deep .p-dialog {
+  background: var(--background-color);
+  color: var(--text-color);
+}
+
+:host ::ng-deep .p-dialog .p-dialog-header {
+  background: var(--background-color);
+  color: var(--text-color);
+  border-bottom: 1px solid var(--medium-gray);
+}
+
+:host ::ng-deep .p-dialog .p-dialog-content {
+  background: var(--background-color);
+  color: var(--text-color);
 }
 
 /* Print styles */
@@ -429,8 +444,6 @@
     display: block !important;
   }
 }
-
-
 
 .print-only {
   display: none;

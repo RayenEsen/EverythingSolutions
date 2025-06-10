@@ -1,3 +1,11 @@
+<p-confirmDialog 
+  [style]="{width: '90vw', maxWidth: '450px'}" 
+  [breakpoints]="{'960px': '75vw', '640px': '90vw'}"
+  acceptButtonStyleClass="p-button-danger" 
+  rejectButtonStyleClass="p-button-text"
+  [baseZIndex]="10000"
+  styleClass="custom-confirm-dialog">
+</p-confirmDialog>
 <p-toast />
 <div class="dashboard-header">
   <div class="header-content"> 
@@ -153,7 +161,7 @@
         </p-tag>
       </td>
       <td>{{ ret.dateCreation | date:'dd/MM/yyyy' }}</td>
-      <td>{{ ret.retenue | number:'1.2-2' }} TND</td>
+      <td>{{ ret.retenueMontant | number:'1.2-2' }} TND</td>
       <td>{{ ret.montantNet | number:'1.2-2' }} TND</td>
       <td>
         <i 
@@ -204,7 +212,13 @@
 
 
 
-<p-drawer [(visible)]="AddRetenueInfo" header="Ajouter une Retenue" position="right" [style]="{width: '450px'}">
+<p-drawer 
+  [(visible)]="AddRetenueInfo" 
+  header="Ajouter une Retenue" 
+  position="right" 
+  [style]="{width: '90vw', maxWidth: '450px'}"
+  [baseZIndex]="10000"
+  styleClass="custom-drawer">
   <div class="p-4">
 <!-- Numéro de Facture -->
 <div class="mb-3">
@@ -328,7 +342,13 @@
 
 
 
-<p-drawer [(visible)]="AddFournisseurInfo" header="Ajouter un Nouveau Fournisseur" position="right" [style]="{width: '450px'}">
+<p-drawer 
+  [(visible)]="AddFournisseurInfo" 
+  header="Ajouter un Nouveau Fournisseur" 
+  position="right" 
+  [style]="{width: '90vw', maxWidth: '450px'}"
+  [baseZIndex]="10000"
+  styleClass="custom-drawer">
   <div class="p-4">
     <div>
 
@@ -430,10 +450,12 @@
   [modal]="true"
   [resizable]="false"
   [maximizable]="true"
-  appendTo="body"
-  [style]="{ width: '75vw' }"
-  [contentStyle]="{ height: '350px' }"
->
+  [style]="{width: '90vw', maxWidth: '75vw'}"
+  [breakpoints]="{'960px': '95vw', '640px': '100vw'}"
+  [contentStyle]="{'max-height': '80vh', 'height': 'auto'}"
+  styleClass="custom-dialog"
+  [baseZIndex]="10000"
+  appendTo="body">
   <p-table
     #dt
     [value]="fournisseursData"
@@ -478,103 +500,98 @@
     <!-- Body -->
     <ng-template pTemplate="body" let-fournisseur let-editing="editing" let-ri="rowIndex">
       <tr [pEditableRow]="fournisseur">
-
-      <td>
-      <p-cellEditor>
-        <ng-template pTemplate="input">
-          <input pInputText [(ngModel)]="fournisseur.matriculeFournisseur" />
-        </ng-template>
-        <ng-template pTemplate="output">
-          {{ fournisseur.matriculeFournisseur }}
-        </ng-template>
-      </p-cellEditor>
-    </td>
-            <td>
-      <p-cellEditor>
-        <ng-template pTemplate="input">
-          <input pInputText [(ngModel)]="fournisseur.nom" />
-        </ng-template>
-        <ng-template pTemplate="output">
-          {{ fournisseur.nom }}
-        </ng-template>
-      </p-cellEditor>
-    </td>
-       <td>
-      <p-cellEditor>
-        <ng-template pTemplate="input">
-          <input pInputText [(ngModel)]="fournisseur.email" />
-        </ng-template>
-        <ng-template pTemplate="output">
-          {{ fournisseur.email }}
-        </ng-template>
-      </p-cellEditor>
-    </td>
-         <td>
-      <p-cellEditor>
-        <ng-template pTemplate="input">
-          <input pInputText [(ngModel)]="fournisseur.telephone" />
-        </ng-template>
-        <ng-template pTemplate="output">
-          {{ fournisseur.telephone }}
-        </ng-template>
-      </p-cellEditor>
-            <td>
-      <p-cellEditor>
-        <ng-template pTemplate="input">
-          <input pInputText [(ngModel)]="fournisseur.adresse" />
-        </ng-template>
-        <ng-template pTemplate="output">
-          {{ fournisseur.adresse }}
-        </ng-template>
-      </p-cellEditor>
-    </td>
-        <td style="display: flex">
- <div class="flex items-center justify-center gap-2">
-                    <button
-                        *ngIf="!editing"
-                        pButton
-                        pRipple
-                        type="button"
-                        pInitEditableRow
-                        icon="pi pi-pencil"
-                        text
-                        rounded
-                        severity="secondary"
-                    ></button>
-                    <button
-                        *ngIf="editing"
-                        pButton
-                        pRipple
-                        type="button"
-                        pSaveEditableRow
-                        icon="pi pi-check"
-                        text
-                        rounded
-                        severity="secondary"
-                    ></button>
-                    <button
-                        *ngIf="editing"
-                        pButton
-                        pRipple
-                        type="button"
-                        pCancelEditableRow
-                        icon="pi pi-times"
-                        text
-                        rounded
-                        severity="secondary"
-                    ></button>
-                        <!-- Delete button -->
-                      <button
-                          pButton
-                          pRipple
-                          type="button"
-                          icon="pi pi-trash"
-                          text
-                          rounded
-                          severity="danger"
-                          (click)="onDelete(fournisseur.id)"
-                      ></button>
-                </div>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText [(ngModel)]="fournisseur.matriculeFournisseur" [ngClass]="{'ng-invalid ng-dirty': !validateFournisseurEdit(fournisseur)}" />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ fournisseur.matriculeFournisseur }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText [(ngModel)]="fournisseur.nom" required />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ fournisseur.nom }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText [(ngModel)]="fournisseur.email" required type="email" />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ fournisseur.email }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText [(ngModel)]="fournisseur.telephone" required />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ fournisseur.telephone }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText [(ngModel)]="fournisseur.adresse" required />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ fournisseur.adresse }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <div class="flex align-items-center justify-content-center gap-2">
+            <button
+              *ngIf="!editing"
+              pButton
+              pRipple
+              type="button"
+              pInitEditableRow
+              icon="pi pi-pencil"
+              (click)="onRowEditInit(fournisseur)"
+              class="p-button-rounded p-button-text"
+            ></button>
+            <button
+              *ngIf="editing"
+              pButton
+              pRipple
+              type="button"
+              pSaveEditableRow
+              icon="pi pi-check"
+              (click)="onRowEditSave(fournisseur)"
+              class="p-button-rounded p-button-text p-button-success"
+            ></button>
+            <button
+              *ngIf="editing"
+              pButton
+              pRipple
+              type="button"
+              pCancelEditableRow
+              icon="pi pi-times"
+              (click)="onRowEditCancel(fournisseur, ri)"
+              class="p-button-rounded p-button-text p-button-danger"
+            ></button>
+            <button
+              *ngIf="!editing"
+              pButton
+              pRipple
+              type="button"
+              icon="pi pi-trash"
+              (click)="onDelete(fournisseur.id)"
+              class="p-button-rounded p-button-text p-button-danger"
+            ></button>
+          </div>
         </td>
       </tr>
     </ng-template>
@@ -610,6 +627,114 @@
     ></button>
   </ng-template>
 </p-dialog>
+
+<p-drawer 
+  [(visible)]="updateRetenueInfo" 
+  header="Modifier la Retenue" 
+  position="right" 
+  [style]="{width: '90vw', maxWidth: '450px'}"
+  [baseZIndex]="10000"
+  styleClass="custom-drawer">
+  <div class="p-4">
+    <!-- Numéro de Facture -->
+    <div class="mb-3">
+      <label for="facture" class="form-label">Numéro de Retenue</label>
+      <input 
+        type="text" 
+        class="form-control" 
+        id="facture"
+        [(ngModel)]="updateRetenue.numeroFacture"
+        placeholder="Ex: 1234567ABC">
+      
+      <div *ngIf="showNumeroFactureError && !updateRetenue.numeroFacture" class="text-danger small mt-1">
+        Le numéro de facture est requis
+      </div>
+      <div *ngIf="showNumeroFactureError && updateRetenue.numeroFacture" class="text-danger small mt-1">
+        Format invalide. Utilisez 7 chiffres suivis de 3 lettres majuscules (Ex: 1234567ABC)
+      </div>
+    </div>
+
+    <!-- Montant TTC -->
+    <div class="mb-3">
+      <label for="montantTTC" class="form-label">Montant TTC (TND)</label>
+      <p-inputNumber 
+        id="montantTTC" 
+        [(ngModel)]="updateRetenue.montantTTC"
+        mode="currency" 
+        currency="TND" 
+        locale="fr-FR"
+        [min]="0"
+        class="w-100"
+        inputStyleClass="form-control"
+        [showButtons]="true">
+      </p-inputNumber>
+      <div *ngIf="showMontantTTCError" class="text-danger small mt-1">Veuillez entrer un montant valide</div>
+    </div>
+
+    <!-- Type -->
+    <div class="mb-3 d-flex flex-column w-100">
+      <label for="type" class="form-label">Type</label>
+      <p-autoComplete 
+        class="w-100"
+        inputId="type"
+        [(ngModel)]="updateRetenue.type"
+        [suggestions]="filteredTypes"
+        (completeMethod)="filterTypes($event)"
+        [forceSelection]="true"
+        [dropdown]="true"
+        [style]="{'width':'100%'}"
+        placeholder="Ex: 1%, 10%, 15%">
+      </p-autoComplete>
+      <div *ngIf="showTypeError" class="text-danger small mt-1">Veuillez entrer un type valide</div>
+    </div>
+
+    <!-- Fournisseur -->
+    <div class="mb-3">
+      <label for="fournisseur-autocomplete" class="form-label d-block mb-2">Fournisseur</label>
+      <div style="display: flex;">
+        <p-autocomplete 
+          id="fournisseur-autocomplete"
+          [(ngModel)]="selectedFournisseur"
+          [suggestions]="filteredFournisseurs"
+          (completeMethod)="filterFournisseurs($event)"
+          field="nom"
+          [dropdown]="true"
+          placeholder="Sélectionner un fournisseur"
+          class="d-block w-100">
+          <ng-template let-fournisseur pTemplate="item">
+            <div class="d-flex flex-column p-2">
+              <div><strong>{{ fournisseur.nom }}</strong></div>
+              <div class="small text-muted mt-1">
+                <i class="pi pi-phone me-1"></i>{{ fournisseur.telephone }}
+                <i class="pi pi-envelope ms-3 me-1"></i>{{ fournisseur.email }}
+              </div>
+              <div class="small text-muted mt-1">
+                <i class="pi pi-map-marker me-1"></i>{{ fournisseur.adresse }}
+              </div>
+            </div>
+          </ng-template>
+        </p-autocomplete>
+      </div>
+      <div *ngIf="showFournisseurError" class="text-danger small mt-1">Veuillez sélectionner un fournisseur valide</div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="d-flex justify-content-end gap-2 p-3" [ngClass]="themeService.isDarkMode() ? 'custom-bg-dark' : 'bg-light'" style="position: absolute; bottom: 0; left: 0; width: 100%;">
+    <button 
+      type="button" 
+      class="btn btn-outline-secondary"
+      (click)="updateRetenueInfo = false">
+      <i class="pi pi-times me-2"></i>Annuler
+    </button>
+    <button 
+      type="button" 
+      class="btn btn-primary"
+      (click)="onUpdateSubmit()">
+      <i class="pi pi-check me-2"></i>Enregistrer
+    </button>
+  </div>
+</p-drawer>
 
 
 

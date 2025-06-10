@@ -1,13 +1,22 @@
-.certificate-card {
-  background-color: #f3f4f6;
-  padding: 40px;
-  display: flex;
-  justify-content: center;
+:host {
+  display: block;
 }
 
-.certificate {
+:host(.dark-mode) .certificate-card {
+  background-color: #1a1a1a;
+}
+
+:host .certificate-card {
+  background-color: #f3f4f6;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+:host .certificate {
   background: #fff;
-  padding: 40px;
+  padding: 20px;
   width: 100%;
   max-width: 1200px;
   color: #000;
@@ -15,104 +24,233 @@
   font-size: 14px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow-x: auto;
 }
 
-.certificate:hover {
+:host(.dark-mode) .certificate {
+  background: #2d2d2d;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+:host .certificate:hover {
   transform: scale(1.005);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
 
-.header {
+:host(.dark-mode) .certificate:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+:host .header {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   margin-bottom: 20px;
+  gap: 20px;
+  flex-wrap: nowrap;
+  width: 100%;
 }
 
-.header-left,
-.header-right {
-  width: 20%;
-}
-
-.header-left p {
-  margin: 4px 0;
-}
-
-.header-right {
+:host .header-left {
+  width: auto;
+  min-width: 250px;
   text-align: left;
+  margin: 0;
+  padding: 0;
 }
 
-.header-right h2 {
-  font-size: 16px;
+:host .header-right {
+  width: auto;
+  min-width: 250px;
+  text-align: right;
+  margin: 0;
+  padding: 0;
+}
+
+:host .header-left p {
+  margin: 4px 0;
+  font-size: clamp(12px, 2.5vw, 14px);
+}
+
+:host .header-right h2 {
+  font-size: clamp(14px, 3vw, 16px);
   font-weight: bold;
   text-transform: uppercase;
   margin-bottom: 20px;
   line-height: 1.4;
 }
 
-.section {
+:host .section {
   margin-top: 20px;
 }
 
-table {
+:host .section h4 {
+  font-size: clamp(14px, 2.5vw, 16px);
+  margin-bottom: 10px;
+}
+
+:host table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
+  font-size: clamp(12px, 2.5vw, 14px);
 }
 
-th,
-td {
+:host th,
+:host td {
   border: 1px solid #000;
   padding: 6px;
   text-align: center;
+  word-break: break-word;
 }
 
-.no-border td {
+:host(.dark-mode) th,
+:host(.dark-mode) td {
+  border: 1px solid #555;
+}
+
+:host .no-border td {
   border: none;
   text-align: left;
 }
 
-.footer {
+:host .footer {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   margin-top: 40px;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
+:host .footer > div,
+:host .footer > p {
+  flex: 1;
+  min-width: 200px;
+  font-size: clamp(12px, 2.5vw, 14px);
+}
 
-.print-btn {
+:host .print-btn {
   background-color: #dc3545;
   color: white;
   border: none;
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 12px 24px;
+  font-size: clamp(14px, 2.5vw, 16px);
   font-weight: bold;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
+  width: 100%;
+  max-width: 300px;
+  margin: 20px auto;
+  display: block;
 }
 
-.print-btn:hover {
+:host .print-btn:hover {
   background-color: #e09a1d;
   transform: scale(1.05);
 }
 
-.SecondTable
-{
+:host(.dark-mode) .print-btn {
+  background-color: #ff4757;
+}
+
+:host(.dark-mode) .print-btn:hover {
+  background-color: #ff6b81;
+}
+
+:host .SecondTable {
   text-align: left;
   padding-left: 10px;
 }
 
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  :host .certificate-card {
+    padding: 10px;
+  }
 
+  :host .certificate {
+    padding: 15px;
+  }
 
+  :host .header {
+    flex-direction: column;
+  }
+
+  :host .header-left,
+  :host .header-right {
+    width: 100%;
+    text-align: center;
+  }
+
+  :host .header-right h2 {
+    margin-top: 15px;
+  }
+
+  :host table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  :host .footer {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  :host .footer > div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+/* Small Mobile Devices */
+@media screen and (max-width: 480px) {
+  :host .certificate {
+    padding: 10px;
+  }
+
+  :host .header-left p,
+  :host .header-right p {
+    font-size: 12px;
+  }
+
+  :host .header-right h2 {
+    font-size: 14px;
+  }
+
+  :host table {
+    font-size: 11px;
+  }
+
+  :host th,
+  :host td {
+    padding: 4px;
+  }
+
+  :host .print-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+/* Print styles remain unchanged */
 @media print {
   html, body {
     margin: 0;
-    padding: 20mm; /* Add print-safe margin */
+    padding: 20mm;
     height: 100%;
     font-size: 12px;
     box-sizing: border-box;
+    background: white !important;
+    color: black !important;
   }
 
-  .certificate-card {
+  :host .certificate-card,
+  :host(.dark-mode) .certificate-card {
     background: none !important;
     box-shadow: none !important;
     display: block !important;
@@ -123,28 +261,62 @@ td {
     page-break-inside: avoid !important;
   }
 
-  .certificate {
-    padding: 10mm !important; /* Inner spacing to avoid edges */
+  :host .certificate,
+  :host(.dark-mode) .certificate {
+    padding: 10mm !important;
     width: 100% !important;
     max-width: none !important;
     transform: none !important;
     box-shadow: none !important;
     page-break-inside: avoid !important;
-    background: white;
+    background: white !important;
+    color: black !important;
   }
 
-  .certificate * {
+  :host .certificate *,
+  :host(.dark-mode) .certificate * {
     page-break-inside: avoid !important;
     page-break-before: auto !important;
     page-break-after: auto !important;
+    color: black !important;
   }
 
-  .print-btn {
+  :host th,
+  :host td,
+  :host(.dark-mode) th,
+  :host(.dark-mode) td {
+    border: 1px solid black !important;
+  }
+
+  :host .print-btn,
+  :host(.dark-mode) .print-btn {
     display: none !important;
   }
 
-  .header-right {
-    width: 60%;
-    text-align: right;
+  :host .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  :host .header-left,
+  :host(.dark-mode) .header-left {
+    width: auto !important;
+    text-align: left !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  :host .header-right,
+  :host(.dark-mode) .header-right {
+    width: auto !important;
+    text-align: right !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 }
+
+/* Remove conflicting style */
