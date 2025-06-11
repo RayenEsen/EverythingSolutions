@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -32,14 +32,22 @@ interface AutoCompleteCompleteEvent {
   imports: [AutoComplete, PopoverModule ,CommonModule, ButtonModule, InputTextModule, FormsModule, ToastModule , AutoCompleteModule , RecaptchaV3Module , RecaptchaModule , DialogModule],
   providers: [MessageService]
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
+  private previousDarkMode: boolean = false;
 
   constructor(public ServiceA: AuthService, private messageService: MessageService , private router: Router , private captchaService: CaptchaService ) {}
 
   isButtonDisabled: boolean = false;
 
   ngOnInit(): void {
-       const lastClickTime = localStorage.getItem('resetButtonTimestamp');
+    // Store previous dark mode state
+    this.previousDarkMode = document.documentElement.classList.contains('dark-mode');
+    
+    // Remove dark mode classes
+    document.documentElement.classList.remove('dark-mode');
+    document.body.classList.remove('dark');
+
+    const lastClickTime = localStorage.getItem('resetButtonTimestamp');
     if (lastClickTime) {
       const diff = Date.now() - parseInt(lastClickTime, 10);
       if (diff < 30 * 60 * 1000) { // 30 minutes
@@ -47,6 +55,14 @@ export class LoginComponent implements OnInit {
         const remainingTime = 30 * 60 * 1000 - diff;
         setTimeout(() => this.isButtonDisabled = false, remainingTime);
       }
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Restore previous dark mode state when leaving the login page
+    if (this.previousDarkMode) {
+      document.documentElement.classList.add('dark-mode');
+      document.body.classList.add('dark');
     }
   }
 
@@ -233,7 +249,7 @@ Register() {
     this.messageService.add({
       severity: 'error',
       summary: 'Adresse invalide',
-      detail: 'L’adresse choisie n’est pas reconnue.',
+      detail: 'L\'adresse choisie n\'est pas reconnue.',
       life: 3000
     });
     return;
@@ -279,12 +295,12 @@ Register() {
       this.ShowRegisterSection = false;
       this.AccountVisible = false;
       this.ShowVerificationSection = true;
-      this.messageService.add({ severity: 'success', summary: 'Inscription réussie', detail: 'Veuillez vérifier votre compte via l’email envoyé.', life: 3000 });
+      this.messageService.add({ severity: 'success', summary: 'Inscription réussie', detail: 'Veuillez vérifier votre compte via l\'email envoyé.', life: 3000 });
     },
     error: (error) => {
       const msg = error.error;
       const detail = msg === 'Cet email est déjà utilisé.' || msg === 'Ce nom de société est déjà utilisé.' ? msg : 'Erreur inconnue.';
-      this.messageService.add({ severity: 'error', summary: 'Erreur d’inscription', detail, life: 3000 });
+      this.messageService.add({ severity: 'error', summary: 'Erreur d\'inscription', detail, life: 3000 });
     }
   });
 }
@@ -342,29 +358,69 @@ Register() {
 
 // Method to send the reset password link
 sendResetPasswordLink(): void {
-  if (this.resetPasswordRequest.email) {
-    // Disable the button and start cooldown
-    this.isButtonDisabled = true;
-
-    // Call your service to send the reset password link to the user's email
-    this.ServiceA.forgotPassword(this.resetPasswordRequest.email).subscribe(
-      response => {
-        console.log('Reset link sent successfully');
-        // Handle successful reset request (e.g., show success message)
-      },
-      error => {
-        console.error('Error sending reset link:', error);
-        // Handle error (e.g., show error message)
-      }
-    );
-
-    // Lock the button for 30 minutes
-    setTimeout(() => {
-      this.isButtonDisabled = false; // Enable button after 30 minutes
-    }, 30 * 60 * 1000); // 30 minutes
-  } else {
-    console.log('Email is required');
+  if (!this.resetPasswordRequest.email) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Email manquant',
+      detail: 'Veuillez saisir votre adresse email.',
+      life: 3000
+    });
+    return;
   }
+
+  if (!this.emailPattern.test(this.resetPasswordRequest.email)) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Email invalide',
+      detail: 'Veuillez saisir une adresse email valide.',
+      life: 3000
+    });
+    return;
+  }
+
+  // Disable the button and start cooldown
+  this.isButtonDisabled = true;
+  localStorage.setItem('resetButtonTimestamp', Date.now().toString());
+
+  // Call your service to send the reset password link to the user's email
+  this.ServiceA.forgotPassword(this.resetPasswordRequest.email).subscribe({
+    next: (response) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Email envoyé',
+        detail: 'Un lien de réinitialisation a été envoyé à votre adresse email.',
+        life: 3000
+      });
+      
+      // Lock the button for 30 minutes
+      setTimeout(() => {
+        this.isButtonDisabled = false;
+        localStorage.removeItem('resetButtonTimestamp');
+      }, 30 * 60 * 1000); // 30 minutes
+    },
+    error: (error) => {
+      // Handle specific error cases
+      if (error.error === 'Utilisateur non trouvé') {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Utilisateur non trouvé',
+          detail: 'Aucun compte n\'est associé à cette adresse email.',
+          life: 3000
+        });
+      } else {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: 'Une erreur est survenue lors de l\'envoi du lien de réinitialisation.',
+          life: 3000
+        });
+      }
+      
+      // Reset button state on error
+      this.isButtonDisabled = false;
+      localStorage.removeItem('resetButtonTimestamp');
+    }
+  });
 }
 
   captchaToken: string | null = null;

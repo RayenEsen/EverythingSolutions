@@ -810,3 +810,74 @@
         :host-context(.dark-mode) :host ::ng-deep .p-select-label {
           color: #ffffff !important;
       }
+
+
+      /* Dark mode adjustments for p-select-label */
+:host-context(body.dark) {
+  .p-select-label {
+    color: #ffffff !important;
+  }
+
+  /* Also handle the placeholder state */
+  .p-select-label.p-placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  /* Force dark mode styles for autocomplete panel and items */
+  :host ::ng-deep .p-autocomplete-panel {
+    background-color: #2d3748 !important;
+    border-color: #4a5568 !important;
+
+    .p-autocomplete-items {
+      background-color: #2d3748 !important; /* Ensure list background is dark */
+      .p-autocomplete-item {
+        color: #ffffff !important;
+        /* Ensure all text within the item is white */
+        span, div, p, strong, small {
+          color: #ffffff !important;
+        }
+
+        /* Direct targeting of small tag within item */
+        small {
+          color: #ffffff !important;
+        }
+
+        &:hover {
+          background-color: #374151 !important;
+          color: #ffffff !important; /* Ensure hover text is white */
+          span, div, p, strong, small {
+            color: #ffffff !important;
+          }
+          small {
+            color: #ffffff !important;
+          }
+        }
+      }
+    }
+  }
+
+  /* Even more aggressive targeting for small tags within autocomplete panels */
+  :host ::ng-deep .p-autocomplete-panel small {
+    color: #ffffff !important;
+  }
+
+  /* Force dark mode styles for the autocomplete list itself */
+  :host ::ng-deep .p-autocomplete-list {
+    color: #ffffff !important;
+  }
+}
+
+/* Dark mode datatable hover styles */
+:host-context(body.dark) {
+  .p-datatable.p-datatable-hoverable .p-datatable-tbody > tr:not(.p-highlight):not(.p-datatable-row-selected):hover {
+    background-color: #ffffff !important;
+    color: #ffffff !important;
+  }
+}
+
+/* Dark mode style for select label */
+:host-context(.dark-mode) :host ::ng-deep .p-select-label {
+  color: #ffffff !important;
+}
+
+

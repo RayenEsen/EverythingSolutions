@@ -7,7 +7,7 @@ import { AuthService } from './shared/Auth.service';
 import { LayoutComponent } from './layout/layout.component';
 import { ThemeService } from './Services/theme.service';
 import { HostBinding } from '@angular/core';
-import { NavbarComponent } from './navbar/navbarr.component';
+import { NavbarComponent } from './navbar/Navbar.component';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -21,41 +21,27 @@ export class AppComponent implements OnInit {
 
   constructor(private themeService: ThemeService , private authService: AuthService, private router: Router) {}  // Inject Router here
 
-ngOnInit() {
-  // Subscribe to login status
-  this.authService.isLoggedIn$.subscribe(status => {
-    this.isLoggedIn = status;
-  });
-
-  // Subscribe to router events to check the current route
-  this.router.events.subscribe((event) => {
-    if (event instanceof NavigationEnd) {
-      this.isLoginPage = this.router.url === '/login';
-    }
-  });
-
-  // Set initial theme
-  this.updateBodyClass();
-}
-
-
-toggleDarkMode() {
-  this.themeService.toggleDarkMode();
-  this.updateBodyClass();
-}
-
-private updateBodyClass() {
-  const isDark = this.themeService.isDarkMode();
-  const body = document.body;
-
-  if (isDark) {
-    body.classList.add('dark');
-  } else {
-    body.classList.remove('dark');
+  goToPaymentInfo() {
+    this.router.navigate(['/payment-info']);
   }
-}
 
-  
+  ngOnInit() {
+    // Subscribe to login status
+    this.authService.isLoggedIn$.subscribe(status => {
+      this.isLoggedIn = status;
+    });
+
+    // Subscribe to router events to check the current route
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.isLoginPage = this.router.url === '/login';
+      }
+    });
+  }
+
+  toggleDarkMode() {
+    this.themeService.toggleDarkMode();
+  }
 
   title = 'ES';
 }

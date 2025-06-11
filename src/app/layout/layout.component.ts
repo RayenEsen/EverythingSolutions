@@ -5,7 +5,7 @@ import { AuthService } from '../shared/Auth.service';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { NavbarComponent } from '../navbar/navbarr.component';
+import { NavbarComponent } from '../navbar/Navbar.component';
 
 @Component({
   selector: 'app-layout',

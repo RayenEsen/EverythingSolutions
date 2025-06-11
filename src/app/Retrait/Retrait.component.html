@@ -186,8 +186,8 @@
           <ng-template #emptymessage>
             <tr>
               <td colspan="100%" style="text-align: center; width: 100%;">
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
-                  <iframe 
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;" [ngStyle]="{'background-color': themeService.isDarkMode() ? '#1a202c' : ''}">
+                  <iframe *ngIf="!themeService.isDarkMode()"
                     src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie" 
                     width="200" 
                     height="200" 
@@ -289,16 +289,10 @@
 
             
                 <!-- Full-detail item template -->
-                <ng-template let-fournisseur pTemplate="item">
-                  <div class="d-flex flex-column p-2" style="white-space: normal;">
-                    <div><strong>{{ fournisseur.nom }}</strong></div>
-                    <div class="small text-muted mt-1">
-                      <i class="pi pi-phone me-1"></i>{{ fournisseur.telephone }}
-                      <i class="pi pi-envelope ms-3 me-1"></i>{{ fournisseur.email }}
-                    </div>
-                    <div class="small text-muted mt-1">
-                      <i class="pi pi-map-marker me-1"></i>{{ fournisseur.adresse }}
-                    </div>
+                <ng-template let-f pTemplate="item">
+                  <div class="p-2">
+                    <strong>{{ f.nom }}</strong><br />
+                    <small>{{ f.email }} - {{ f.telephone }}</small>
                   </div>
                 </ng-template>
             
@@ -335,9 +329,7 @@
                 class="d-block w-100">
                 
                 <ng-template let-bank pTemplate="item">
-                  <div class="bank-item" style="white-space: normal; padding: 8px;">
-                    {{bank.nom}}
-                  </div>
+                  <div class="p-2">{{ bank.nom }}</div>
                 </ng-template>
                 
               </p-autocomplete>
@@ -354,7 +346,6 @@
             
 
             
-
 
 
 
@@ -409,7 +400,8 @@
       [forceSelection]="true"
       [minLength]="0"
       [autoHighlight]="true"
-      [style]="{'width':'100%'}">
+      [style]="{'width':'100%'}"
+      appendTo="body">
     </p-autoComplete>
 
 
@@ -459,7 +451,6 @@
         </div>
       </div>
     </p-drawer>
-
 
 
 
@@ -724,8 +715,8 @@
       <ng-template pTemplate="emptymessage">
         <tr>
           <td colspan="5" class="text-center">
-            <div class="d-flex flex-column align-items-center justify-content-center w-100">
-              <iframe
+            <div class="d-flex flex-column align-items-center justify-content-center w-100" [ngStyle]="{'background-color': themeService.isDarkMode() ? '#1a202c' : ''}">
+              <iframe *ngIf="!themeService.isDarkMode()"
                 src="https://lottie.host/embed/9001f2fe-ee47-47a4-bc9b-a4f3899d0d13/CoC7Gm9nvK.lottie"
                 width="200"
                 height="200"
@@ -881,8 +872,8 @@
       <ng-template pTemplate="emptymessage">
         <tr>
           <td colspan="100%" style="text-align: center; width: 100%;">
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
-              <iframe
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;" [ngStyle]="{'background-color': themeService.isDarkMode() ? '#1a202c' : ''}">
+              <iframe *ngIf="!themeService.isDarkMode()"
                 src="https://lottie.host/embed/9001f2fe-ee47-47a4-bc9b-a4f3899d0d13/CoC7Gm9nvK.lottie"
                 width="200"
                 height="200"
@@ -967,7 +958,7 @@
             <ng-template let-f pTemplate="item">
               <div class="p-2">
                 <strong>{{ f.nom }}</strong><br />
-                <small class="text-muted">{{ f.email }} - {{ f.telephone }}</small>
+                <small>{{ f.email }} - {{ f.telephone }}</small>
               </div>
             </ng-template>
           </p-autocomplete>

@@ -123,6 +123,19 @@
   user-select: none;        /* Prevent text selection */
 }
 
+/* Adjust submenu arrows when collapsed */
+.sidebar.close .arrow-left,
+.sidebar.collapsed .arrow-left {
+  display: none;
+}
+
+.menu_items.blocked {
+  pointer-events: none;     /* Disables all interaction */
+  opacity: 0.6;             /* Makes it look disabled */
+  filter: grayscale(1);     /* Optional: make it look visually inactive */
+  user-select: none;        /* Prevent text selection */
+}
+
 
 
 .menu_wrapper {
@@ -164,3 +177,78 @@
 .sidebar.collapsed .blocked-section::after {
   display: none !important;
 }
+
+.menu_content {
+  transition: margin-top 0.3s ease;
+}
+
+.sidebar.close .menu_content,
+.sidebar.collapsed .menu_content {
+  margin-top: 5vh;
+}
+
+/* Center icons when collapsed */
+.sidebar.close .nav_link,
+.sidebar.collapsed .nav_link {
+  justify-content: center;
+  margin: 2px auto;
+  width: 50px;  /* Fixed width for centered icons */
+}
+
+.sidebar.close .navlink_icon,
+.sidebar.collapsed .navlink_icon {
+  margin-right: 0;
+}
+
+.menu_wrapper {
+  position: relative;
+}
+
+/* Locking the section */
+.blocked-section {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.6;
+  user-select: none;
+  
+  filter: grayscale(1);
+}
+
+
+/* Premium badge overlay */
+.blocked-section::after {
+  content: "🔒 PREMIUM";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #dc3545;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  z-index: 11;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none; /* allows mouse to pass through to the wrapper for visual only */
+}
+
+
+.sidebar.close .blocked-section::after,
+.sidebar.collapsed .blocked-section::after {
+  display: none !important;
+}
+
+.menu_content {
+  transition: margin-top 0.3s ease;
+}
+
+.sidebar.close .menu_content,
+.sidebar.collapsed .menu_content {
+  margin-top: 5vh;
+}
+
+   
+
+

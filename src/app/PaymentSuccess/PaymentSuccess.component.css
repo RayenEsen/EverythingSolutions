@@ -1,0 +1,40 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  background: linear-gradient(90deg, #039fc4, #03f9ed);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 2.5em;
+  margin-bottom: 20px;
+}
+
+p {
+  color: #333;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+:host-context(.dark) h1 {
+  background: linear-gradient(90deg, #039fc4, #03f9ed); /* Same gradient for dark mode */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+:host-context(.dark) p {
+  color: #CCC; /* Light grey for paragraphs in dark mode */
+}
+
+.logo {
+  max-width: 150px; /* Adjust as needed */
+  margin-bottom: 30px;
+}

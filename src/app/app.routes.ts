@@ -13,7 +13,11 @@ import { CommingSoonComponent } from './CommingSoon/CommingSoon.component';
 import { LayoutComponent } from './layout/layout.component';
 import { ProfileComponent } from './Profile/Profile.component';
 import { DashboardComponent } from './Dashboard/Dashboard.component';
-import { AdminGuard } from './Guards/admin.guard'; 
+import { AdminGuard } from './Guards/admin.guard';
+import { PaymentSuccessComponent } from './PaymentSuccess/PaymentSuccess.component';
+import { PaymentFailComponent } from './PaymentFail/PaymentFail.component';
+import { PaymentInfoComponent } from './PaymentInfo/PaymentInfo.component';
+import { ArticleComponent } from './Article/Article.component';
 
 export const routes: Routes = [
   {
@@ -78,6 +82,27 @@ export const routes: Routes = [
         component: DashboardComponent,
         title: 'Dashboard',
         canActivate: [AdminGuard]  // Only admin users
+      },
+      {
+        path: 'payment-success',
+        component: PaymentSuccessComponent,
+        title: 'Payment Success'
+      },
+      {
+        path: 'payment-fail',
+        component: PaymentFailComponent,
+        title: 'Payment Failed'
+      },
+      {
+        path: 'payment-info',
+        component: PaymentInfoComponent,
+        title: 'Payment Information'
+      },
+      {
+        path: 'ListArticle',
+        component: ArticleComponent,
+        title: 'Liste Article',
+        canActivate: [AdminGuard]
       }
     ]
   },

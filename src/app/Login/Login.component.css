@@ -12,6 +12,16 @@
   --card-hover-shadow: 0 8px 40px rgba(3, 159, 196, 0.2);
 }
 
+/* Force light mode styles */
+:host {
+  background-color: #ffa50024 !important;
+  color: var(--text-dark) !important;
+}
+
+:host ::ng-deep * {
+  color: inherit;
+}
+
 /* Gradient Background */
 .page-container {
   display: flex;
@@ -19,20 +29,54 @@
   align-items: center;
   min-height: 100vh;
   padding: 2rem;
-  background: linear-gradient(135deg, #F7FAFC 0%, #e6f9fc 50%, #d0f5fa 100%);
+  background: linear-gradient(135deg, #F7FAFC 0%, #e6f9fc 50%, #d0f5fa 100%) !important;
 }
 
 /* Modern Card with Glass Effect */
 .card {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.9) !important;
   padding: 2.5rem;
   border-radius: 20px;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--card-shadow) !important;
   width: 90%;
   max-width: 1400px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Override any dark mode styles */
+:host ::ng-deep {
+  .p-inputtext,
+  .p-button,
+  .p-dialog,
+  .p-dialog-header,
+  .p-dialog-content,
+  .p-dialog-footer,
+  .form-section,
+  .section-title,
+  .large-label {
+    color: var(--text-dark) !important;
+    background-color: white !important;
+  }
+
+  .p-button.p-button-primary {
+    background: linear-gradient(90deg, var(--primary-hover), var(--primary-accent)) !important;
+    color: white !important;
+  }
+
+  .p-dialog {
+    background: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  .p-dialog-header {
+    background: linear-gradient(90deg, var(--primary-hover) 0%, var(--primary-accent) 100%) !important;
+    color: white !important;
+  }
+
+  .p-dialog-content {
+    background: white !important;
+  }
 }
 
 .card:hover {

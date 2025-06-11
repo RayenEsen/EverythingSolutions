@@ -567,7 +567,12 @@
         /* Dark mode style for select label */
         :host-context(.dark-mode) :host ::ng-deep .p-select-label {
             color: #ffffff !important;
+        }        /* Dark mode style for select label */
+
+        :host-context(.dark-mode) .text-muted {
+            color: #fff !important;
         }
+  
 
         /* Add to your existing styles */
         :host ::ng-deep .p-chart {

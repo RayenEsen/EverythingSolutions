@@ -1,0 +1,650 @@
+<div [class.dark-mode]="themeService.isDarkMode()">
+    <p-toast />
+    <div class="dashboard-header">
+        <div class="header-content">
+            <div class="breadcrumb-nav" style="display: flex; align-items: center; justify-content: space-between;">
+                <nav class="breadcrumb">
+                    <span class="breadcrumb-item">Accueil</span>
+                    <span class="breadcrumb-separator">›</span>
+                    <span class="breadcrumb-item">Contenu</span>
+                    <span class="breadcrumb-separator">›</span>
+                    <span class="breadcrumb-item active">Liste des Articles</span>
+                </nav>
+                <img src="https://i.ibb.co/Xfj86PzY/8a2a07a8-b6ca-4342-8173-14564dd9ab4e-removebg-preview-1-1.png" alt="Article Logo" style="margin-left: 12px; height: 50px; width: 50px;">
+            </div>
+            <div class="header-main" style="margin-top: -10px;">
+                <h1 class="header-title">
+                    <span class="title-gradient">Gestion des Articles</span>
+                </h1>
+                <p class="header-subtitle">Gérez vos articles, suivez les performances et optimisez votre flux de travail de contenu.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="metrics-grid">
+        <!-- Total Articles Card -->
+        <div class="metric-card">
+            <div class="metric-content">
+                <h3 class="metric-label">Articles Totaux</h3>
+                <p class="metric-value">{{ totalArticles }} <span class="currency"></span></p>
+                <div class="metric-decoration">
+                    <i class="pi pi-file-o" style="color: black;"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Valeur Totale HT Card -->
+        <div class="metric-card accent-2">
+            <div class="metric-content">
+                <h3 class="metric-label">Valeur Totale HT</h3>
+                <p class="metric-value">{{ totalValueHT | number:'1.2-2' }} <span class="currency">TND</span></p>
+                <div class="metric-decoration">
+                    <i class="pi pi-dollar" style="color: black;"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Prix Moyen HT Card -->
+        <div class="metric-card accent-3">
+            <div class="metric-content">
+                <h3 class="metric-label">Prix Moyen HT</h3>
+                <p class="metric-value">{{ averagePriceHT | number:'1.2-2' }} <span class="currency">TND</span></p>
+                <div class="metric-decoration">
+                    <i class="pi pi-calculator" style="color: black;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New row for charts -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="metric-card accent-4">
+                <div class="metric-content">
+                    <h3 class="metric-label">Performance des Articles</h3>
+                    <div class="chart-container">
+                        <p-chart type="bar" height="300" [data]="salesByDesignationChartData" [options]="salesByDesignationChartOptions" [style]="{'width': '100%'}"></p-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="metric-card accent-2">
+                <div class="metric-content">
+                    <h3 class="metric-label">Sources de Trafic</h3>
+                    <div class="chart-container">
+                        <p-chart type="doughnut" height="300" [data]="articlesByTVAChartData" [options]="articlesByTVAChartOptions" [style]="{'width': '100%'}"></p-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="card">
+        <div class="d-flex align-items-center justify-content-between p-2 bg-light text-dark border rounded mb-3">
+            <p-menubar [model]="items" />
+
+            <p-iconfield class="d-flex align-items-center">
+                <p-inputicon styleClass="pi pi-search" />
+                <input
+                    type="text"
+                    pInputText
+                    placeholder="Rechercher"
+                    class="form-control"
+                    [(ngModel)]="searchText"
+                    (input)="filterArticles()"
+                />
+            </p-iconfield>
+        </div>
+
+        <p-contextMenu #cm [model]="items2" [appendTo]="'body'"></p-contextMenu>
+
+        <p-table
+            #dt1
+            [value]="stock.articles"
+            dataKey="id"
+            [rows]="10"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            [loading]="loading"
+            [paginator]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [filterDelay]="0"
+            selectionMode="single"
+            [(selection)]="SelectedArticles"
+            [contextMenu]="cm"
+            [(contextMenuSelection)]="selectedArticle"
+            [globalFilterFields]="['code', 'designation', 'tva.code']">
+
+            <ng-template #header>
+                <tr>
+                    <th style="width: 1rem">
+                        <p-tableHeaderCheckbox pReorderableColumn class="printable" />
+                    </th>
+                    <th style="width: 10rem">
+                        Code
+                        <p-columnFilter type="text" field="code" display="menu" class="ml-auto" />
+                    </th>
+                    <th style="width: 20rem">
+                        Désignation
+                        <p-columnFilter type="text" field="designation" display="menu" class="ml-auto" />
+                    </th>
+                    <th style="width: 10rem">
+                        Prix Achat HT
+                        <p-columnFilter type="numeric" field="prixAchatHT" display="menu" class="ml-auto" />
+                    </th>
+                    <th style="width: 10rem">
+                        TVA
+                        <p-columnFilter type="text" field="tva.code" display="menu" class="ml-auto" />
+                    </th>
+                    <th style="width: 10rem">
+                        Prix Vente HT
+                        <p-columnFilter type="numeric" field="prixVenteHT" display="menu" class="ml-auto" />
+                    </th>
+                    <th style="width: 10rem">
+                        Prix Vente TTC
+                        <p-columnFilter type="numeric" field="prixVenteTTC" display="menu" class="ml-auto" />
+                    </th>
+                    <th style="width: 8rem">
+                        Marge
+                        <p-columnFilter type="numeric" field="marge" display="menu" class="ml-auto" />
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+            </ng-template>
+
+            <ng-template #body let-article>
+                <tr style="cursor: pointer;" [pContextMenuRow]="article">
+                    <td>
+                        <p-tableCheckbox pReorderableRowHandle class="printable" [value]="article" />
+                    </td>
+                    <td>{{ article.code }}</td>
+                    <td>{{ article.designation }}</td>
+                    <td>{{ article.prixAchatHT | number:'1.2-2' }} TND</td>
+                    <td><p-tag severity="info" [value]="article.tva.code"></p-tag></td>
+                    <td>{{ article.prixVenteHT | number:'1.2-2' }} TND</td>
+                    <td>{{ article.prixVenteTTC | number:'1.2-2' }} TND</td>
+                    <td>{{ article.marge | percent:'1.2-2' }}</td>
+                    <td style="width: 7%;">
+                        <div class="article-actions" style="display: flex; gap: 1rem; justify-content: center;">
+                            <i class="pi pi-pencil" style="color: #22c55e; cursor: pointer;" (click)="openModal('edit', article)"></i>
+                            <i class="pi pi-trash" style="color: #ef4444; cursor: pointer;" (click)="deleteArticle(article)"></i>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; width: 100%;">
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;" [ngStyle]="{'background-color': themeService.isDarkMode() ? '#1a202c' : ''}">
+                            <iframe *ngIf="!themeService.isDarkMode()"
+                                src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie"
+                                width="200"
+                                height="200"
+                                frameborder="0"
+                                allow="autoplay; encrypted-media"
+                                allowfullscreen>
+                            </iframe>
+                            <div>Aucun Article trouvé.</div>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <!-- Modal for Create/Edit (from previous conversation) -->
+    <p-drawer
+        [(visible)]="AddArticleInfo"
+        header="Ajouter un Nouvel Article"
+        position="right"
+        [style]="{width: '90vw', maxWidth: '450px'}"
+        [baseZIndex]="10000"
+        styleClass="custom-drawer">
+        <div class="p-4">
+            <div>
+                <div class="mb-3">
+                    <label for="articleCode" class="form-label">Code</label>
+                    <input type="text" class="form-control" id="articleCode" [(ngModel)]="currentArticle.code" required placeholder="Ex: ART-XXX-001">
+                    <div *ngIf="showCodeError" class="text-danger small mt-1">Le code est requis</div>
+                </div>
+                <div class="mb-3">
+                    <label for="articleDesignation" class="form-label">Désignation</label>
+                    <p-autoComplete
+                        id="articleDesignation"
+                        [(ngModel)]="currentArticle.designation"
+                        [suggestions]="filteredDesignations"
+                        (completeMethod)="filterDesignations($event)"
+                        [forceSelection]="true"
+                        [dropdown]="true"
+                        placeholder="Sélectionner une désignation"
+                        [inputStyle]="{ 'width':'100%' }"
+                        [style]="{ 'width':'100%' }"
+                        inputStyleClass="form-control"
+                        [required]="true">
+                        <ng-template let-designation pTemplate="item">
+                            <div>{{ designation }}</div>
+                        </ng-template>
+                    </p-autoComplete>
+                    <div *ngIf="showDesignationError" class="text-danger small mt-1">La désignation est requise et doit être sélectionnée depuis la liste.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="prixAchatHT" class="form-label">Prix Achat HT</label>
+                    <p-inputNumber
+                        id="prixAchatHT"
+                        [(ngModel)]="currentArticle.prixAchatHT"
+                        mode="currency"
+                        currency="TND"
+                        locale="fr-FR"
+                        [min]="0"
+                        class="w-100"
+                        inputStyleClass="form-control"
+                        placeholder="Ex: 100.00 TND">
+                    </p-inputNumber>
+                    <div *ngIf="showPrixAchatHTError" class="text-danger small mt-1">Le prix d'achat HT est requis</div>
+                </div>
+                <div class="mb-3">
+                    <label for="tva" class="form-label">TVA</label>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <p-dropdown
+                            id="tva"
+                            [(ngModel)]="selectedTVA"
+                            [options]="tvaOptions"
+                            optionLabel="code"
+                            placeholder="Sélectionner une TVA"
+                            [filter]="true"
+                            filterBy="code"
+                            [showClear]="true"
+                            [style]="{ width: '100%' }"
+                            styleClass="p-dropdown-sm"
+                            class="flex-grow-1"
+                            [required]="true">
+                            <ng-template pTemplate="selectedItem">
+                                <div *ngIf="selectedTVA" class="flex align-items-center gap-2">
+                                    <div>{{ selectedTVA.code }} ({{ selectedTVA.taux }}%)</div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="item" let-tva>
+                                <div class="flex align-items-center gap-2">
+                                    <div>{{ tva.code }} ({{ tva.taux }}%)</div>
+                                </div>
+                            </ng-template>
+                        </p-dropdown>
+                        <button type="button" pButton icon="pi pi-plus" class="p-button-rounded p-button-sm" severity="secondary" [text]="true" (click)="toggleAddTVAInfo()"></button>
+                        <button type="button" pButton icon="pi pi-eye" class="p-button-rounded p-button-sm" severity="secondary" [text]="true" (click)="toggleDialogTVA()"></button>
+                    </div>
+                    <div *ngIf="showTVAError" class="text-danger small mt-1">La TVA est requise</div>
+                </div>
+                <div class="mb-3">
+                    <label for="articleStock" class="form-label">Stock</label>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <p-autoComplete
+                            id="articleStock"
+                            [(ngModel)]="selectedStock"
+                            [suggestions]="filteredStocks"
+                            (completeMethod)="filterStocks($event)"
+                            field="id"
+                            [dropdown]="true"
+                            placeholder="Sélectionner un stock"
+                            [inputStyle]="{ 'width':'100%' }"
+                            [style]="{ 'width':'100%' }"
+                            inputStyleClass="form-control"
+                            [required]="true">
+                            <ng-template let-stock pTemplate="item">
+                                <div>Stock ID: {{ stock.id }}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <button type="button" pButton icon="pi pi-plus" class="p-button-rounded p-button-sm" severity="secondary" [text]="true" (click)="toggleAddStockInfo()"></button>
+                        <button type="button" pButton icon="pi pi-eye" class="p-button-rounded p-button-sm" severity="secondary" [text]="true" (click)="toggleDialogStock()"></button>
+                    </div>
+                    <div *ngIf="showNewStockIdError" class="text-danger small mt-1">Le stock est requis</div>
+                </div>
+                <div class="mb-3">
+                    <label for="prixVenteHT" class="form-label">Prix Vente HT</label>
+                    <p-inputNumber
+                        id="prixVenteHT"
+                        [(ngModel)]="currentArticle.prixVenteHT"
+                        mode="currency"
+                        currency="TND"
+                        locale="fr-FR"
+                        [min]="0"
+                        class="w-100"
+                        inputStyleClass="form-control"
+                        placeholder="Ex: 150.00 TND">
+                    </p-inputNumber>
+                    <div *ngIf="showPrixVenteHTError" class="text-danger small mt-1">Le prix de vente HT est requis</div>
+                </div>
+                <div class="d-flex justify-content-end gap-2 p-3" style="position: absolute; bottom: 0; left: 0; width: 100%;" [ngClass]="themeService.isDarkMode() ? 'custom-bg-dark' : 'bg-light'">
+                    <button type="button" class="btn btn-outline-secondary" (click)="AddArticleInfo = false">
+                        <i class="pi pi-times me-2"></i>Annuler
+                    </button>
+                    <button type="submit" class="btn btn-primary" (click)="saveArticle()">
+                        <i class="pi pi-check me-2"></i>Enregistrer l'Article
+                    </button>
+                </div>
+            </div>
+        </div>
+    </p-drawer>
+
+    <p-drawer 
+        [(visible)]="AddTVAInfo" 
+        header="Ajouter une Nouvelle TVA" 
+        position="right" 
+        [style]="{width: '90vw', maxWidth: '450px'}"
+        [baseZIndex]="10000"
+        styleClass="custom-drawer">
+        <div class="p-4 d-flex flex-column" style="height: 100%; position: relative;">
+            <div style="flex-grow: 1; overflow-y: auto; padding-bottom: 60px;"> 
+                <h4>Ajouter une Nouvelle TVA</h4>
+                <div class="mb-3">
+                    <label for="newTVACode" class="form-label">Code TVA</label>
+                    <input type="text" class="form-control" id="newTVACode" [(ngModel)]="newTVA.code" required placeholder="Ex: TVA_18">
+                    <div *ngIf="showNewTVACodeError" class="text-danger small mt-1">Le code TVA est requis</div>
+                </div>
+                <div class="mb-3">
+                    <label for="newTVATaux" class="form-label">Taux TVA (%)</label>
+                    <p-inputNumber 
+                        id="newTVATaux" 
+                        [(ngModel)]="newTVA.taux" 
+                        mode="decimal" 
+                        [min]="0" 
+                        [max]="100"
+                        [showButtons]="true"
+                        class="w-100"
+                        inputStyleClass="form-control"
+                        placeholder="Ex: 18"
+                        required>
+                    </p-inputNumber>
+                    <div *ngIf="showNewTVATauxError" class="text-danger small mt-1">Le taux TVA est requis et doit être entre 0 et 100</div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2 p-3" style="position: absolute; bottom: 0; left: 0; width: 100%;" [ngClass]="themeService.isDarkMode() ? 'custom-bg-dark' : 'bg-light'">
+                <button type="button" class="btn btn-outline-secondary" (click)="AddTVAInfo = false">
+                    <i class="pi pi-times me-2"></i>Fermer
+                </button>
+                <button type="submit" class="btn btn-primary" (click)="onSaveNewTVA()">
+                    <i class="pi pi-check me-2"></i>Ajouter TVA
+                </button>
+            </div>
+        </div>
+    </p-drawer>
+
+    <p-drawer 
+        [(visible)]="AddStockInfo" 
+        header="Ajouter un Nouveau Stock" 
+        position="right" 
+        [style]="{width: '90vw', maxWidth: '450px'}"
+        [baseZIndex]="10000"
+        styleClass="custom-drawer">
+        <div class="p-4 d-flex flex-column" style="height: 100%; position: relative;">
+            <div style="flex-grow: 1; overflow-y: auto; padding-bottom: 60px;"> 
+                <h4>Ajouter un Nouveau Stock</h4>
+                <div class="mb-3">
+                    <label for="newStockId" class="form-label">ID du Stock</label>
+                    <p-inputNumber 
+                        id="newStockId" 
+                        [(ngModel)]="newStock.id" 
+                        mode="decimal" 
+                        [min]="1" 
+                        class="w-100"
+                        inputStyleClass="form-control"
+                        placeholder="Ex: 104"
+                        required>
+                    </p-inputNumber>
+                    <div *ngIf="showNewStockIdError" class="text-danger small mt-1">L'ID du stock est requis et doit être un nombre positif</div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2 p-3" style="position: absolute; bottom: 0; left: 0; width: 100%;" [ngClass]="themeService.isDarkMode() ? 'custom-bg-dark' : 'bg-light'">
+                <button type="button" class="btn btn-outline-secondary" (click)="AddStockInfo = false">
+                    <i class="pi pi-times me-2"></i>Fermer
+                </button>
+                <button type="submit" class="btn btn-primary" (click)="onSaveNewStock()">
+                    <i class="pi pi-check me-2"></i>Ajouter Stock
+                </button>
+            </div>
+        </div>
+    </p-drawer>
+
+    <p-dialog
+        header="Liste des TVA"
+        [(visible)]="dialogVisibleTVA"
+        [modal]="true"
+        [resizable]="false"
+        [maximizable]="true"
+        appendTo="body"
+        [style]="{ width: '75vw' }"
+        [contentStyle]="{ height: '350px' }">
+        <p-table
+            [value]="tvaOptions"
+            dataKey="id"
+            editMode="row" 
+            [rows]="5"
+            [rowsPerPageOptions]="[5, 10, 20]"
+            [paginator]="true"
+            [scrollable]="true"
+            scrollHeight="flex"
+            [tableStyle]="{ 'min-width': '100%' }"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [filterDelay]="0"
+            [globalFilterFields]="['code', 'taux']">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 15rem">Code</th>
+                    <th style="width: 15rem">Taux (%)</th>
+                    <th style="width: 10rem">Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-tva let-editing="editing" let-ri="rowIndex">
+                <tr [pEditableRow]="tva">
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText [(ngModel)]="tva.code" required />
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ tva.code }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-inputNumber [(ngModel)]="tva.taux" [min]="0" [max]="100" [showButtons]="true" required></p-inputNumber>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ tva.taux }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td style="display: flex">
+                        <div class="flex items-center justify-content-center gap-2">
+                            <button
+                                *ngIf="!editing"
+                                pButton
+                                pRipple
+                                type="button"
+                                pInitEditableRow
+                                icon="pi pi-pencil"
+                                (click)="onRowEditInitTVA(tva)"
+                                text
+                                rounded
+                                severity="secondary"
+                            ></button>
+                            <button
+                                *ngIf="editing"
+                                pButton
+                                pRipple
+                                type="button"
+                                pSaveEditableRow
+                                icon="pi pi-check"
+                                (click)="onRowEditSaveTVA(tva)"
+                                text
+                                rounded
+                                severity="secondary"
+                            ></button>
+                            <button
+                                *ngIf="editing"
+                                pButton
+                                pRipple
+                                type="button"
+                                pCancelEditableRow
+                                icon="pi pi-times"
+                                (click)="onRowEditCancelTVA(tva, ri)"
+                                text
+                                rounded
+                                severity="secondary"
+                            ></button>
+                        </div>
+                        <button
+                            pButton
+                            icon="pi pi-trash"
+                            class="p-button-sm p-button-rounded p-button-text p-button-danger"
+                            (click)="confirmDeleteTVA(tva);"
+                            title="Supprimer"
+                        ></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="100%" style="text-align: center; width: 100%;">
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;" [ngStyle]="{'background-color': themeService.isDarkMode() ? '#1a202c' : ''}">
+                            <div>Aucune TVA trouvée.</div>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <!-- Footer -->
+        <ng-template pTemplate="footer">
+            <button
+                pButton
+                label="Fermer"
+                icon="pi pi-times"
+                (click)="dialogVisibleTVA = false"
+                class="p-button-text"
+            ></button>
+        </ng-template>
+    </p-dialog>
+
+    <p-dialog
+        header="Liste des Stocks"
+        [(visible)]="dialogVisibleStock"
+        [modal]="true"
+        [resizable]="false"
+        [maximizable]="true"
+        appendTo="body"
+        [style]="{ width: '75vw' }"
+        [contentStyle]="{ height: '350px' }">
+        <p-table
+            [value]="stockOptions"
+            dataKey="id"
+            editMode="row" 
+            [rows]="5"
+            [rowsPerPageOptions]="[5, 10, 20]"
+            [paginator]="true"
+            [scrollable]="true"
+            scrollHeight="flex"
+            [tableStyle]="{ 'min-width': '100%' }"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [filterDelay]="0"
+            [globalFilterFields]="['id']">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 15rem">ID Stock</th>
+                    <th style="width: 15rem">Nombre d'Articles</th>
+                    <th style="width: 10rem">Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-stock let-editing="editing" let-ri="rowIndex">
+                <tr [pEditableRow]="stock">
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-inputNumber [(ngModel)]="stock.id" [min]="1" required></p-inputNumber>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ stock.id }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        {{ stock.articles.length }}
+                    </td>
+                    <td style="display: flex">
+                        <div class="flex items-center justify-content-center gap-2">
+                            <button
+                                *ngIf="!editing"
+                                pButton
+                                pRipple
+                                type="button"
+                                pInitEditableRow
+                                icon="pi pi-pencil"
+                                (click)="onRowEditInitStock(stock)"
+                                text
+                                rounded
+                                severity="secondary"
+                            ></button>
+                            <button
+                                *ngIf="editing"
+                                pButton
+                                pRipple
+                                type="button"
+                                pSaveEditableRow
+                                icon="pi pi-check"
+                                (click)="onRowEditSaveStock(stock)"
+                                text
+                                rounded
+                                severity="secondary"
+                            ></button>
+                            <button
+                                *ngIf="editing"
+                                pButton
+                                pRipple
+                                type="button"
+                                pCancelEditableRow
+                                icon="pi pi-times"
+                                (click)="onRowEditCancelStock(stock, ri)"
+                                text
+                                rounded
+                                severity="secondary"
+                            ></button>
+                        </div>
+                        <button
+                            pButton
+                            icon="pi pi-trash"
+                            class="p-button-sm p-button-rounded p-button-text p-button-danger"
+                            (click)="confirmDeleteStock(stock);"
+                            title="Supprimer"
+                        ></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="100%" style="text-align: center; width: 100%;">
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;" [ngStyle]="{'background-color': themeService.isDarkMode() ? '#1a202c' : ''}">
+                            <div>Aucun Stock trouvé.</div>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <!-- Footer -->
+        <ng-template pTemplate="footer">
+            <button
+                pButton
+                label="Fermer"
+                icon="pi pi-times"
+                (click)="dialogVisibleStock = false"
+                class="p-button-text"
+            ></button>
+        </ng-template>
+    </p-dialog>
+
+    <p-confirmDialog></p-confirmDialog>
+</div>

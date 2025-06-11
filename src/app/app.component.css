@@ -1,0 +1,53 @@
+.payment-overlay {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.payment-button {
+  background: linear-gradient(45deg, #FF6B6B, #FFCD6B); /* Sunset gradient */
+  color: #333; /* Dark text for contrast */
+  padding: 10px 25px; /* Reduced padding */
+  border: none;
+  border-radius: 50px; /* Pill shape */
+  cursor: pointer;
+  font-size: 16px; /* Reduced font size */
+  font-weight: 900; /* Extra bold */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Adjusted shadow */
+  transition: all 0.4s cubic-bezier(.25,.8,.25,1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.button-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px; /* Space between icon and text */
+  fill: currentColor; /* Inherit color from parent button */
+}
+
+.payment-button:hover {
+  background: linear-gradient(45deg, #FFCD6B, #FF6B6B); /* Reverse gradient on hover */
+  transform: translateY(-3px) scale(1.02); /* Adjusted lift and scale */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* Adjusted shadow on hover */
+  color: white; /* White text on hover */
+}
+
+/* Dark theme styles for the button */
+:host-context(.dark) .payment-button {
+  background: linear-gradient(45deg, #6B84FF, #6BFFCD); /* Cool gradient for dark theme */
+  color: #E0E0E0; /* Light text for dark theme */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+:host-context(.dark) .payment-button:hover {
+  background: linear-gradient(45deg, #6BFFCD, #6B84FF); /* Reverse cool gradient on hover */
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  color: white;
+}
