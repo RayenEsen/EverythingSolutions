@@ -7,6 +7,7 @@ export interface Article {
   prixAchatHT: number;
   tva: TVA; // TVA (objet)
   prixVenteHT: number;
+  gouvernerat?: string; // New property for Gouvernerat
   prixVenteTTC?: number; // Calculated automatically
   marge?: number; // Calculated automatically
   stockId?: number; // New property to link to a Stock

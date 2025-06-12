@@ -26,6 +26,13 @@ import { DropdownModule } from 'primeng/dropdown';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DialogModule } from 'primeng/dialog';
 import { ChartModule } from 'primeng/chart';
+import { ArticleService } from '../Services/Article.service';
+import { TVAService } from '../Services/TVA.service';
+import { StockService } from '../Services/Stock.service';
+import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { forkJoin } from 'rxjs';
+import { AddStock } from '../DTO/AddStock';
+import { AddArticle } from '../DTO/AddArticle';
 
 @Component({
   selector: 'app-Article',
@@ -52,11 +59,12 @@ import { ChartModule } from 'primeng/chart';
     DropdownModule,
     AutoCompleteModule,
     ChartModule,
+    HttpClientModule
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [ConfirmationService, MessageService, ArticleService, TVAService, StockService],
 })
 export class ArticleComponent implements OnInit {
-  stock: Stock = { id: 1, articles: [] };
+  stock: Stock = { id: 1, name: '', code: '', articles: [] };
   searchText: string = '';
   loading: boolean = false;
 
@@ -73,24 +81,21 @@ export class ArticleComponent implements OnInit {
     code: '',
     designation: '',
     prixAchatHT: 0,
-    tva: { id: 1, code: 'TVA_20', taux: 20 },
+    tva: { id: 0, code: '', taux: 0 },
     prixVenteHT: 0,
+    gouvernerat: '',
   };
 
-  tvaOptions: TVA[] = [
-    { id: 1, code: 'TVA_20', taux: 20 },
-    { id: 2, code: 'TVA_10', taux: 10 },
-    { id: 3, code: 'TVA_7', taux: 7 },
-    { id: 4, code: 'TVA_0', taux: 0 },
-  ];
+  tvaOptions: TVA[] = [];
 
-  selectedTVA: TVA = this.tvaOptions[0];
+  selectedTVA: TVA | null = null;
 
   showCodeError: boolean = false;
   showDesignationError: boolean = false;
   showPrixAchatHTError: boolean = false;
   showPrixVenteHTError: boolean = false;
   showTVAError: boolean = false;
+  showGouverneratError: boolean = false;
 
   // New properties for TVA management
   AddTVAInfo: boolean = false;
@@ -106,8 +111,10 @@ export class ArticleComponent implements OnInit {
   stockOptions: Stock[] = [];
   selectedStock: Stock | null = null;
   AddStockInfo: boolean = false;
-  newStock: Stock = { id: 0, articles: [] };
+  newStock: Stock = { id: 0, name: '', code: '', articles: [] };
   showNewStockIdError: boolean = false;
+  showNewStockNameError: boolean = false;
+  showNewStockCodeError: boolean = false;
   dialogVisibleStock: boolean = false;
   clonedStock: { [s: string]: Stock } = {};
 
@@ -144,6 +151,8 @@ export class ArticleComponent implements OnInit {
     'Zaghouan'
   ];
   
+  gouverneratSuggestions: string[] = this.tunisDesignations;
+  
   filteredDesignations: string[] = [];
   filteredStocks: Stock[] = [];
 
@@ -176,51 +185,62 @@ export class ArticleComponent implements OnInit {
   constructor(
     public themeService: ThemeService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
-  ) {}
-
-  ngOnInit() {
-    this.loadArticles();
-    this.initCharts();
+    private confirmationService: ConfirmationService,
+    private articleService: ArticleService,
+    private tvaService: TVAService,
+    private stockService: StockService
+  ) {
+    // Subscribe to theme changes to update chart colors
+    this.themeService.darkMode$.subscribe(() => {
+      this.initCharts();
+      // Force chart re-render by creating new object references
+      this.salesByDesignationChartData = { ...this.salesByDesignationChartData };
+      this.articlesByTVAChartData = { ...this.articlesByTVAChartData };
+    });
   }
 
-  loadArticles() {
-    // Initialize some dummy stocks
-    this.stockOptions = [
-      { id: 101, articles: [] },
-      { id: 102, articles: [] },
-      { id: 103, articles: [] }
-    ];
+  ngOnInit() {
+    this.loadInitialData();
+  }
 
-    this.stock.articles = [
-      { id: 1, code: 'ART-001-A', designation: 'Ariana', prixAchatHT: 800, tva: this.tvaOptions[0], prixVenteHT: 1200, prixVenteTTC: 1440, marge: 0.5, stockId: 101 },
-      { id: 2, code: 'ART-002-B', designation: 'Sfax', prixAchatHT: 10, tva: this.tvaOptions[1], prixVenteHT: 20, prixVenteTTC: 22, marge: 1, stockId: 101 },
-      { id: 3, code: 'ART-003-C', designation: 'Monastir', prixAchatHT: 50, tva: this.tvaOptions[0], prixVenteHT: 80, prixVenteTTC: 96, marge: 0.6, stockId: 102 },
-      { id: 4, code: 'ART-004-D', designation: 'Sousse', prixAchatHT: 300, tva: this.tvaOptions[0], prixVenteHT: 500, prixVenteTTC: 600, marge: 0.666, stockId: 103 },
-      { id: 5, code: 'ART-005-E', designation: 'Tunis', prixAchatHT: 150, tva: this.tvaOptions[1], prixVenteHT: 250, prixVenteTTC: 275, marge: 0.666, stockId: 101 },
-      { id: 6, code: 'ART-006-F', designation: 'Gabès', prixAchatHT: 200, tva: this.tvaOptions[2], prixVenteHT: 300, prixVenteTTC: 321, marge: 0.5, stockId: 102 },
-      { id: 7, code: 'ART-007-G', designation: 'Nabeul', prixAchatHT: 75, tva: this.tvaOptions[0], prixVenteHT: 120, prixVenteTTC: 144, marge: 0.6, stockId: 103 },
-      { id: 8, code: 'ART-008-H', designation: 'Jendouba', prixAchatHT: 400, tva: this.tvaOptions[1], prixVenteHT: 600, prixVenteTTC: 660, marge: 0.5, stockId: 101 },
-      { id: 9, code: 'ART-009-I', designation: 'Kairouan', prixAchatHT: 60, tva: this.tvaOptions[2], prixVenteHT: 90, prixVenteTTC: 96.3, marge: 0.5, stockId: 102 },
-      { id: 10, code: 'ART-010-J', designation: 'Bizerte', prixAchatHT: 120, tva: this.tvaOptions[0], prixVenteHT: 180, prixVenteTTC: 216, marge: 0.5, stockId: 103 },
-    ];
-
-    // Distribute articles to stocks based on stockId
-    this.stock.articles.forEach(article => {
-      const targetStock = this.stockOptions.find(s => s.id === article.stockId);
-      if (targetStock) {
-        targetStock.articles.push(article);
+  loadInitialData() {
+    this.loading = true;
+    forkJoin({
+      articles: this.articleService.getArticles(),
+      tvas: this.tvaService.getTVAs(),
+      stocks: this.stockService.getStocks()
+    }).subscribe({
+      next: (data: { articles: Article[], tvas: TVA[], stocks: Stock[] }) => {
+        this.stock.articles = data.articles;
+        this.tvaOptions = data.tvas;
+        this.stockOptions = data.stocks; // Populate stockOptions
+        if (this.tvaOptions.length > 0) {
+          this.selectedTVA = this.tvaOptions[0];
+        }
+        // Set initial selectedStock if any exists
+        if (this.stockOptions.length > 0) {
+          this.selectedStock = this.stockOptions[0];
+        }
+        this.calculateStats();
+        this.initCharts();
+        this.loading = false;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error loading initial data:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: 'Échec du chargement des données initiales (articles, TVA ou stocks).',
+        });
+        this.loading = false;
       }
     });
-
-    this.calculateStats();
   }
 
   calculateStats() {
     this.totalArticles = this.stock.articles.length;
     this.totalValueHT = this.stock.articles.reduce((sum, article) => sum + article.prixVenteHT, 0);
     this.averagePriceHT = this.totalArticles > 0 ? this.totalValueHT / this.totalArticles : 0;
-    this.initCharts();
   }
 
   filterArticles() {
@@ -230,6 +250,7 @@ export class ArticleComponent implements OnInit {
         String(value).toLowerCase().includes(text)
       ) ||
       article.tva.code.toLowerCase().includes(text)
+      || article.gouvernerat?.toLowerCase().includes(text)
     );
   }
 
@@ -239,40 +260,35 @@ export class ArticleComponent implements OnInit {
     this.showPrixAchatHTError = false;
     this.showPrixVenteHTError = false;
     this.showTVAError = false;
-    this.showNewStockIdError = false; // Reset stock error
+    this.showGouverneratError = false;
+    this.showNewStockIdError = false;
 
-    if (mode === 'create') {
+    if (mode === 'edit' && article) {
+      this.currentArticle = { ...article };
+      this.selectedTVA = this.tvaOptions.find(t => t.id === article.tva.id) || null;
+      this.selectedStock = this.stockOptions.find(s => s.id === article.stockId) || null;
+    } else {
       this.currentArticle = {
         id: 0,
         code: '',
         designation: '',
         prixAchatHT: 0,
-        tva: this.tvaOptions[0],
+        tva: this.tvaOptions.length > 0 ? this.tvaOptions[0] : { id: 0, code: '', taux: 0 },
         prixVenteHT: 0,
-        stockId: undefined, // Clear stockId for new articles
+        gouvernerat: '',
+        stockId: undefined,
       };
-      this.selectedTVA = this.tvaOptions[0];
-      this.selectedStock = null; // Clear selected stock for new articles
-    } else if (mode === 'edit' && article) {
-      this.currentArticle = { ...article };
-      this.selectedTVA = article.tva;
-      // Set selectedStock if stockId exists
-      this.selectedStock = this.stockOptions.find(s => s.id === article.stockId) || null;
+      this.selectedTVA = this.tvaOptions.length > 0 ? this.tvaOptions[0] : null;
+      this.selectedStock = this.stockOptions.length > 0 ? this.stockOptions[0] : null;
     }
     this.AddArticleInfo = true;
   }
 
-  filterDesignations(event: any) {
-    let filtered: string[] = [];
-    let query = event.query;
-
-    for (let i = 0; i < this.tunisDesignations.length; i++) {
-      let designation = this.tunisDesignations[i];
-      if (designation.toLowerCase().startsWith(query.toLowerCase())) {
-        filtered.push(designation);
-      }
-    }
-    this.filteredDesignations = filtered;
+  filterGouvernerats(event: any) {
+    const query = event.query.toLowerCase();
+    this.gouverneratSuggestions = this.tunisDesignations.filter(gouvernerat =>
+      gouvernerat.toLowerCase().includes(query)
+    );
   }
 
   filterStocks(event: any) {
@@ -281,8 +297,10 @@ export class ArticleComponent implements OnInit {
 
     for (let i = 0; i < this.stockOptions.length; i++) {
         let stock = this.stockOptions[i];
-        // Filter by stock ID (can adjust to other properties if Stock had them)
-        if (String(stock.id).toLowerCase().includes(query.toLowerCase())) {
+        // Filter by stock ID, name or code
+        if (String(stock.id).toLowerCase().includes(query.toLowerCase()) ||
+            stock.name.toLowerCase().includes(query.toLowerCase()) ||
+            stock.code.toLowerCase().includes(query.toLowerCase())) {
             filtered.push(stock);
         }
     }
@@ -291,11 +309,12 @@ export class ArticleComponent implements OnInit {
 
   saveArticle() {
     this.showCodeError = !this.currentArticle.code.trim();
-    this.showDesignationError = !this.currentArticle.designation || !this.tunisDesignations.includes(this.currentArticle.designation);
+    this.showDesignationError = !this.currentArticle.designation;
     this.showPrixAchatHTError = this.currentArticle.prixAchatHT === 0 || this.currentArticle.prixAchatHT === null || this.currentArticle.prixAchatHT === undefined;
     this.showPrixVenteHTError = this.currentArticle.prixVenteHT === 0 || this.currentArticle.prixVenteHT === null || this.currentArticle.prixVenteHT === undefined;
     this.showTVAError = !this.selectedTVA;
-    this.showNewStockIdError = !this.selectedStock; // Validate stock selection
+    this.showGouverneratError = !this.currentArticle.gouvernerat || !this.gouverneratSuggestions.includes(this.currentArticle.gouvernerat);
+    this.showNewStockIdError = !this.selectedStock;
 
     if (
       this.showCodeError ||
@@ -303,76 +322,70 @@ export class ArticleComponent implements OnInit {
       this.showPrixAchatHTError ||
       this.showPrixVenteHTError ||
       this.showTVAError ||
-      this.showNewStockIdError // Include stock error in overall validation
+      this.showGouverneratError ||
+      this.showNewStockIdError
     ) {
       this.messageService.add({
         severity: 'error',
-        summary: 'Erreur',
-        detail: 'Veuillez remplir tous les champs requis et sélectionner une désignation/TVA/Stock valide.',
+        summary: 'Erreur de validation',
+        detail: 'Veuillez remplir tous les champs requis.',
       });
       return;
     }
 
-    this.currentArticle.tva = this.selectedTVA;
-    this.currentArticle.stockId = this.selectedStock?.id; // Assign selected stock ID
+    const addArticle: AddArticle = {
+      code: this.currentArticle.code,
+      designation: this.currentArticle.designation,
+      prixAchatHT: this.currentArticle.prixAchatHT,
+      tvaId: this.selectedTVA ? this.selectedTVA.id : null,
+      prixVenteHT: this.currentArticle.prixVenteHT,
+      gouvernerat: this.currentArticle.gouvernerat,
+      stockId: this.selectedStock ? this.selectedStock.id : undefined,
+    };
 
-    this.currentArticle.prixVenteTTC = this.currentArticle.prixVenteHT * (1 + (this.currentArticle.tva.taux / 100));
-
-    if (this.currentArticle.prixAchatHT !== 0) {
-      this.currentArticle.marge = (this.currentArticle.prixVenteHT - this.currentArticle.prixAchatHT) / this.currentArticle.prixAchatHT;
-    } else {
-      this.currentArticle.marge = 0;
-    }
-
-    if (this.currentArticle.id === 0) {
-      // Add to main article list
-      const newId = Math.max(...this.stock.articles.map((a) => a.id)) + 1;
-      const newArticle: Article = { ...this.currentArticle, id: newId };
-      this.stock.articles.push(newArticle);
-
-      // Add to selected stock's articles list
-      const targetStock = this.stockOptions.find(s => s.id === newArticle.stockId);
-      if (targetStock) {
-        targetStock.articles.push(newArticle);
-      }
-
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Succès',
-        detail: 'Article ajouté avec succès!',
+    if (this.currentArticle.id) {
+      // Edit existing article
+      this.articleService.updateArticle(this.currentArticle.id, addArticle).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Succès',
+            detail: 'Article mis à jour avec succès',
+          });
+          this.loadInitialData();
+          this.AddArticleInfo = false;
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error updating article:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: `Échec de la mise à jour de l'article: ${error.message || error.error.message}`,
+          });
+        },
       });
     } else {
-      // Update in main article list
-      const index = this.stock.articles.findIndex(
-        (a) => a.id === this.currentArticle.id
-      );
-      if (index !== -1) {
-        // Remove from old stock's articles list if stockId changed
-        const oldArticle = this.stock.articles[index];
-        if (oldArticle.stockId !== this.currentArticle.stockId) {
-          const oldStock = this.stockOptions.find(s => s.id === oldArticle.stockId);
-          if (oldStock) {
-            oldStock.articles = oldStock.articles.filter(a => a.id !== oldArticle.id);
-          }
-        }
-
-        this.stock.articles[index] = { ...this.currentArticle };
-
-        // Add to new stock's articles list
-        const newStock = this.stockOptions.find(s => s.id === this.currentArticle.stockId);
-        if (newStock && !newStock.articles.some(a => a.id === this.currentArticle.id)) {
-          newStock.articles.push(this.currentArticle);
-        }
-
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Succès',
-          detail: 'Article modifié avec succès!',
-        });
-      }
+      // Add new article
+      this.articleService.addArticle(addArticle).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Succès',
+            detail: 'Article ajouté avec succès',
+          });
+          this.loadInitialData();
+          this.AddArticleInfo = false;
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error adding article:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: `Échec de l'ajout de l'article: ${error.message || error.error.message}`,
+          });
+        },
+      });
     }
-    this.calculateStats();
-    this.AddArticleInfo = false;
   }
 
   deleteArticle(article: Article) {
@@ -387,15 +400,24 @@ export class ArticleComponent implements OnInit {
       acceptLabel: 'Supprimer',
       rejectLabel: 'Annuler',
       accept: () => {
-        this.stock.articles = this.stock.articles.filter(
-          (a) => a.id !== article.id
-        );
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Succès',
-          detail: 'Article supprimé avec succès!',
+        this.articleService.deleteArticle(article.id).subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Succès',
+              detail: 'Article supprimé avec succès!',
+            });
+            this.loadInitialData(); // Reload articles after deletion
+          },
+          error: (error: HttpErrorResponse) => {
+            console.error('Error deleting article:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erreur',
+              detail: 'Échec de la suppression de l"article.',
+            });
+          },
         });
-        this.calculateStats();
       },
     });
   }
@@ -421,17 +443,31 @@ export class ArticleComponent implements OnInit {
       acceptLabel: 'Supprimer',
       rejectLabel: 'Annuler',
       accept: () => {
-        const idsToDelete = new Set(this.SelectedArticles.map((a) => a.id));
-        this.stock.articles = this.stock.articles.filter(
-          (a) => !idsToDelete.has(a.id)
+        // Create an array of Observables for each delete operation
+        const deleteObservables = this.SelectedArticles.map(article =>
+          this.articleService.deleteArticle(article.id)
         );
-        this.SelectedArticles = [];
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Succès',
-          detail: 'Articles sélectionnés supprimés avec succès!',
+
+        // Use forkJoin to wait for all delete operations to complete
+        forkJoin(deleteObservables).subscribe({
+          next: () => {
+            this.SelectedArticles = []; // Clear selection after successful deletion
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Succès',
+              detail: 'Articles sélectionnés supprimés avec succès!',
+            });
+            this.loadInitialData(); // Reload articles after all deletions
+          },
+          error: (error: HttpErrorResponse) => {
+            console.error('Error deleting selected articles:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erreur',
+              detail: 'Échec de la suppression des articles sélectionnés.',
+            });
+          },
         });
-        this.calculateStats();
       },
     });
   }
@@ -463,8 +499,8 @@ export class ArticleComponent implements OnInit {
     const salesByDesignationLabels = Array.from(salesByDesignationMap.keys());
     const salesByDesignationValues = Array.from(salesByDesignationMap.values());
 
-    const salesChartBackgroundColor = this.themeService.isDarkMode() ? '#6366f1' : documentStyle.getPropertyValue('--primary-color');
-    const salesChartBorderColor = this.themeService.isDarkMode() ? '#6366f1' : documentStyle.getPropertyValue('--primary-color');
+    const salesChartBackgroundColor = this.themeService.isDarkMode() ? '#60a5fa' : '#7b92e1'; // Dynamic color based on theme
+    const salesChartBorderColor = this.themeService.isDarkMode() ? '#60a5fa' : '#7b92e1'; // Dynamic color based on theme
 
     this.salesByDesignationChartData = {
       labels: salesByDesignationLabels,
@@ -517,104 +553,99 @@ export class ArticleComponent implements OnInit {
     const articlesByTVALabels = Array.from(articlesByTVAMap.keys());
     const articlesByTVAValues = Array.from(articlesByTVAMap.values());
 
-    // Define a palette of colors for the Doughnut chart
-    const defaultColors = [
-        documentStyle.getPropertyValue('--primary-color'),
-        documentStyle.getPropertyValue('--secondary-color'),
-        '#ffc107', // Amber
-        '#17a2b8', // Cyan
-        '#dc3545', // Red
-        '#28a745', // Green
-        '#6f42c1', // Purple
-        '#fd7e14'  // Orange
+    // Define distinct palettes of colors for the Pie chart for both themes
+    const lightModeColors = [
+      '#7b92e1', // Muted Blue (similar to image)
+      '#3cbfae', // Teal/Green (similar to image)
+      '#ffc00a', // Golden Yellow (similar to image)
+      '#7a9e6d', // A new shade of green (replacing brown)
+      '#EC407A', // Pink (additional)
+      '#78909C'  // Blue Grey (additional)
     ];
 
-    const darkColors = [
-        '#6366f1', // Indigo
-        '#3cbfae', // Teal
-        '#fbbf24', // Amber
-        '#22d3ee', // Cyan
-        '#ef4444', // Red
-        '#10b981', // Green
-        '#8b5cf6', // Violet
-        '#f97316'  // Orange
+    const darkModeColors = [
+      '#7b92e1', // Muted Blue (similar to image)
+      '#3cbfae', // Teal/Green (similar to image)
+      '#ffc00a', // Golden Yellow (similar to image)
+      '#8ec07f', // Lighter shade of green for Dark Mode (replacing light brown)
+      '#F06292', // Light Pink (additional)
+      '#90A4AE'  // Light Blue Grey (additional)
     ];
 
-    const backgroundColors = this.themeService.isDarkMode() ? darkColors : defaultColors;
+    const currentColors = this.themeService.isDarkMode() ? darkModeColors : lightModeColors;
+    const backgroundColors = articlesByTVALabels.map((_, i) => currentColors[i % currentColors.length]);
 
     this.articlesByTVAChartData = {
       labels: articlesByTVALabels,
       datasets: [
         {
-          label: 'Nombre dArticles',
           data: articlesByTVAValues,
-          backgroundColor: backgroundColors.slice(0, articlesByTVALabels.length),
-          hoverBackgroundColor: backgroundColors.slice(0, articlesByTVALabels.length).map(color => this.adjustColorBrightness(color, 1.2)), // Lighten on hover
+          backgroundColor: backgroundColors,
+          hoverBackgroundColor: backgroundColors
         }
       ]
     };
 
     this.articlesByTVAChartOptions = {
       maintainAspectRatio: false,
-      aspectRatio: 0.5,
+      aspectRatio: 0.8,
+      cutout: '65%',
       plugins: {
         legend: {
           labels: {
             color: textColor
-          },
-          position: 'right'
+          }
         }
-      },
-      cutout: '70%'
+      }
     };
   }
 
-  // Helper function to adjust color brightness (e.g., for hover effect)
   adjustColorBrightness(hex: string, factor: number) {
-    let c = parseInt(hex.slice(1), 16);
-    let r = (c >> 16) * factor;
-    let g = ((c >> 8) & 0x00FF) * factor;
-    let b = (c & 0x0000FF) * factor;
+    let c = hex.substring(1);
+    let rgb = parseInt(c, 16);
+    let r = (rgb >> 16) & 0xff;
+    let g = (rgb >> 8) & 0xff;
+    let b = (rgb >> 0) & 0xff;
 
-    r = Math.round(Math.min(Math.max(0, r), 255));
-    g = Math.round(Math.min(Math.max(0, g), 255));
-    b = Math.round(Math.min(Math.max(0, b), 255));
+    r = Math.min(255, Math.floor(r * factor));
+    g = Math.min(255, Math.floor(g * factor));
+    b = Math.min(255, Math.floor(b * factor));
 
-    return "#" + ("00" + r.toString(16)).slice(-2) + ("00" + g.toString(16)).slice(-2) + ("00" + b.toString(16)).slice(-2);
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   }
 
   onSaveNewTVA() {
     this.showNewTVACodeError = !this.newTVA.code.trim();
-    this.showNewTVATauxError = this.newTVA.taux === null || this.newTVA.taux < 0 || this.newTVA.taux > 100;
+    this.showNewTVATauxError = this.newTVA.taux === 0 || this.newTVA.taux === null || this.newTVA.taux === undefined || this.newTVA.taux < 0 || this.newTVA.taux > 100;
 
     if (this.showNewTVACodeError || this.showNewTVATauxError) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erreur',
-        detail: 'Veuillez remplir correctement tous les champs de la TVA.',
+        detail: 'Veuillez remplir tous les champs requis pour la TVA et s\'assurer que le taux est entre 0 et 100.',
       });
       return;
     }
 
-    // Check for duplicate TVA code
-    if (this.tvaOptions.some(t => t.code.toLowerCase() === this.newTVA.code.toLowerCase())) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Erreur',
-        detail: 'Ce code TVA existe déjà.',
-      });
-      return;
-    }
-
-    const newId = Math.max(...this.tvaOptions.map(t => t.id), 0) + 1;
-    this.tvaOptions.push({ ...this.newTVA, id: newId });
+    this.tvaService.postTVA(this.newTVA).subscribe({
+      next: (tva: TVA) => {
     this.messageService.add({
       severity: 'success',
       summary: 'Succès',
       detail: 'TVA ajoutée avec succès!',
     });
-    this.newTVA = { id: 0, code: '', taux: 0 }; // Reset form
-    this.AddTVAInfo = false; // Close drawer
+        this.AddTVAInfo = false;
+        this.loadInitialData(); // Reload TVAs after adding
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error adding TVA:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: 'Échec de l\'ajout de la TVA.',
+        });
+      },
+    });
   }
 
   onRowEditInitTVA(tva: TVA) {
@@ -622,39 +653,44 @@ export class ArticleComponent implements OnInit {
   }
 
   onRowEditSaveTVA(tva: TVA) {
-    if (tva.code.trim() === '' || tva.taux === null || tva.taux < 0 || tva.taux > 100) {
+    if (tva.code.trim() && tva.taux >= 0 && tva.taux <= 100) {
+      this.tvaService.putTVA(tva.id, tva).subscribe({
+        next: () => {
+          delete this.clonedTVA[tva.id as unknown as string];
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Succès',
+            detail: 'TVA mise à jour avec succès.'
+          });
+          this.loadInitialData(); // Reload TVAs after updating
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error updating TVA:', error);
       this.messageService.add({
         severity: 'error',
         summary: 'Erreur',
-        detail: 'Le code et le taux de la TVA sont requis et le taux doit être entre 0 et 100.',
+            detail: 'Échec de la mise à jour de la TVA.'
+          });
+          this.onRowEditCancelTVA(tva, (this.tvaOptions.findIndex((item) => item.id === tva.id)));
+        }
       });
-      this.onRowEditCancelTVA(tva, this.tvaOptions.findIndex(item => item.id === tva.id));
     } else {
-      // Check for duplicate code (excluding current editing item)
-      if (this.tvaOptions.some(item => item.code.toLowerCase() === tva.code.toLowerCase() && item.id !== tva.id)) {
         this.messageService.add({
           severity: 'error',
           summary: 'Erreur',
-          detail: 'Ce code TVA existe déjà.',
-        });
-        this.onRowEditCancelTVA(tva, this.tvaOptions.findIndex(item => item.id === tva.id));
-        return;
-      }
-
-      delete this.clonedTVA[tva.id as unknown as string];
-      this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'TVA mise à jour avec succès!' });
+        detail: 'Le code et le taux de TVA sont requis, et le taux doit être entre 0 et 100.'
+      });
     }
   }
 
   onRowEditCancelTVA(tva: TVA, index: number) {
     this.tvaOptions[index] = this.clonedTVA[tva.id as unknown as string];
     delete this.clonedTVA[tva.id as unknown as string];
-    this.messageService.add({ severity: 'info', summary: 'Annulation', detail: 'La modification de la TVA a été annulée.' });
   }
 
   confirmDeleteTVA(tva: TVA) {
     this.confirmationService.confirm({
-      message: `Êtes-vous sûr de vouloir supprimer la TVA "${tva.code}"?`,
+      message: `Êtes-vous sûr de vouloir supprimer la TVA avec le code "${tva.code}"?`,
       header: 'Confirmation de suppression',
       icon: 'pi pi-exclamation-triangle',
       acceptButtonStyleClass: 'p-button-danger p-button-raised',
@@ -664,48 +700,68 @@ export class ArticleComponent implements OnInit {
       acceptLabel: 'Supprimer',
       rejectLabel: 'Annuler',
       accept: () => {
-        this.tvaOptions = this.tvaOptions.filter(t => t.id !== tva.id);
-        this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'TVA supprimée avec succès!' });
+        this.tvaService.deleteTVA(tva.id).subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Succès',
+              detail: 'TVA supprimée avec succès!',
+            });
+            this.loadInitialData(); // Reload TVAs after deletion
+          },
+          error: (error: HttpErrorResponse) => {
+            console.error('Error deleting TVA:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erreur',
+              detail: 'Échec de la suppression de la TVA.',
+            });
+          },
+        });
       },
     });
   }
 
   toggleAddStockInfo() {
     this.AddStockInfo = !this.AddStockInfo;
-    this.newStock = { id: 0, articles: [] }; // Reset new stock form
+    this.newStock = { id: 0, name: '', code: '', articles: [] }; // Reset new stock form
     this.showNewStockIdError = false;
+    this.showNewStockNameError = false;
+    this.showNewStockCodeError = false;
   }
 
   onSaveNewStock() {
-    this.showNewStockIdError = this.newStock.id === null || this.newStock.id <= 0;
+    this.showNewStockNameError = !this.newStock.name.trim();
+    this.showNewStockCodeError = !this.newStock.code.trim();
 
-    if (this.showNewStockIdError) {
+    if (this.showNewStockNameError || this.showNewStockCodeError) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erreur',
-        detail: 'Veuillez entrer un ID de stock valide (nombre positif).',
+        detail: 'Veuillez entrer un nom et un code pour le stock.',
       });
       return;
     }
 
-    // Check for duplicate Stock ID
-    if (this.stockOptions.some(s => s.id === this.newStock.id)) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Erreur',
-        detail: 'Cet ID de stock existe déjà.',
-      });
-      return;
-    }
-
-    this.stockOptions.push({ ...this.newStock, articles: [] }); // Add new stock with empty articles array
+    this.stockService.postStock({ name: this.newStock.name, code: this.newStock.code }).subscribe({
+      next: (stock: Stock) => {
     this.messageService.add({
       severity: 'success',
       summary: 'Succès',
       detail: 'Stock ajouté avec succès!',
     });
-    this.newStock = { id: 0, articles: [] }; // Reset form
     this.AddStockInfo = false; // Close drawer
+        this.loadInitialData(); // Reload stocks after adding
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error adding stock:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: 'Échec de l\'ajout du stock.',
+        });
+      },
+    });
   }
 
   toggleDialogStock() {
@@ -717,27 +773,34 @@ export class ArticleComponent implements OnInit {
   }
 
   onRowEditSaveStock(stock: Stock) {
-    if (stock.id === null || stock.id <= 0) {
+    if (stock.id === null || stock.id <= 0 || !stock.name.trim() || !stock.code.trim()) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erreur',
-        detail: 'LID du stock est requis et doit être un nombre positif.',
+        detail: 'L\'ID, le nom et le code du stock sont requis, et l\'ID doit être un nombre positif.',
       });
       this.onRowEditCancelStock(stock, this.stockOptions.findIndex(item => item.id === stock.id));
     } else {
-      // Check for duplicate ID (excluding current editing item)
-      if (this.stockOptions.some(item => item.id === stock.id && item.id !== stock.id)) {
+      this.stockService.putStock(stock.id, stock).subscribe({
+        next: () => {
+          delete this.clonedStock[stock.id as unknown as string];
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Succès',
+            detail: 'Stock mis à jour avec succès!'
+          });
+          this.loadInitialData(); // Reload stocks after updating
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error updating stock:', error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erreur',
-          detail: 'Cet ID de stock existe déjà.',
+            detail: 'Échec de la mise à jour du stock.'
         });
-        this.onRowEditCancelStock(stock, this.stockOptions.findIndex(item => item.id === stock.id));
-        return;
+          this.onRowEditCancelStock(stock, (this.stockOptions.findIndex((item) => item.id === stock.id)));
       }
-
-      delete this.clonedStock[stock.id as unknown as string];
-      this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Stock mis à jour avec succès!' });
+      });
     }
   }
 
@@ -759,11 +822,43 @@ export class ArticleComponent implements OnInit {
       acceptLabel: 'Supprimer',
       rejectLabel: 'Annuler',
       accept: () => {
-        // Remove articles associated with the deleted stock
-        this.stock.articles = this.stock.articles.filter(a => a.stockId !== stock.id);
-        this.stockOptions = this.stockOptions.filter(s => s.id !== stock.id);
-        this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Stock supprimé avec succès!' });
-        this.calculateStats(); // Recalculate stats after deletion
+        this.stockService.deleteStock(stock.id).subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Succès',
+              detail: 'Stock supprimé avec succès!',
+            });
+            this.loadInitialData(); // Reload stocks after deletion
+          },
+          error: (error: HttpErrorResponse) => {
+            console.error('Error deleting stock:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erreur',
+              detail: 'Échec de la suppression du stock.',
+            });
+          },
+        });
+      },
+    });
+  }
+
+  loadTVAs() {
+    this.tvaService.getTVAs().subscribe({
+      next: (data) => {
+        this.tvaOptions = data;
+        if (this.tvaOptions.length > 0) {
+          this.selectedTVA = this.tvaOptions[0];
+        }
+      },
+      error: (error) => {
+        console.error('Error loading TVAs:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: 'Échec du chargement des TVAs.',
+        });
       },
     });
   }

@@ -4,6 +4,8 @@ export interface AddArticle {
   code: string;
   designation: string;
   prixAchatHT: number;
-  tva: TVA; // Assuming TVA is selected/input as an object
+  tvaId: number | null; // Changed from 'tva: TVA'
   prixVenteHT: number;
-} 
+  gouvernerat?: string; // New property for Gouvernerat
+  stockId?: number; // Optionnel, comme dans le backend
+}
