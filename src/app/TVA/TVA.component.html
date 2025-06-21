@@ -1,0 +1,349 @@
+<div [class.dark-mode]="themeService.isDarkMode()">
+  <p-toast />
+  <div class="dashboard-header">
+    <div class="header-content"> 
+      <div class="breadcrumb-nav" style="display: flex; align-items: center; justify-content: space-between;">
+        <nav class="breadcrumb">
+          <span class="breadcrumb-item">Accueil</span>
+          <span class="breadcrumb-separator">›</span>
+          <span class="breadcrumb-item">Finances</span>
+          <span class="breadcrumb-separator">›</span>
+          <span class="breadcrumb-item active">Gestion TVA</span>
+        </nav>
+        <!-- Add your image here -->
+        <img src="https://i.ibb.co/Xfj86PzY/8a2a07a8-b6ca-4342-8173-14564dd9ab4e-removebg-preview-1-1.png" alt="Logo" width="60" height="60"alt="TVA Icon" 
+             style="margin-left: 12px; height: 50px; width: 50px;">
+      </div>
+      
+      <div class="header-main" style="margin-top: -10px;">
+        <h1 class="header-title">
+          <span class="title-gradient">Gestion TVA</span>
+        </h1>
+        <p class="header-subtitle">Gérez les taux de TVA de votre entreprise.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <!-- Total TVAs Card -->
+    <div class="metric-card">
+      <div class="metric-content">
+        <h3 class="metric-label">Total TVAs</h3>
+        <p class="metric-value">{{ animatedTotalTVAs }} <span class="currency"></span></p>
+        <div class="metric-decoration">
+          <i class="pi pi-percentage" style="color: black;"></i>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Taux Moyen Card -->
+    <div class="metric-card accent-2">
+      <div class="metric-content">
+        <h3 class="metric-label">Taux Moyen</h3>
+        <p class="metric-value">{{ animatedAverageTaux | number:'1.1-1' }} <span class="currency">%</span></p>
+        <div class="metric-decoration">
+          <i class="pi pi-chart-line" style="color: black;"></i>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Taux le plus Élevé Card -->
+    <div class="metric-card accent-3">
+      <div class="metric-content">
+        <h3 class="metric-label">Taux le plus Élevé</h3>
+        <p class="metric-value">{{ animatedHighestRate | number:'1.1-1' }} <span class="currency">%</span></p>
+        <div class="metric-decoration">
+          <i class="pi pi-crown" style="color: black;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="card">
+      <h5 class="text-lg font-semibold mb-4">Distribution des Taux de TVA</h5>
+      <p-chart type="bar" [data]="tvaDistributionChartData" [options]="tvaDistributionChartOptions"></p-chart>
+    </div>
+    <div class="card">
+      <h5 class="text-lg font-semibold mb-4">Catégorisation des Taux</h5>
+      <p-chart type="doughnut" [data]="tvaCategoryChartData" [options]="tvaCategoryChartOptions"></p-chart>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="d-flex align-items-center justify-content-between p-2 bg-light text-dark border rounded mb-3">
+      <p-menubar [model]="items" />
+      
+      <p-iconfield class="d-flex align-items-center">
+        <p-inputicon styleClass="pi pi-search" />
+        <input
+          type="text"
+          pInputText
+          placeholder="Rechercher"
+          class="form-control"
+          [(ngModel)]="searchText"
+          (input)="filterTVAs()"
+        />
+      </p-iconfield>
+    </div>
+
+    <p-contextMenu #cm [model]="items2" [appendTo]="'body'"></p-contextMenu>
+
+    <p-table 
+      #dt1 
+      [value]="tvaData" 
+      dataKey="id" 
+      [rows]="10" 
+      [rowsPerPageOptions]="[10, 25, 50]" 
+      [loading]="loading" 
+      [paginator]="true" 
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
+      [filterDelay]="0" 
+      selectionMode="single"
+      [(selection)]="SelectedTVAs"
+      [contextMenu]="cm"
+      [(contextMenuSelection)]="selectedTVA" 
+      [globalFilterFields]="['code', 'taux']"
+      editMode="row">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 1rem">
+            <p-tableHeaderCheckbox pReorderableColumn class="printable"/>
+          </th>
+          
+          <th style="width: 15rem">
+            Code
+            <p-columnFilter type="text" field="code" display="menu" class="ml-auto"/>
+          </th>
+          
+          <th style="width: 16rem">
+            Taux (%)
+            <p-columnFilter type="numeric" field="taux" display="menu" class="ml-auto"/>
+          </th>
+          
+          <th style="width: 10rem">Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-tva let-editing="editing" let-ri="rowIndex">
+        <tr [pEditableRow]="tva" [pContextMenuRow]="tva">
+          <td>
+            <p-tableCheckbox pReorderableRowHandle class="printable" [value]="tva"/>
+          </td>
+          
+          <td>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText [(ngModel)]="tva.code" />
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{ tva.code }}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          
+          <td>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <p-inputNumber [(ngModel)]="tva.taux" [min]="0" [max]="100" [step]="0.1" suffix="%" />
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{ tva.taux }}%
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          
+          <td style="display: flex; gap: 0.5rem;">
+            <div class="flex items-center justify-center gap-2">
+              <button
+                *ngIf="!editing"
+                pButton
+                pRipple
+                type="button"
+                pInitEditableRow
+                icon="pi pi-pencil"
+                (click)="onRowEditInit(tva)"
+                text
+                rounded
+                severity="secondary"
+              ></button>
+              <button
+                *ngIf="editing"
+                pButton
+                pRipple
+                type="button"
+                pSaveEditableRow
+                icon="pi pi-check"
+                (click)="onRowEditSave(tva)"
+                text
+                rounded
+                severity="success"
+              ></button>
+              <button
+                *ngIf="editing"
+                pButton
+                pRipple
+                type="button"
+                pCancelEditableRow
+                icon="pi pi-times"
+                (click)="onRowEditCancel(tva, ri)"
+                text
+                rounded
+                severity="secondary"
+              ></button>
+            </div>
+            <button
+              pButton
+              icon="pi pi-trash"
+              class="p-button-sm p-button-rounded p-button-text p-button-danger"
+              (click)="confirmDeleteTVA(tva)"
+              title="Supprimer"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="100%" style="text-align: center; width: 100%;">
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;" [ngStyle]="{'background-color': themeService.isDarkMode() ? '#1a202c' : ''}">
+              <iframe *ngIf="!themeService.isDarkMode()"
+                src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie" 
+                width="200" 
+                height="200" 
+                frameborder="0" 
+                allow="autoplay; encrypted-media" 
+                allowfullscreen>
+              </iframe>
+              <div>Aucune TVA trouvée.</div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Add TVA Drawer -->
+  <p-drawer 
+    [(visible)]="AddTVAInfo" 
+    header="Ajouter une Nouvelle TVA" 
+    position="right" 
+    [style]="{width: '90vw', maxWidth: '450px'}"
+    [baseZIndex]="10000"
+    styleClass="custom-drawer">
+    <div class="p-4">
+      <div>
+        <!-- Code Field -->
+        <div class="mb-3">
+          <label for="code" class="form-label">Code TVA</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="code"
+            [(ngModel)]="AddTVA.code"
+            placeholder="Ex: TVA20">
+          <div *ngIf="showCodeError" class="text-danger small mt-1">Le code TVA est requis</div>
+        </div>
+
+        <!-- Taux Field -->
+        <div class="mb-3">
+          <label for="taux" class="form-label">Taux (%)</label>
+          <p-inputNumber 
+            id="taux" 
+            [(ngModel)]="AddTVA.taux"
+            [min]="0"
+            [max]="100"
+            [step]="0.1"
+            suffix="%"
+            placeholder="0.0%" 
+            class="w-100"
+            inputStyleClass="form-control"
+            [showButtons]="true">
+          </p-inputNumber>
+          <div *ngIf="showTauxError" class="text-danger small mt-1">Veuillez entrer un taux valide</div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex justify-content-end gap-2 p-3" style="position: absolute; bottom: 0; left: 0; width: 100%;" [ngClass]="themeService.isDarkMode() ? 'custom-bg-dark' : 'bg-light'">
+          <button 
+            type="button" 
+            class="btn btn-outline-secondary"
+            (click)="AddTVAInfo = false">
+            <i class="pi pi-times me-2"></i>Annuler
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-primary"
+            (click)="validateForm()">
+            <i class="pi pi-check me-2"></i>Enregistrer
+          </button>
+        </div>
+      </div>
+    </div>
+  </p-drawer>
+
+  <!-- Modify TVA Drawer -->
+  <p-drawer 
+    [(visible)]="ModifyTVAInfo" 
+    header="Modifier la TVA" 
+    position="right" 
+    [style]="{width: '90vw', maxWidth: '450px'}"
+    [baseZIndex]="10000"
+    styleClass="custom-drawer">
+    <div class="p-4">
+      <!-- Code Field -->
+      <div class="mb-3">
+        <label for="modify-code" class="form-label">Code TVA</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="modify-code"
+          [(ngModel)]="selectedTVA.code"
+          placeholder="Ex: TVA20">
+      </div>
+
+      <!-- Taux Field -->
+      <div class="mb-3">
+        <label for="modify-taux" class="form-label">Taux (%)</label>
+        <p-inputNumber 
+          id="modify-taux" 
+          [(ngModel)]="selectedTVA.taux"
+          [min]="0"
+          [max]="100"
+          [step]="0.1"
+          suffix="%"
+          placeholder="0.0%" 
+          class="w-100"
+          inputStyleClass="form-control"
+          [showButtons]="true">
+        </p-inputNumber>
+      </div>
+
+      <!-- Footer Buttons -->
+      <div 
+        class="d-flex justify-content-end gap-2 p-3"
+        style="position: absolute; bottom: 0; left: 0; width: 100%;"
+        [ngClass]="themeService.isDarkMode() ? 'custom-bg-dark' : 'bg-light'"
+      >
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary"
+          (click)="ModifyTVAInfo = false"
+        >
+          <i class="pi pi-times me-2"></i>Fermer
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-primary"
+          (click)="ModifyTVA()"
+        >
+          <i class="pi pi-check me-2"></i>Modifier
+        </button>
+      </div>
+    </div>
+  </p-drawer>
+
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+</div>

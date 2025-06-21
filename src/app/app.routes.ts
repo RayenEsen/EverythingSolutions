@@ -20,6 +20,7 @@ import { PaymentInfoComponent } from './PaymentInfo/PaymentInfo.component';
 import { ArticleComponent } from './Article/Article.component';
 import { EntrepriseDetailsComponent } from './EntrepriseDetails/EntrepriseDetails.component';
 import { FournisseurComponent } from './Fournisseur/Fournisseur.component';
+import { TVAComponent } from './TVA/TVA.component';
 
 export const routes: Routes = [
   {
@@ -109,6 +110,11 @@ export const routes: Routes = [
         path: 'Fournisseur',
         component: FournisseurComponent,
         title: 'Gestion des Fournisseurs',
+      },
+      {
+        path: 'TVA',
+        component: TVAComponent,
+        title: 'Gestion TVA',
       },
       {
         path: 'entreprise-details/:id',
