@@ -1,0 +1,211 @@
+<div class="app-container p-fluid">
+  <p-card styleClass="main-card p-mb-4">
+    <ng-template pTemplate="title">
+      <div class="p-d-flex p-jc-between p-ai-center card-header">
+        <h2 class="main-title">Détails de l'entreprise <span class="company-highlight">{{ entrepriseDetails?.nom }}</span></h2>
+        <p-button icon="pi pi-arrow-left" label="Retour au tableau de bord" styleClass="p-button-secondary return-dashboard-button" routerLink="/Dashboard"></p-button>
+      </div>
+    </ng-template>
+
+    <ng-container *ngIf="entrepriseDetails; else loadingOrError">
+      <div class="p-grid p-nogutter p-mb-4">
+        <div class="p-col-12 p-lg-6 p-pr-lg-3">
+          <p-fieldset legend="Informations de contact" [toggleable]="true" styleClass="detail-fieldset">
+            <div class="p-grid p-dir-col p-lg-dir-row p-nogutter">
+              <div class="p-col-12 p-lg-6">
+                <div class="info-item">
+                  <i class="pi pi-building info-icon"></i>
+                  <p><strong>Nom:</strong> <span>{{ entrepriseDetails.nom }}</span></p>
+                </div>
+                <div class="info-item">
+                  <i class="pi pi-at info-icon"></i>
+                  <p><strong>Email:</strong> <span>{{ entrepriseDetails.email }}</span></p>
+                </div>
+              </div>
+              <div class="p-col-12 p-lg-6">
+                <div class="info-item">
+                  <i class="pi pi-phone info-icon"></i>
+                  <p><strong>Téléphone:</strong> <span>{{ entrepriseDetails.tel }}</span></p>
+                </div>
+                <div class="info-item">
+                  <i class="pi pi-map-marker info-icon"></i>
+                  <p><strong>Adresse:</strong> <span>{{ entrepriseDetails.adresse }}</span></p>
+                </div>
+              </div>
+            </div>
+          </p-fieldset>
+        </div>
+        <div class="p-col-12 p-lg-6 p-pl-lg-3">
+          <p-fieldset legend="Insights Clés" [toggleable]="true" styleClass="detail-fieldset h-100">
+            <div class="p-grid p-nogutter insight-grid h-100">
+              <div class="p-col-12 p-md-6 p-pr-md-2 p-mb-3 p-md-mb-0">
+                <p-card styleClass="insight-card">
+                  <ng-template pTemplate="title">
+                    <h5>Fournisseur le plus utilisé:</h5>
+                  </ng-template>
+                  <ng-template pTemplate="content">
+                    <ng-container *ngIf="entrepriseDetails.mostUsedFournisseur; else noMostUsedFournisseur">
+                      <div class="insight-content">
+                        <i class="pi pi-user-plus insight-icon"></i>
+                        <div>
+                          <p><strong>Nom:</strong> {{ entrepriseDetails.mostUsedFournisseur.nom }}</p>
+                          <p><strong>Email:</strong> {{ entrepriseDetails.mostUsedFournisseur.email }}</p>
+                          <p><strong>Téléphone:</strong> {{ entrepriseDetails.mostUsedFournisseur.tel }}</p>
+                        </div>
+                      </div>
+                    </ng-container>
+                    <ng-template #noMostUsedFournisseur>
+                      <div class="no-insight"><i class="pi pi-info-circle"></i> N/A</div>
+                    </ng-template>
+                  </ng-template>
+                </p-card>
+              </div>
+              <div class="p-col-12 p-md-6 p-pl-md-2">
+                <p-card styleClass="insight-card">
+                  <ng-template pTemplate="title">
+                    <h5>Banque la plus utilisée:</h5>
+                  </ng-template>
+                  <ng-template pTemplate="content">
+                    <div class="insight-content">
+                      <i class="pi pi-money-bill insight-icon"></i>
+                      <p>{{ entrepriseDetails.mostUsedBanque || 'N/A' }}</p>
+                    </div>
+                  </ng-template>
+                </p-card>
+              </div>
+            </div>
+          </p-fieldset>
+        </div>
+      </div>
+
+      <p-divider></p-divider>
+
+      <p-fieldset legend="Statistiques Générales" [toggleable]="true" styleClass="detail-fieldset p-mb-4">
+        <div class="p-grid p-nogutter stats-grid">
+          <div class="p-col-12 p-md-6 p-lg-3 p-mb-3">
+            <p-card styleClass="stat-card">
+              <ng-template pTemplate="content">
+                <div class="stat-content-inline">
+                  <i class="pi pi-file-excel stat-icon primary"></i>
+                  <div class="stat-info-inline">
+                    <h5 class="stat-title-inline">Retenues</h5>
+                    <span class="stat-value-inline">{{ entrepriseDetails.retenuesCount }}</span>
+                  </div>
+                  <div class="stat-amount-inline">
+                    <span class="stat-amount-label-inline">Montant:</span>
+                    <span class="stat-amount-value-inline">{{ entrepriseDetails.totalRetenueAmount | currency:'TND':'symbol':'1.2-2' }}</span>
+                  </div>
+                </div>
+              </ng-template>
+            </p-card>
+          </div>
+          <div class="p-col-12 p-md-6 p-lg-3 p-mb-3">
+            <p-card styleClass="stat-card">
+              <ng-template pTemplate="content">
+                <div class="stat-content-inline">
+                  <i class="pi pi-file-o stat-icon success"></i>
+                  <div class="stat-info-inline">
+                    <h5 class="stat-title-inline">Traites</h5>
+                    <span class="stat-value-inline">{{ entrepriseDetails.traitesCount }}</span>
+                  </div>
+                  <div class="stat-amount-inline">
+                    <span class="stat-amount-label-inline">Montant:</span>
+                    <span class="stat-amount-value-inline">{{ entrepriseDetails.totalTraiteAmount | currency:'TND':'symbol':'1.2-2' }}</span>
+                  </div>
+                </div>
+              </ng-template>
+            </p-card>
+          </div>
+          <div class="p-col-12 p-md-6 p-lg-3 p-mb-3">
+            <p-card styleClass="stat-card">
+              <ng-template pTemplate="content">
+                <div class="stat-content-inline">
+                  <i class="pi pi-box stat-icon info"></i>
+                  <div class="stat-info-inline">
+                    <h5 class="stat-title-inline">Articles</h5>
+                    <span class="stat-value-inline">{{ entrepriseDetails.articlesCount }}</span>
+                  </div>
+                </div>
+              </ng-template>
+            </p-card>
+          </div>
+          <div class="p-col-12 p-md-6 p-lg-3 p-mb-3">
+            <p-card styleClass="stat-card">
+              <ng-template pTemplate="content">
+                <div class="stat-content-inline">
+                  <i class="pi pi-bank stat-icon warning"></i>
+                  <div class="stat-info-inline">
+                    <h5 class="stat-title-inline">Banques</h5>
+                    <span class="stat-value-inline">{{ entrepriseDetails.banquesCount }}</span>
+                  </div>
+                </div>
+              </ng-template>
+            </p-card>
+          </div>
+        </div>
+      </p-fieldset>
+
+      <p-divider></p-divider>
+
+      <p-fieldset legend="Analyse des Documents" [toggleable]="true" styleClass="detail-fieldset chart-fieldset p-mb-4">
+        <div class="chart-wrapper">
+          <p-chart type="bar" [data]="chartData" [options]="chartOptions"></p-chart>
+        </div>
+      </p-fieldset>
+
+      <p-divider></p-divider>
+
+      <p-fieldset legend="Fournisseurs" [toggleable]="true" styleClass="detail-fieldset">
+        <div *ngIf="entrepriseDetails.fournisseurs && entrepriseDetails.fournisseurs.length > 0; else noFournisseursTemplate">
+          <p-table [value]="entrepriseDetails.fournisseurs" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} fournisseurs" [rowsPerPageOptions]="[5, 10, 20]">
+            <ng-template pTemplate="caption">
+              <div class="table-caption-content">
+                Fournisseurs ({{ entrepriseDetails.fournisseurs.length }})
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Matricule</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-fournisseur>
+              <tr>
+                <td>{{ fournisseur.nom }}</td>
+                <td>{{ fournisseur.email }}</td>
+                <td>{{ fournisseur.tel }}</td>
+                <td><p-tag [value]="fournisseur.matricule" severity="info"></p-tag></td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptyMessage">
+              <tr>
+                <td colspan="4" class="text-center">Aucun fournisseur trouvé.</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        <ng-template #noFournisseursTemplate>
+          <div class="no-data-message">
+            <i class="pi pi-info-circle"></i>
+            <p class="text-muted p-mt-2">Aucun fournisseur trouvé pour cette entreprise.</p>
+          </div>
+        </ng-template>
+      </p-fieldset>
+    </ng-container>
+
+    <ng-template #loadingOrError>
+      <div class="loading-spinner p-py-5 p-d-flex p-flex-column p-ai-center">
+        <i class="pi pi-spin pi-spinner" style="font-size: 3rem"></i>
+        <p class="text-muted p-mt-3">Chargement des détails de l'entreprise ou une erreur s'est produite.</p>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <div class="p-d-flex p-jc-end p-pt-3">
+      </div>
+    </ng-template>
+  </p-card>
+</div>

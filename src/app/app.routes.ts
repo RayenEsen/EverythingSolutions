@@ -18,6 +18,8 @@ import { PaymentSuccessComponent } from './PaymentSuccess/PaymentSuccess.compone
 import { PaymentFailComponent } from './PaymentFail/PaymentFail.component';
 import { PaymentInfoComponent } from './PaymentInfo/PaymentInfo.component';
 import { ArticleComponent } from './Article/Article.component';
+import { EntrepriseDetailsComponent } from './EntrepriseDetails/EntrepriseDetails.component';
+import { FournisseurComponent } from './Fournisseur/Fournisseur.component';
 
 export const routes: Routes = [
   {
@@ -102,6 +104,16 @@ export const routes: Routes = [
         path: 'ListArticle',
         component: ArticleComponent,
         title: 'Liste Article',
+      },
+      {
+        path: 'Fournisseur',
+        component: FournisseurComponent,
+        title: 'Gestion des Fournisseurs',
+      },
+      {
+        path: 'entreprise-details/:id',
+        component: EntrepriseDetailsComponent,
+        title: 'Entreprise Details',
         canActivate: [AdminGuard]
       }
     ]

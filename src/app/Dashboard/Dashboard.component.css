@@ -1,626 +1,625 @@
-        :root {
-            --primary-color: #4f46e5;
-            --navbar-bg: #1f2937;
-            --secondary-color: #8b5cf6;
-            --chart-grid-color: #e5e7eb;
-            --chart-text-color: #4b5563;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #f8fafc;
-        }
-
-        .top-navbar {
-            background: var(--navbar-bg);
-            padding: 1rem 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .navbar-brand {
-            color: white !important;
-            font-size: 1.75rem;
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        .navbar-brand:hover {
-            color: #e5e7eb !important;
-        }
-
-        .navbar-nav .nav-link {
-            color: #d1d5db !important;
-            font-weight: 500;
-            padding: 0.75rem 1.25rem !important;
-            border-radius: 8px;
-            margin: 0 0.25rem;
-            transition: all 0.2s ease;
-        }
-
-        .navbar-nav .nav-link:hover {
-            background-color: #374151;
-            color: white !important;
-        }
-
-        .navbar-nav .nav-link.active {
-            background-color: var(--primary-color);
-            color: white !important;
-        }
-
-        .navbar-text {
-            color: #9ca3af !important;
-        }
-
-        .btn-outline-light {
-            border-color: #6b7280;
-            color: #d1d5db;
-        }
-
-        .btn-outline-light:hover {
-            background-color: #374151;
-            border-color: #374151;
-            color: white;
-        }
-
-        .main-content[_ngcontent-ng-c4140409694] {
-            background-color: white;
-            padding: 2rem;
-        }
-
-        .dark-mode .main-content[_ngcontent-ng-c4140409694] {
-            background-color: var(--bg-main);
-        }
-
-        .stat-card[_ngcontent-ng-c4140409694] {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            border: 1px solid #e5e7eb;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card[_ngcontent-ng-c4140409694]::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), #8b5cf6);
-        }
-
-        .stat-card[_ngcontent-ng-c4140409694]:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        .dark-mode .stat-card[_ngcontent-ng-c4140409694] {
-            background: var(--bg-card);
-            border-color: var(--border-color);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .dark-mode .stat-card[_ngcontent-ng-c4140409694]:hover {
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .dark-mode .stat-card[_ngcontent-ng-c4140409694]::before {
-            background: linear-gradient(90deg, #4f46e5, #6366f1);
-            opacity: 0.8;
-        }
-
-        .stat-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-            color: white;
-            margin-bottom: 1rem;
-        }
-
-        .stat-icon.primary { 
-            background: linear-gradient(135deg, var(--primary-color), #6366f1); 
-        }
-        .stat-icon.success { 
-            background: linear-gradient(135deg, #10b981, #059669); 
-        }
-        .stat-icon.warning { 
-            background: linear-gradient(135deg, #f59e0b, #d97706); 
-        }
-        .stat-icon.danger { 
-            background: linear-gradient(135deg, #ef4444, #dc2626); 
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: #6b7280;
-            font-size: 1rem;
-            font-weight: 500;
-            margin-bottom: 1rem;
-        }
-
-        .chart-container[_ngcontent-ng-c4140409694] {
-            width: 100%;
-            background: #fff;
-            padding: 1rem;
-            border-radius: 6px;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .dark-mode .chart-container[_ngcontent-ng-c4140409694] {
-            background: var(--bg-card);
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-color);
-        }
-
-        .table-container {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border: 1px solid #e5e7eb;
-        }
-
-        .table-header {
-            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-            padding: 2rem;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .table thead th {
-            background: #f8fafc;
-            border: none;
-            font-weight: 600;
-            color: #374151;
-            padding: 1rem 1.5rem;
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .table tbody td {
-            border: none;
-            padding: 1.25rem 1.5rem;
-            vertical-align: middle;
-        }
-
-        .table tbody tr:hover {
-            background-color: #f9fafb;
-        }
-
-        .badge-status {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            text-transform: capitalize;
-        }
-
-        .progress-modern {
-            height: 8px;
-            border-radius: 4px;
-            background-color: #f3f4f6;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            border-radius: 4px;
-        }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-        }
-
-        /* Welcome section styles */
-        :host .welcome-section,
-        .welcome-section[_ngcontent-ng-c4140409694] {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 3rem 2rem;
-            border-radius: 20px;
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .welcome-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 300px;
-            height: 300px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-        }
-
-        .welcome-section::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 200px;
-            height: 200px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 50%;
-        }
-
-        /* Dark mode welcome section */
-        :host-context(.dark-mode) .welcome-section,
-        .dark-mode .welcome-section[_ngcontent-ng-c4140409694] {
-            background: linear-gradient(135deg, #1e1b4b, #3730a3) !important;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-
-        :host-context(.dark-mode) .welcome-section::before,
-        .dark-mode .welcome-section[_ngcontent-ng-c4140409694]::before {
-            opacity: 0.15;
-        }
-
-        :host-context(.dark-mode) .welcome-section::after,
-        .dark-mode .welcome-section[_ngcontent-ng-c4140409694]::after {
-            opacity: 0.1;
-        }
-
-        .welcome-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .btn-modern {
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary {
-            background: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-        .btn-primary:hover {
-            background: #3730a3;
-            border-color: #3730a3;
-            transform: translateY(-1px);
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                padding: 1rem;
-            }
-            
-            .welcome-section {
-                padding: 2rem 1.5rem;
-                text-align: center;
-            }
-            
-            .stat-number {
-                font-size: 2rem;
-            }
-        }
-
-        .map-chart-container .d-flex.h-75 {
-            height: 300px;  /* fix map container height */
-        }
-
-        #map-container {
-            height: 100%;
-            min-width: 310px;
-            max-width: 100%;
-            margin: 0 auto;
-        }
-
-        /* Dark mode variables */
-        .dark-mode {
-            --bg-main: #111827;
-            --bg-card: #1f2937;
-            --text-primary: #ffffff;
-            --text-secondary: #9ca3af;
-            --border-color: #374151;
-            --hover-bg: #2d3748;
-            --shadow-color: rgba(0, 0, 0, 0.3);
-            --chart-grid-color: #374151;
-            --chart-text-color: #9ca3af;
-        }
-
-        /* Add dark mode styles */
-        .dark-mode body {
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-        }
-
-        .dark-mode .top-navbar {
-            background: #111827;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        .dark-mode .stat-number {
-            color: var(--text-primary);
-        }
-
-        .dark-mode .stat-label {
-            color: var(--text-secondary);
-        }
-
-        .dark-mode .table thead th {
-            background: var(--bg-card);
-            color: var(--text-primary);
-        }
-
-        .dark-mode .table tbody td {
-            color: var(--text-secondary);
-        }
-
-        .dark-mode .table tbody tr:hover {
-            background-color: var(--hover-bg);
-        }
-
-        .dark-mode .progress-modern {
-            background-color: var(--hover-bg);
-        }
-
-        .dark-mode .welcome-section {
-            background: linear-gradient(135deg, #1e1b4b, #3730a3);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-
-        .dark-mode .welcome-section::before {
-            opacity: 0.15;
-        }
-
-        .dark-mode .welcome-section::after {
-            opacity: 0.1;
-        }
-
-        /* Dark mode map styles */
-        .dark-mode #map-container {
-            background-color: var(--bg-card);
-        }
-
-        .dark-mode .highcharts-background {
-            fill: var(--bg-card);
-        }
-
-        .dark-mode .highcharts-title,
-        .dark-mode .highcharts-axis-labels text,
-        .dark-mode .highcharts-axis-title {
-            fill: var(--text-primary) !important;
-        }
-
-        .dark-mode .highcharts-grid-line {
-            stroke: var(--border-color);
-        }
-
-        .dark-mode .highcharts-point {
-            fill-opacity: 0.8;
-        }
-
-        .dark-mode .p-datatable {
-            background-color: var(--bg-card);
-            color: var(--text-primary);
-        }
-
-        .dark-mode .p-datatable .p-datatable-thead > tr > th {
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            border-color: var(--border-color);
-        }
-
-        .dark-mode .p-datatable .p-datatable-tbody > tr {
-            background-color: var(--bg-card);
-            color: var(--text-primary);
-        }
-
-        .dark-mode .p-datatable .p-datatable-tbody > tr > td {
-            border-color: var(--border-color);
-            color: var(--text-secondary);
-        }
-
-        .dark-mode .p-datatable .p-datatable-tbody > tr:hover {
-            background-color: var(--hover-bg);
-        }
-
-        .dark-mode .p-button {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-        .dark-mode .p-button:hover {
-            background-color: #4338ca;
-            border-color: #4338ca;
-        }
-
-        /* Dark mode for badges and other elements */
-        .dark-mode .badge-status {
-            background-color: var(--hover-bg);
-            color: var(--text-primary);
-        }
-
-        .dark-mode .avatar {
-            background-color: var(--primary-color);
-        }
-
-        /* Chart styles */
-        .p-chart {
+:root {
+    --primary-color: #4f46e5;
+    --navbar-bg: #1f2937;
+    --secondary-color: #8b5cf6;
+    --chart-grid-color: #e5e7eb;
+    --chart-text-color: #4b5563;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #f8fafc;
+}
+
+.top-navbar {
+    background: var(--navbar-bg);
+    padding: 1rem 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.navbar-brand:hover {
+    color: #e5e7eb !important;
+}
+
+.navbar-nav .nav-link {
+    color: #d1d5db !important;
+    font-weight: 500;
+    padding: 0.75rem 1.25rem !important;
+    border-radius: 8px;
+    margin: 0 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: #374151;
+    color: white !important;
+}
+
+.navbar-nav .nav-link.active {
+    background-color: var(--primary-color);
+    color: white !important;
+}
+
+.navbar-text {
+    color: #9ca3af !important;
+}
+
+.btn-outline-light {
+    border-color: #6b7280;
+    color: #d1d5db;
+}
+
+.btn-outline-light:hover {
+    background-color: #374151;
+    border-color: #374151;
+    color: white;
+}
+
+.main-content {
+    background-color: white;
+    padding: 2rem;
+}
+
+.dark-mode .main-content {
+    background-color: var(--bg-main);
+}
+
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), #8b5cf6);
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.dark-mode .stat-card {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .stat-card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.dark-mode .stat-card::before {
+    background: linear-gradient(90deg, #4f46e5, #6366f1);
+    opacity: 0.8;
+}
+
+.stat-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.stat-icon.primary { 
+    background: linear-gradient(135deg, var(--primary-color), #6366f1); 
+}
+.stat-icon.success { 
+    background: linear-gradient(135deg, #10b981, #059669); 
+}
+.stat-icon.warning { 
+    background: linear-gradient(135deg, #f59e0b, #d97706); 
+}
+.stat-icon.danger { 
+    background: linear-gradient(135deg, #ef4444, #dc2626); 
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #6b7280;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.chart-container {
+    width: 100%;
+    background: #fff;
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.dark-mode .chart-container {
+    background: var(--bg-card);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+}
+
+.table-container {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid #e5e7eb;
+}
+
+.table-header {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    padding: 2rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.table thead th {
+    background: #f8fafc;
+    border: none;
+    font-weight: 600;
+    color: #374151;
+    padding: 1rem 1.5rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table tbody td {
+    border: none;
+    padding: 1.25rem 1.5rem;
+    vertical-align: middle;
+}
+
+.table tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+.badge-status {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.progress-modern {
+    height: 8px;
+    border-radius: 4px;
+    background-color: #f3f4f6;
+    overflow: hidden;
+}
+
+.progress-bar {
+    border-radius: 4px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+}
+
+/* Welcome section styles */
+:host .welcome-section,
+.welcome-section {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+}
+
+.welcome-section::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -10%;
+    width: 200px;
+    height: 200px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+}
+
+/* Dark mode welcome section */
+:host-context(.dark-mode) .welcome-section,
+.dark-mode .welcome-section {
+    background: linear-gradient(135deg, #1e1b4b, #3730a3) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+:host-context(.dark-mode) .welcome-section::before,
+.dark-mode .welcome-section::before {
+    opacity: 0.15;
+}
+
+:host-context(.dark-mode) .welcome-section::after,
+.dark-mode .welcome-section::after {
+    opacity: 0.1;
+}
+
+.welcome-content {
+    position: relative;
+    z-index: 2;
+}
+
+.btn-modern {
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background: #3730a3;
+    border-color: #3730a3;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 1rem;
+    }
+    
+    .welcome-section {
+        padding: 2rem 1.5rem;
+        text-align: center;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+}
+
+.map-chart-container .d-flex.h-75 {
+    height: 300px;  /* fix map container height */
+}
+
+#map-container {
+    height: 100%;
+    min-width: 310px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+/* Dark mode variables */
+.dark-mode {
+    --bg-main: #111827;
+    --bg-card: #1f2937;
+    --text-primary: #ffffff;
+    --text-secondary: #9ca3af;
+    --border-color: #374151;
+    --hover-bg: #2d3748;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --chart-grid-color: #374151;
+    --chart-text-color: #9ca3af;
+}
+
+/* Add dark mode styles */
+.dark-mode body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+}
+
+.dark-mode .top-navbar {
+    background: #111827;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .stat-number {
+    color: var(--text-primary);
+}
+
+.dark-mode .stat-label {
+    color: var(--text-secondary);
+}
+
+.dark-mode .table thead th {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.dark-mode .table tbody td {
+    color: var(--text-secondary);
+}
+
+.dark-mode .table tbody tr:hover {
+    background-color: var(--hover-bg);
+}
+
+.dark-mode .progress-modern {
+    background-color: var(--hover-bg);
+}
+
+.dark-mode .welcome-section {
+    background: linear-gradient(135deg, #1e1b4b, #3730a3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .welcome-section::before {
+    opacity: 0.15;
+}
+
+.dark-mode .welcome-section::after {
+    opacity: 0.1;
+}
+
+/* Dark mode map styles */
+.dark-mode #map-container {
+    background-color: var(--bg-card);
+}
+
+.dark-mode .highcharts-background {
+    fill: var(--bg-card);
+}
+
+.dark-mode .highcharts-title,
+.dark-mode .highcharts-axis-labels text,
+.dark-mode .highcharts-axis-title {
+    fill: var(--text-primary) !important;
+}
+
+.dark-mode .highcharts-grid-line {
+    stroke: var(--border-color);
+}
+
+.dark-mode .highcharts-point {
+    fill-opacity: 0.8;
+}
+
+.dark-mode .p-datatable {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.dark-mode .p-datatable .p-datatable-thead > tr > th {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.dark-mode .p-datatable .p-datatable-tbody > tr {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.dark-mode .p-datatable .p-datatable-tbody > tr > td {
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+.dark-mode .p-datatable .p-datatable-tbody > tr:hover {
+    background-color: var(--hover-bg);
+}
+
+.dark-mode .p-button {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.dark-mode .p-button:hover {
+    background-color: #4338ca;
+    border-color: #4338ca;
+}
+
+/* Dark mode for badges and other elements */
+.dark-mode .badge-status {
+    background-color: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.dark-mode .avatar {
+    background-color: var(--primary-color);
+}
+
+/* Chart styles */
+.p-chart {
+    background: transparent;
+}
+
+.p-chart canvas {
+    background: transparent;
+}
+
+/* Only add dark mode styles */
+:host-context(.dark-mode) .main-content {
+    background-color: #111827;
+}
+
+:host-context(.dark-mode) .chart-container {
+    background: #1f2937;
+    border-color: #374151;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+:host-context(.dark-mode) .stat-card {
+    background: #1f2937;
+    border-color: #374151;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+:host-context(.dark-mode) .stat-card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+:host-context(.dark-mode) .stat-number {
+    color: #ffffff;
+}
+
+:host-context(.dark-mode) .stat-label {
+    color: #9ca3af;
+}
+
+:host-context(.dark-mode) .welcome-section {
+    background: linear-gradient(135deg, #1e1b4b, #3730a3);
+}
+
+/* Dark mode map styles */
+:host-context(.dark-mode) #map-container {
+    background-color: #1f2937;
+}
+
+:host-context(.dark-mode) .highcharts-background {
+    fill: #1f2937;
+}
+
+:host-context(.dark-mode) .highcharts-title,
+:host-context(.dark-mode) .highcharts-axis-labels text {
+    fill: #ffffff !important;
+}
+
+:host-context(.dark-mode) .highcharts-grid-line {
+    stroke: #374151;
+}
+
+/* Table dark mode */
+:host-context(.dark-mode) .p-datatable {
+    background-color: #1f2937;
+    color: #ffffff;
+}
+
+:host-context(.dark-mode) .p-datatable .p-datatable-thead > tr > th {
+    background-color: #1a2332;
+    color: #ffffff;
+    border-color: #374151;
+}
+
+:host-context(.dark-mode) .p-datatable .p-datatable-tbody > tr {
+    background-color: #1f2937;
+    color: #ffffff;
+}
+
+:host-context(.dark-mode) .p-datatable .p-datatable-tbody > tr > td {
+    border-color: #374151;
+    color: #9ca3af;
+}
+
+:host-context(.dark-mode) .p-datatable .p-datatable-tbody > tr:hover {
+    background-color: #2d3748;
+}
+
+/* Add to your existing dark mode styles */
+:host-context(.dark-mode) .fw-bold {
+    color: #ffffff !important;
+}
+
+:host-context(.dark-mode) .table-header {
+    background: #1a2332;
+    border-bottom: 1px solid #374151;
+}
+
+/* Dark mode style for select label */
+:host-context(.dark-mode) :host ::ng-deep .p-select-label {
+    color: #ffffff !important;
+}        /* Dark mode style for select label */
+
+:host-context(.dark-mode) .text-muted {
+    color: #fff !important;
+}
+
+
+/* Add to your existing styles */
+:host ::ng-deep .p-chart {
+    .p-chart-axis-label {
+        color: var(--chart-axis-color) !important;
+    }
+    .p-chart-grid-line {
+        stroke: var(--chart-grid-color) !important;
+    }
+}
+
+/* Only target Chart.js elements in dark mode */
+:host-context(.dark-mode) .chart-container {
+    & .chartjs-render-monitor {
+        & .chartjs-size-monitor {
             background: transparent;
         }
+    }
+}
 
-        .p-chart canvas {
-            background: transparent;
-        }
+:host-context(.dark-mode) .chart-container canvas {
+    filter: brightness(1.2);
+}
 
-        /* Only add dark mode styles */
-        :host-context(.dark-mode) .main-content {
-            background-color: #111827;
-        }
+/* Card body dark mode styles */
+:host-context(.dark-mode) .card-body,
+.dark-mode .card-body {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+}
 
-        :host-context(.dark-mode) .chart-container {
-            background: #1f2937;
-            border-color: #374151;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-        }
+:host-context(.dark-mode) .card-body p,
+.dark-mode .card-body p {
+    color: var(--text-secondary);
+}
 
-        :host-context(.dark-mode) .stat-card {
-            background: #1f2937;
-            border-color: #374151;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        :host-context(.dark-mode) .stat-card:hover {
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-        }
-
-        :host-context(.dark-mode) .stat-number {
-            color: #ffffff;
-        }
-
-        :host-context(.dark-mode) .stat-label {
-            color: #9ca3af;
-        }
-
-        :host-context(.dark-mode) .welcome-section {
-            background: linear-gradient(135deg, #1e1b4b, #3730a3);
-        }
-
-        /* Dark mode map styles */
-        :host-context(.dark-mode) #map-container {
-            background-color: #1f2937;
-        }
-
-        :host-context(.dark-mode) .highcharts-background {
-            fill: #1f2937;
-        }
-
-        :host-context(.dark-mode) .highcharts-title,
-        :host-context(.dark-mode) .highcharts-axis-labels text {
-            fill: #ffffff !important;
-        }
-
-        :host-context(.dark-mode) .highcharts-grid-line {
-            stroke: #374151;
-        }
-
-        /* Table dark mode */
-        :host-context(.dark-mode) .p-datatable {
-            background-color: #1f2937;
-            color: #ffffff;
-        }
-
-        :host-context(.dark-mode) .p-datatable .p-datatable-thead > tr > th {
-            background-color: #111827;
-            color: #ffffff;
-            border-color: #374151;
-        }
-
-        :host-context(.dark-mode) .p-datatable .p-datatable-tbody > tr {
-            background-color: #1f2937;
-            color: #ffffff;
-        }
-
-        :host-context(.dark-mode) .p-datatable .p-datatable-tbody > tr > td {
-            border-color: #374151;
-            color: #9ca3af;
-        }
-
-        :host-context(.dark-mode) .p-datatable .p-datatable-tbody > tr:hover {
-            background-color: #2d3748;
-        }
-
-        /* Add to your existing dark mode styles */
-        :host-context(.dark-mode) .fw-bold {
-            color: #ffffff !important;
-        }
-
-        :host-context(.dark-mode) .table-header {
-            background: linear-gradient(135deg, #1f2937, #111827);
-            border-bottom: 1px solid #374151;
-        }
-
-        /* Dark mode style for select label */
-        :host-context(.dark-mode) :host ::ng-deep .p-select-label {
-            color: #ffffff !important;
-        }        /* Dark mode style for select label */
-
-        :host-context(.dark-mode) .text-muted {
-            color: #fff !important;
-        }
-  
-
-        /* Add to your existing styles */
-        :host ::ng-deep .p-chart {
-            .p-chart-axis-label {
-                color: var(--chart-axis-color) !important;
-            }
-            .p-chart-grid-line {
-                stroke: var(--chart-grid-color) !important;
-            }
-        }
-
-        /* Only target Chart.js elements in dark mode */
-        :host-context(.dark-mode) .chart-container {
-            & .chartjs-render-monitor {
-                & .chartjs-size-monitor {
-                    background: transparent;
-                }
-            }
-        }
-
-        :host-context(.dark-mode) .chart-container canvas {
-            filter: brightness(1.2);
-        }
-
-        /* Card body dark mode styles */
-        :host-context(.dark-mode) .card-body[_ngcontent-ng-c3636181545],
-        .dark-mode .card-body[_ngcontent-ng-c3636181545] {
-            background-color: var(--bg-card);
-            color: var(--text-primary);
-        }
-
-        :host-context(.dark-mode) .card-body[_ngcontent-ng-c3636181545] p,
-        .dark-mode .card-body[_ngcontent-ng-c3636181545] p {
-            color: var(--text-secondary);
-        }
-
-        :host-context(.dark-mode) .card-body[_ngcontent-ng-c3636181545] h1,
-        :host-context(.dark-mode) .card-body[_ngcontent-ng-c3636181545] h2,
-        :host-context(.dark-mode) .card-body[_ngcontent-ng-c3636181545] h3,
-        :host-context(.dark-mode) .card-body[_ngcontent-ng-c3636181545] h4,
-        :host-context(.dark-mode) .card-body[_ngcontent-ng-c3636181545] h5,
-        :host-context(.dark-mode) .card-body[_ngcontent-ng-c3636181545] h6,
-        .dark-mode .card-body[_ngcontent-ng-c3636181545] h1,
-        .dark-mode .card-body[_ngcontent-ng-c3636181545] h2,
-        .dark-mode .card-body[_ngcontent-ng-c3636181545] h3,
-        .dark-mode .card-body[_ngcontent-ng-c3636181545] h4,
-        .dark-mode .card-body[_ngcontent-ng-c3636181545] h5,
-        .dark-mode .card-body[_ngcontent-ng-c3636181545] h6 {
-            color: var(--text-primary);
-        }
-  
+:host-context(.dark-mode) .card-body h1,
+:host-context(.dark-mode) .card-body h2,
+:host-context(.dark-mode) .card-body h3,
+:host-context(.dark-mode) .card-body h4,
+:host-context(.dark-mode) .card-body h5,
+:host-context(.dark-mode) .card-body h6,
+.dark-mode .card-body h1,
+.dark-mode .card-body h2,
+.dark-mode .card-body h3,
+.dark-mode .card-body h4,
+.dark-mode .card-body h5,
+.dark-mode .card-body h6 {
+    color: var(--text-primary);
+}

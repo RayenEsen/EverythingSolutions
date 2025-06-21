@@ -1,0 +1,245 @@
+<div [class.dark-mode]="themeService.isDarkMode()">
+  <p-toast />
+  <p-confirmDialog></p-confirmDialog>
+  
+  <div class="dashboard-header">
+    <div class="header-content"> 
+      <div class="breadcrumb-nav" style="display: flex; align-items: center; justify-content: space-between;">
+        <nav class="breadcrumb">
+          <span class="breadcrumb-item">Accueil</span>
+          <span class="breadcrumb-separator">›</span>
+          <span class="breadcrumb-item">Finances</span>
+          <span class="breadcrumb-separator">›</span>
+          <span class="breadcrumb-item active">Liste des Fournisseurs</span>
+        </nav>
+        <img src="https://i.ibb.co/Xfj86PzY/8a2a07a8-b6ca-4342-8173-14564dd9ab4e-removebg-preview-1-1.png" 
+             alt="Logo" 
+             width="60" 
+             height="60"
+             style="margin-left: 12px; height: 50px; width: 50px;">
+      </div>
+      
+      <div class="header-main" style="margin-top: -10px;">
+        <h1 class="header-title">
+          <span class="title-gradient">Liste des Fournisseurs</span>
+        </h1>
+        <p class="header-subtitle">Voici la liste des Fournisseurs avec leurs détails.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <!-- Total Fournisseurs Card -->
+    <div class="metric-card">
+      <div class="metric-content">
+        <h3 class="metric-label">Total Fournisseurs</h3>
+        <p class="metric-value">{{ fournisseurs.length }} <span class="currency"></span></p>
+        <div class="metric-decoration">
+          <i class="pi pi-users" style="color: black;"></i>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Fournisseurs Ajoutés ce Mois Card -->
+    <div class="metric-card accent-2">
+      <div class="metric-content">
+        <h3 class="metric-label">Fournisseurs Ajoutés ce Mois</h3>
+        <p class="metric-value">{{ fournisseursThisMonth }} <span class="currency"></span></p>
+        <div class="metric-decoration">
+          <i class="pi pi-calendar-plus" style="color: black;"></i>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Fournisseurs Ajoutés cette Année Card -->
+    <div class="metric-card accent-3">
+      <div class="metric-content">
+        <h3 class="metric-label">Fournisseurs Ajoutés cette Année</h3>
+        <p class="metric-value">{{ fournisseursThisYear }}</p>
+        <div class="metric-decoration">
+          <i class="pi pi-calendar" style="color: black;"></i>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Dernier Ajout Card -->
+    <div class="metric-card accent-4">
+      <div class="metric-content">
+        <h3 class="metric-label">Dernier Ajout</h3>
+        <p class="metric-value metric-value-small">{{ fournisseurs.length > 0 ? (fournisseurs[0].dateCreation | date:'dd/MM/yyyy HH:mm') : 'N/A' }}</p>
+        <div class="metric-decoration">
+          <i class="pi pi-calendar" style="color: black;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="d-flex align-items-center justify-content-between p-2 bg-light text-dark border rounded mb-3">
+      <p-menubar [model]="items"></p-menubar>
+      
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input
+          type="text"
+          pInputText
+          placeholder="Rechercher"
+          class="form-control"
+          [(ngModel)]="searchText"
+          (input)="filterFournisseurs()"
+        />
+      </span>
+    </div>
+
+    <p-table 
+      [value]="fournisseurs" 
+      [rows]="10" 
+      [paginator]="true" 
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [loading]="loading"
+      [globalFilterFields]="['code', 'nom', 'email', 'telephone']"
+      styleClass="p-datatable-gridlines"
+      [tableStyle]="{'min-width': '50rem'}"
+      [(selection)]="selectedFournisseurs"
+      dataKey="id"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      [showCurrentPageReport]="true">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th>Matricule</th>
+          <th>Nom</th>
+          <th>Téléphone</th>
+          <th>Email</th>
+          <th>Adresse</th>
+          <th>Date de création</th>
+          <th style="width: 8rem">Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-fournisseur>
+        <tr>
+          <td>
+            <p-tableCheckbox [value]="fournisseur"></p-tableCheckbox>
+          </td>
+          <td>{{fournisseur.matriculeFournisseur}}</td>
+          <td>{{fournisseur.nom}}</td>
+          <td>{{fournisseur.telephone}}</td>
+          <td>{{fournisseur.email}}</td>
+          <td>{{fournisseur.adresse}}</td>
+          <td>{{fournisseur.dateCreation | date:'dd/MM/yyyy'}}</td>
+          <td>
+            <div class="d-flex gap-2">
+              <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-success" (click)="editFournisseur(fournisseur)"></button>
+              <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteFournisseur(fournisseur)"></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="9" class="text-center p-4">
+            <div class="d-flex flex-column align-items-center">
+              <iframe *ngIf="!themeService.isDarkMode()"
+                src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie"
+                width="200"
+                height="200"
+                frameborder="0"
+                allow="autoplay; encrypted-media"
+                allowfullscreen>
+              </iframe>
+              <div>Aucun fournisseur trouvé.</div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <p-drawer 
+    [(visible)]="displayDialog" 
+    [header]="isNew ? 'Ajouter un Nouveau Fournisseur' : 'Modifier Fournisseur'" 
+    position="right" 
+    [style]="{width: '90vw', maxWidth: '450px'}"
+    [baseZIndex]="10000"
+    styleClass="custom-drawer">
+    <div class="p-4">
+      <div>
+        <!-- Matricule Field -->
+        <div class="mb-3">
+          <label for="matricule" class="form-label">Matricule</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="matricule"
+            [(ngModel)]="fournisseur.matriculeFournisseur"
+            placeholder="Ex: MAT123456">
+        </div>
+
+        <!-- Nom Field -->
+        <div class="mb-3">
+          <label for="nom" class="form-label">Nom du Fournisseur</label>
+          <input 
+            type="text" 
+            class="form-control"
+            id="nom"
+            [(ngModel)]="fournisseur.nom"
+            placeholder="Ex: Société ABC">
+        </div>
+
+        <!-- Téléphone Field -->
+        <div class="mb-3">
+          <label for="telephone" class="form-label">Téléphone</label>
+          <input 
+            type="text" 
+            class="form-control"
+            id="telephone"
+            [(ngModel)]="fournisseur.telephone"
+            placeholder="Ex: +216 99 999 999">
+        </div>
+
+        <!-- Email Field -->
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input 
+            type="email" 
+            class="form-control"
+            id="email"
+            [(ngModel)]="fournisseur.email"
+            placeholder="Ex: contact@abc.com">
+        </div>
+
+        <!-- Adresse Field -->
+        <div class="mb-3">
+          <label for="adresse" class="form-label">Adresse</label>
+          <input 
+            type="text" 
+            class="form-control"
+            id="adresse"
+            [(ngModel)]="fournisseur.adresse"
+            placeholder="Ex: 123 Rue de la Paix">
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex justify-content-end gap-2 p-3" style="position: absolute; bottom: 0; left: 0; width: 100%;" [ngClass]="themeService.isDarkMode() ? 'custom-bg-dark' : 'bg-light'">
+          <button 
+            type="button" 
+            class="btn btn-outline-secondary"
+            (click)="displayDialog = false">
+            <i class="pi pi-times me-2"></i>Annuler
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-primary"
+            (click)="saveFournisseur()">
+            <i class="pi pi-check me-2"></i>Enregistrer
+          </button>
+        </div>
+      </div>
+    </div>
+  </p-drawer>
+</div> 

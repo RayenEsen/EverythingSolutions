@@ -253,8 +253,11 @@ export class ArticleComponent implements OnInit {
       || article.gouvernerat?.toLowerCase().includes(text)
     );
   }
+  
+  currentMode: 'create' | 'edit' = 'create';
 
   openModal(mode: 'create' | 'edit', article?: Article) {
+    this.currentMode = mode;  // Set mode here
     this.showCodeError = false;
     this.showDesignationError = false;
     this.showPrixAchatHTError = false;
@@ -711,17 +714,23 @@ export class ArticleComponent implements OnInit {
           },
           error: (error: HttpErrorResponse) => {
             console.error('Error deleting TVA:', error);
+  
+            let detailMessage = 'Échec de la suppression de la TVA.';
+            if (error.status === 400 && error.error && typeof error.error === 'string' && error.error.includes('associée à un article')) {
+              detailMessage = error.error; // Show the backend message directly
+            }
+  
             this.messageService.add({
               severity: 'error',
               summary: 'Erreur',
-              detail: 'Échec de la suppression de la TVA.',
+              detail: detailMessage,
             });
           },
         });
       },
     });
   }
-
+  
   toggleAddStockInfo() {
     this.AddStockInfo = !this.AddStockInfo;
     this.newStock = { id: 0, name: '', code: '', articles: [] }; // Reset new stock form
@@ -812,7 +821,7 @@ export class ArticleComponent implements OnInit {
 
   confirmDeleteStock(stock: Stock) {
     this.confirmationService.confirm({
-      message: `Êtes-vous sûr de vouloir supprimer le stock ID: ${stock.id}? Tous les articles associés à ce stock seront orphelins.`, // Warn about orphaned articles
+      message: `Êtes-vous sûr de vouloir supprimer le stock ID: ${stock.id}?`,
       header: 'Confirmation de suppression',
       icon: 'pi pi-exclamation-triangle',
       acceptButtonStyleClass: 'p-button-danger p-button-raised',
@@ -833,16 +842,26 @@ export class ArticleComponent implements OnInit {
           },
           error: (error: HttpErrorResponse) => {
             console.error('Error deleting stock:', error);
+  
+            let detailMessage = 'Échec de la suppression du stock.';
+            // Assuming your API returns 400 with a message when deletion is blocked by related articles
+            if (error.status === 400 && error.error && typeof error.error === 'string') {
+              if (error.error.toLowerCase().includes('lié') || error.error.toLowerCase().includes('associé')) {
+                detailMessage = "Impossible de supprimer ce stock car il est associé à des articles.";
+              }
+            }
+  
             this.messageService.add({
               severity: 'error',
               summary: 'Erreur',
-              detail: 'Échec de la suppression du stock.',
+              detail: detailMessage,
             });
           },
         });
       },
     });
   }
+  
 
   loadTVAs() {
     this.tvaService.getTVAs().subscribe({

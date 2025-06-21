@@ -200,55 +200,37 @@
   margin-right: 0;
 }
 
-.menu_wrapper {
-  position: relative;
+/* Submenu specific styles */
+.menu_items.submenu {
+  max-height: 0; /* Hidden by default */
+  overflow: hidden;
+  overflow-y: hidden; /* Ensure vertical overflow is hidden */
+  height: auto; /* Allow height to adjust naturally with content */
+  transition: max-height 0.3s ease-out; /* Smooth collapse transition */
 }
 
-/* Locking the section */
-.blocked-section {
-  position: relative;
-  pointer-events: none;
-  opacity: 0.6;
-  user-select: none;
-  
-  filter: grayscale(1);
+.submenu_item.show_submenu + .menu_items.submenu {
+  max-height: 500px; /* Or a sufficiently large value to show all content */
+  transition: max-height 0.3s ease-in; /* Smooth expand transition */
 }
 
+.nav_link.sublink {
+  padding-left: 40px; /* Indent sublinks */
+}
 
-/* Premium badge overlay */
-.blocked-section::after {
-  content: "🔒 PREMIUM";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #dc3545;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: bold;
-  z-index: 11;
-  text-align: center;
-  white-space: nowrap;
-  pointer-events: none; /* allows mouse to pass through to the wrapper for visual only */
+/* Adjust spacing for sublinks within a submenu */
+.submenu .item .nav_link.sublink {
+  margin: 2px 0;
 }
 
 
-.sidebar.close .blocked-section::after,
-.sidebar.collapsed .blocked-section::after {
-  display: none !important;
-}
 
-.menu_content {
-  transition: margin-top 0.3s ease;
-}
 
-.sidebar.close .menu_content,
-.sidebar.collapsed .menu_content {
-  margin-top: 5vh;
-}
 
-   
+
+
+
+
+
 
 

@@ -1,386 +1,385 @@
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
 
 <body>
 
 
-  <!-- Contenu principal -->
-  <div class="main-content">
-    <!-- Section de bienvenue -->
-    <div class="welcome-section">
-      <div class="welcome-content">
-        <div class="row align-items-center">
-          <div class="col-lg-8">
-            <h1 class="display-5 fw-bold mb-3">Bon retour, {{AdminName}}! 👋</h1>
-            <p class="lead mb-0">
-              Bienvenue ! Aujourd'hui, {{entreprisesCreatedTodayCount}} nouveaux utilisateurs se sont inscrits,
-              {{retenuesCreatedTodayCount}} retenues à la source ont été crées,
-              et {{TraitesCreatedTodayCount}} traites ont été crées.
-            </p>
-          </div>
-          <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
-            <button class="btn btn-light btn-modern me-2">
-              <i class="fas fa-download me-2"></i>Exporter les données
-            </button>
-            <button class="btn btn-outline-light btn-modern">
-              <i class="fas fa-plus me-2"></i>Ajouter nouveau
-            </button>
-          </div>
-        </div>
+<!-- Contenu principal -->
+<div class="main-content">
+<!-- Section de bienvenue -->
+<div class="welcome-section">
+  <div class="welcome-content">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <h1 class="display-5 fw-bold mb-3">Bon retour, {{AdminName}}! 👋</h1>
+        <p class="lead mb-0">
+          Bienvenue ! Aujourd'hui, {{entreprisesCreatedTodayCount}} nouveaux utilisateurs se sont inscrits,
+          {{retenuesCreatedTodayCount}} retenues à la source ont été crées,
+          et {{TraitesCreatedTodayCount}} traites ont été crées.
+        </p>
+      </div>
+      <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+        <button class="btn btn-light btn-modern me-2">
+          <i class="fas fa-download me-2"></i>Exporter les données
+        </button>
+        <button class="btn btn-outline-light btn-modern">
+          <i class="fas fa-plus me-2"></i>Ajouter nouveau
+        </button>
       </div>
     </div>
+  </div>
+</div>
 
 <!-- Cartes de statistiques orientées base de données -->
 <div class="row mb-5">
 <div class="col-xl-3 col-md-6 mb-4">
-  <div class="stat-card">
-    <div class="stat-icon primary">
-      <i class="fas fa-users"></i>
-    </div>
+<div class="stat-card">
+<div class="stat-icon primary">
+  <i class="fas fa-users"></i>
+</div>
 
-    <!-- Users count this month -->
-    <div class="stat-number">
-      {{ countThisMonthUsers }}
-    </div>
+<!-- Users count this month -->
+<div class="stat-number">
+  {{ countThisMonthUsers }}
+</div>
 
-    <div class="stat-label">Utilisateurs enregistrés</div>
+<div class="stat-label">Utilisateurs enregistrés</div>
 
-    <!-- Progress bar -->
-    <div class="progress progress-modern">
-      <div
-        class="progress-bar bg-primary"
-        [style.width.%]="
-          growthUsers > 100
-            ? 100
-            : growthUsers < 0
-              ? 0
-              : growthUsers
-        "
-        [attr.data-target-width]="
-          growthUsers > 100
-            ? '100%'
-            : growthUsers < 0
-              ? '0%'
-              : growthUsers + '%'
-        "
-      ></div>
-    </div>
+<!-- Progress bar -->
+<div class="progress progress-modern">
+  <div
+    class="progress-bar bg-primary"
+    [style.width.%]="
+      growthUsers > 100
+        ? 100
+        : growthUsers < 0
+          ? 0
+          : growthUsers
+    "
+    [attr.data-target-width]="
+      growthUsers > 100
+        ? '100%'
+        : growthUsers < 0
+          ? '0%'
+          : growthUsers + '%'
+    "
+  ></div>
+</div>
 
-    <!-- Growth percentage -->
-    <small
-      [ngClass]="{
-        'text-success': growthUsers >= 0,
-        'text-danger': growthUsers < 0
-      }"
-      class="mt-2 d-block"
-    >
-      <i
-        class="fas me-1"
-        [ngClass]="{
-          'fa-arrow-up': growthUsers > 0,
-          'fa-arrow-down': growthUsers < 0,
-          'fa-minus': growthUsers === 0
-        }"
-      ></i>
-      {{ growthUsers >= 0 ? '+' : '' }}{{ growthUsers | number: '1.0-2' }}% ce mois-ci
-    </small>
-  </div>
+<!-- Growth percentage -->
+<small
+  [ngClass]="{
+    'text-success': growthUsers >= 0,
+    'text-danger': growthUsers < 0
+  }"
+  class="mt-2 d-block"
+>
+  <i
+    class="fas me-1"
+    [ngClass]="{
+      'fa-arrow-up': growthUsers > 0,
+      'fa-arrow-down': growthUsers < 0,
+      'fa-minus': growthUsers === 0
+    }"
+  ></i>
+  {{ growthUsers >= 0 ? '+' : '' }}{{ growthUsers | number: '1.0-2' }}% ce mois-ci
+</small>
+</div>
 </div>
 
 
 <div class="col-xl-3 col-md-6 mb-4">
-  <div class="stat-card">
-    <div class="stat-icon success">
-      <i class="fas fa-file-invoice-dollar"></i>
-    </div>
+<div class="stat-card">
+<div class="stat-icon success">
+  <i class="fas fa-file-invoice-dollar"></i>
+</div>
 
-    <!-- Traites count this month -->
-    <div class="stat-number">
-      {{ countThisMonthTraite }}
-    </div>
+<!-- Traites count this month -->
+<div class="stat-number">
+  {{ countThisMonthTraite }}
+</div>
 
-    <div class="stat-label">Traites créées</div>
+<div class="stat-label">Traites créées</div>
 
-    <!-- Progress bar -->
-    <div class="progress progress-modern">
-      <div
-        class="progress-bar bg-success"
-        [style.width.%]="
-          growthTraite > 100
-            ? 100
-            : growthTraite < 0
-              ? 0
-              : growthTraite
-        "
-        [attr.data-target-width]="
-          growthTraite > 100
-            ? '100%'
-            : growthTraite < 0
-              ? '0%'
-              : growthTraite + '%'
-        "
-      ></div>
-    </div>
+<!-- Progress bar -->
+<div class="progress progress-modern">
+  <div
+    class="progress-bar bg-success"
+    [style.width.%]="
+      growthTraite > 100
+        ? 100
+        : growthTraite < 0
+          ? 0
+          : growthTraite
+    "
+    [attr.data-target-width]="
+      growthTraite > 100
+        ? '100%'
+        : growthTraite < 0
+          ? '0%'
+          : growthTraite + '%'
+    "
+  ></div>
+</div>
 
-    <!-- Growth percentage -->
-    <small
-      [ngClass]="{
-        'text-success': growthTraite >= 0,
-        'text-danger': growthTraite < 0
-      }"
-      class="mt-2 d-block"
-    >
-      <i
-        class="fas me-1"
-        [ngClass]="{
-          'fa-arrow-up': growthTraite > 0,
-          'fa-arrow-down': growthTraite < 0,
-          'fa-minus': growthTraite === 0
-        }"
-      ></i>
-      {{ growthTraite >= 0 ? '+' : '' }}{{ growthTraite | number: '1.0-2' }}% ce mois-ci
-    </small>
-  </div>
+<!-- Growth percentage -->
+<small
+  [ngClass]="{
+    'text-success': growthTraite >= 0,
+    'text-danger': growthTraite < 0
+  }"
+  class="mt-2 d-block"
+>
+  <i
+    class="fas me-1"
+    [ngClass]="{
+      'fa-arrow-up': growthTraite > 0,
+      'fa-arrow-down': growthTraite < 0,
+      'fa-minus': growthTraite === 0
+    }"
+  ></i>
+  {{ growthTraite >= 0 ? '+' : '' }}{{ growthTraite | number: '1.0-2' }}% ce mois-ci
+</small>
+</div>
 </div>
 
 <div class="col-xl-3 col-md-6 mb-4">
-  <div class="stat-card">
-    <div class="stat-icon warning">
-      <i class="fas fa-hand-holding-usd"></i>
-    </div>
-    <div class="stat-number">{{ countThisMonthRetenue }}</div>
-    <div class="stat-label">Retenues créées</div>
-    <div class="progress progress-modern">
-      <div
-        class="progress-bar bg-warning"
-        [style.width.%]="
-          growthRetenue > 100
-            ? 100
-            : growthRetenue < 0
-              ? 0
-              : growthRetenue
-        "
-        [attr.data-target-width]="
-          growthRetenue > 100
-            ? '100%'
-            : growthRetenue < 0
-              ? '0%'
-              : growthRetenue + '%'
-        "
-      ></div>
-    </div>
-    <small
-      [ngClass]="{
-        'text-warning': growthRetenue >= 0,
-        'text-danger': growthRetenue < 0
-      }"
-      class="mt-2 d-block"
-    >
-      <i
-        class="fas"
-        [ngClass]="{
-          'fa-arrow-up': growthRetenue > 0,
-          'fa-arrow-down': growthRetenue < 0,
-          'fa-minus': growthRetenue === 0
-        }"
-      ></i>
-      {{ growthRetenue >= 0 ? '+' : '' }}{{ growthRetenue | number:'1.0-2' }}% ce mois-ci
-    </small>
-  </div>
+<div class="stat-card">
+<div class="stat-icon warning">
+  <i class="fas fa-hand-holding-usd"></i>
+</div>
+<div class="stat-number">{{ countThisMonthRetenue }}</div>
+<div class="stat-label">Retenues créées</div>
+<div class="progress progress-modern">
+  <div
+    class="progress-bar bg-warning"
+    [style.width.%]="
+      growthRetenue > 100
+        ? 100
+        : growthRetenue < 0
+          ? 0
+          : growthRetenue
+    "
+    [attr.data-target-width]="
+      growthRetenue > 100
+        ? '100%'
+        : growthRetenue < 0
+          ? '0%'
+          : growthRetenue + '%'
+    "
+  ></div>
+</div>
+<small
+  [ngClass]="{
+    'text-warning': growthRetenue >= 0,
+    'text-danger': growthRetenue < 0
+  }"
+  class="mt-2 d-block"
+>
+  <i
+    class="fas"
+    [ngClass]="{
+      'fa-arrow-up': growthRetenue > 0,
+      'fa-arrow-down': growthRetenue < 0,
+      'fa-minus': growthRetenue === 0
+    }"
+  ></i>
+  {{ growthRetenue >= 0 ? '+' : '' }}{{ growthRetenue | number:'1.0-2' }}% ce mois-ci
+</small>
+</div>
 </div>
 
 
-  <div class="col-xl-3 col-md-6 mb-4">
-    <div class="stat-card">
-      <div class="stat-icon danger">
-        <i class="fas fa-percentage"></i>
-      </div>
-      <div class="stat-number">91,3%</div>
-      <div class="stat-label">Taux de conversion</div>
-      <div class="progress progress-modern">
-        <div class="progress-bar bg-danger" style="width: 91%"></div>
-      </div>
-      <small class="text-success mt-2 d-block">
-        <i class="fas fa-arrow-up me-1"></i>+2% ce mois-ci
-      </small>
-    </div>
+<div class="col-xl-3 col-md-6 mb-4">
+<div class="stat-card">
+  <div class="stat-icon danger">
+    <i class="fas fa-percentage"></i>
   </div>
+  <div class="stat-number">91,3%</div>
+  <div class="stat-label">Taux de conversion</div>
+  <div class="progress progress-modern">
+    <div class="progress-bar bg-danger" style="width: 91%"></div>
+  </div>
+  <small class="text-success mt-2 d-block">
+    <i class="fas fa-arrow-up me-1"></i>+2% ce mois-ci
+  </small>
+</div>
+</div>
 </div>
 
 
 <!-- Ligne des graphiques -->
 <div class="row mb-5">
 <div class="col-lg-8 mb-4">
-  <div class="chart-container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h5 class="mb-0 fw-bold">Analyse des revenus</h5>
-      <div class="btn-group" role="group">
-        <button type="button" class="btn btn-outline-primary btn-sm">7J</button>
-        <button type="button" class="btn btn-primary btn-sm">30J</button>
-        <button type="button" class="btn btn-outline-primary btn-sm">90J</button>
-      </div>
-    </div>
-    <div class="h-75" style="width: 100%;">
-      <p-chart 
-        type="line" 
-        [data]="data" 
-        [options]="options" 
-        style="width: 100%; height: 30rem;">
-      </p-chart>
-    </div>
+<div class="chart-container">
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h5 class="mb-0 fw-bold">Analyse des revenus</h5>
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-outline-primary btn-sm">7J</button>
+    <button type="button" class="btn btn-primary btn-sm">30J</button>
+    <button type="button" class="btn btn-outline-primary btn-sm">90J</button>
   </div>
+</div>
+<div class="h-75" style="width: 100%;">
+  <p-chart 
+    type="line" 
+    [data]="data" 
+    [options]="options" 
+    style="width: 100%; height: 30rem;">
+  </p-chart>
+</div>
+</div>
 </div>
 
 
 <div class="col-lg-4 mb-4">
-  <div class="chart-container map-chart-container">
-    <h5 class="mb-4 fw-bold" style="padding-bottom: 20px;">Sources de trafic</h5>
-    <div class="flex-grow-1 d-flex justify-content-center align-items-center">
-      <div id="map-container"></div>
-    </div>
-  </div>
+<div class="chart-container map-chart-container">
+<h5 class="mb-4 fw-bold" style="padding-bottom: 20px;">Sources de trafic</h5>
+<div class="flex-grow-1 d-flex justify-content-center align-items-center">
+  <div id="map-container"></div>
+</div>
+</div>
 </div>
 
 </div>
-        <!-- Recent Orders Table -->
-        <div class="row" style="margin-bottom: 5vh;">
-            <div class="col-12">
-                <div class="table-container">
-                    <div class="table-header">
-                        <div class="d-flex justify-content-between align-items-center">
+    <!-- Recent Orders Table -->
+    <div class="row" style="margin-bottom: 5vh;">
+        <div class="col-12">
+            <div class="table-container">
+                <div class="table-header">
+                    <div class="d-flex justify-content-between align-items-center">
 <div>
-  <h5 class="mb-1 fw-bold">
-    Utilisateurs récents
-    <span class="text">({{ entreprises.length }})</span>
-  </h5>
-  <p class="text-muted mb-0">Derniers utilisateurs inscrits et leur statut</p>
+<h5 class="mb-1 fw-bold">
+Utilisateurs récents
+<span class="text">({{ entreprises.length }})</span>
+</h5>
+<p class="text-muted mb-0">Derniers utilisateurs inscrits et leur statut</p>
 </div>
 
-                          <button class="btn btn-success btn-modern" (click)="exportUsers()">
-                            <i class="fas fa-file-export me-2"></i>Exporter les utilisateurs
-                          </button>
-                        </div>
+                      <button class="btn btn-success btn-modern" (click)="exportUsers()">
+                        <i class="fas fa-file-export me-2"></i>Exporter les utilisateurs
+                      </button>
                     </div>
-                    <div class="table-responsive">
+                </div>
+                <div class="table-responsive">
 <p-table 
-  #dt
-  [value]="entreprises"
-  [paginator]="true"
-  [rows]="10"
-  [rowsPerPageOptions]="[5, 10, 20]"
-  [responsiveLayout]="'scroll'"
-  [globalFilterFields]="['nomSociete', 'email', 'telephone', 'matriculeFiscale', 'adresseComplete']"
-  [filterDelay]="0"
-  dataKey="id"
-  [styleClass]="'p-datatable-striped p-datatable-gridlines'">
+#dt
+[value]="entreprises"
+[paginator]="true"
+[rows]="10"
+[rowsPerPageOptions]="[5, 10, 20]"
+[responsiveLayout]="'scroll'"
+[globalFilterFields]="['nomSociete', 'email', 'telephone', 'matriculeFiscale', 'adresseComplete']"
+[filterDelay]="0"
+dataKey="id"
+[styleClass]="'p-datatable-striped p-datatable-gridlines'">
 
-  <!-- Header with filters -->
-  <ng-template pTemplate="header">
-    <tr>
-      <th>ID Utilisateur</th>
-      <th>
-        Client
-        <p-columnFilter type="text" field="nomSociete" display="menu" class="ml-auto" />
-      </th>
-      <th>
-        Adresse complète
-        <p-columnFilter type="text" field="adresseComplete" display="menu" class="ml-auto" />
-      </th>
-      <th>
-        Matricule
-        <p-columnFilter type="text" field="matriculeFiscale" display="menu" class="ml-auto" />
-      </th>
-      <th>
-        Abonnement
-        <p-columnFilter type="text" field="abonnementStatus" display="menu" class="ml-auto" />
-      </th>
-      <th>
-        Téléphone
-        <p-columnFilter type="text" field="telephone" display="menu" class="ml-auto" />
-      </th>
-      <th>
-        Retenues
-        <!-- optional: add filter if needed -->
-      </th>
-      <th>
-        Traites
-        <!-- optional: add filter if needed -->
-      </th>
-      <th>Actions</th>
-    </tr>
-  </ng-template>
+<!-- Header with filters -->
+<ng-template pTemplate="header">
+<tr>
+  <th>ID Utilisateur</th>
+  <th>
+    Client
+    <p-columnFilter type="text" field="nomSociete" display="menu" class="ml-auto" />
+  </th>
+  <th>
+    Adresse complète
+    <p-columnFilter type="text" field="adresseComplete" display="menu" class="ml-auto" />
+  </th>
+  <th>
+    Matricule
+    <p-columnFilter type="text" field="matriculeFiscale" display="menu" class="ml-auto" />
+  </th>
+  <th>
+    Abonnement
+    <p-columnFilter type="text" field="abonnementStatus" display="menu" class="ml-auto" />
+  </th>
+  <th>
+    Téléphone
+    <p-columnFilter type="text" field="telephone" display="menu" class="ml-auto" />
+  </th>
+  <th>
+    Retenues
+    <!-- optional: add filter if needed -->
+  </th>
+  <th>
+    Traites
+    <!-- optional: add filter if needed -->
+  </th>
+  <th>Actions</th>
+</tr>
+</ng-template>
 
-  <!-- Table body -->
-  <ng-template pTemplate="body" let-e>
-    <tr>
-      <td><span class="fw-bold">#{{ e.id }}</span></td>
-      <td>
-        <div class="d-flex align-items-center">
-          <div class="avatar me-3" style="width: 35px; height: 35px; font-size: 0.875rem;">
-            {{ e.nomSociete.charAt(0) + e.nomSociete.split(' ')[1]?.charAt(0) || '' }}
-          </div>
-          <div>
-            <div class="fw-semibold">{{ e.nomSociete }}</div>
-            <small class="text-muted">{{ e.email }}</small>
-          </div>
-        </div>
-      </td>
-      <td>{{ e.adresseComplete }}</td>
-      <td>{{ e.matriculeFiscale }}</td>
-      <td>
-        <span class="badge"
-              [ngClass]="{
-                'bg-success': e.nombreRetenues > 0,
-                'bg-warning': e.nombreRetenues === 0 && e.nombreTraites > 0,
-                'bg-danger': e.nombreRetenues === 0 && e.nombreTraites === 0
-              }">
-          {{
-            e.nombreRetenues > 0
-              ? 'Abonné'
-              : (e.nombreTraites > 0 ? 'Essai' : 'Non abonné')
-          }}
-        </span>
-      </td>
-      <td>{{ e.telephone }}</td>
-      <td>{{ e.nombreRetenues }}</td>
-      <td>{{ e.nombreTraites }}</td>
-      <td>
-        <button pButton icon="pi pi-eye" class="p-button-text p-button-sm p-button-primary me-1"></button>
-        <button
-          pButton
-          icon="pi pi-trash"
-          class="p-button-text p-button-sm p-button-danger"
-          (click)="confirmDelete(e.id)">>
-        </button>
-      </td>
-    </tr>
-  </ng-template>
+<!-- Table body -->
+<ng-template pTemplate="body" let-e>
+<tr>
+  <td><span class="fw-bold">#{{ e.id }}</span></td>
+  <td>
+    <div class="d-flex align-items-center">
+      <div class="avatar me-3" style="width: 35px; height: 35px; font-size: 0.875rem;">
+        {{ e.nomSociete.charAt(0) + e.nomSociete.split(' ')[1]?.charAt(0) || '' }}
+      </div>
+      <div>
+        <div class="fw-semibold">{{ e.nomSociete }}</div>
+        <small class="text-muted">{{ e.email }}</small>
+      </div>
+    </div>
+  </td>
+  <td>{{ e.adresseComplete }}</td>
+  <td>{{ e.matriculeFiscale }}</td>
+  <td>
+    <span class="badge"
+          [ngClass]="{
+            'bg-success': e.nombreRetenues > 0,
+            'bg-warning': e.nombreRetenues === 0 && e.nombreTraites > 0,
+            'bg-danger': e.nombreRetenues === 0 && e.nombreTraites === 0
+          }">
+      {{
+        e.nombreRetenues > 0
+          ? 'Abonné'
+          : (e.nombreTraites > 0 ? 'Essai' : 'Non abonné')
+      }}
+    </span>
+  </td>
+  <td>{{ e.telephone }}</td>
+  <td>{{ e.nombreRetenues }}</td>
+  <td>{{ e.nombreTraites }}</td>
+  <td>
+    <button pButton icon="pi pi-eye" class="p-button-text p-button-sm p-button-primary me-1" (click)="viewEntrepriseDetails(e.id)"></button>
+    <button
+      pButton
+      icon="pi pi-trash"
+      class="p-button-text p-button-sm p-button-danger"
+      (click)="confirmDelete(e.id)">>
+    </button>
+  </td>
+</tr>
+</ng-template>
 
-  <!-- Empty message -->
-  <ng-template pTemplate="emptymessage">
-    <tr>
-      <td colspan="9" class="text-center">
-        <div class="d-flex flex-column align-items-center">
-          <iframe 
-            src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie"
-            width="200" height="200" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
-          </iframe>
-          <div>Aucune entreprise trouvée.</div>
-        </div>
-      </td>
-    </tr>
-  </ng-template>
+<!-- Empty message -->
+<ng-template pTemplate="emptymessage">
+<tr>
+  <td colspan="9" class="text-center">
+    <div class="d-flex flex-column align-items-center">
+      <iframe 
+        src="https://lottie.host/embed/64172e68-0b40-4a28-8ac4-d8c506fcd7d1/1FLsCpbxo0.lottie"
+        width="200" height="200" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+      </iframe>
+      <div>Aucune entreprise trouvée.</div>
+    </div>
+  </td>
+</tr>
+</ng-template>
 </p-table>
 
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

@@ -109,7 +109,7 @@
       <th><p-tableHeaderCheckbox /></th>
 
       <th>
-        Numero Facture
+        Numero Retenue
         <p-columnFilter type="text" field="numeroFacture" display="menu" class="ml-auto"/>
       </th>
 
@@ -231,7 +231,7 @@
     placeholder="Ex: 1234567ABC">
   
   <div *ngIf="showNumeroFactureError && !AddRetenue.numeroFacture" class="text-danger small mt-1">
-    Le numéro de facture est requis
+    Le numéro de Retenue est requis
   </div>
   <div *ngIf="showNumeroFactureError && AddRetenue.numeroFacture" class="text-danger small mt-1">
     Format invalide. Utilisez 7 chiffres suivis de 3 lettres majuscules (Ex: 1234567ABC)
@@ -647,7 +647,7 @@
         placeholder="Ex: 1234567ABC">
       
       <div *ngIf="showNumeroFactureError && !updateRetenue.numeroFacture" class="text-danger small mt-1">
-        Le numéro de facture est requis
+        Le numéro de Retenue est requis
       </div>
       <div *ngIf="showNumeroFactureError && updateRetenue.numeroFacture" class="text-danger small mt-1">
         Format invalide. Utilisez 7 chiffres suivis de 3 lettres majuscules (Ex: 1234567ABC)

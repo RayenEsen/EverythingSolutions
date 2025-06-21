@@ -8,6 +8,7 @@ import { LoginResponse } from '../DTO/LoginResponse';
 import { RegisterRequest } from '../DTO/RegisterRequest';
 import { ResetPasswordRequest } from '../DTO/ResetPasswordRequest';
 import { EntreprisesProgress } from '../DTO/EntreprisesProgress';
+import { EntrepriseDetailsDto } from '../DTO/EntrepriseDetailsDto';
 @Injectable({
   providedIn: 'root'
 })
@@ -253,7 +254,16 @@ getEntreprisesCreatedTodayCount(): Observable<{ count: number }> {
   );
 }
 
-
-
+// Get entreprise details by id
+getEntrepriseDetails(id: number): Observable<EntrepriseDetailsDto> {
+  return this.http.get<EntrepriseDetailsDto>(`${this.baseUrl}/${id}/details`, {
+    withCredentials: true
+  }).pipe(
+    catchError(error => {
+      console.error('Get entreprise details error', error);
+      throw error;
+    })
+  );
+}
 
 }

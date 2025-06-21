@@ -13,6 +13,7 @@ import { ConfirmationService } from 'primeng/api';
 import { RetenuesService } from '../Services/Retenue.service';
 import { RetraitesService } from '../Services/Trait.service';
 import { ThemeService } from '../Services/theme.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -31,7 +32,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     private serviceA : AuthService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private router: Router
   ) {
     // Subscribe to theme changes
     this.themeService.darkMode$.subscribe(isDark => {
@@ -312,12 +314,29 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     plugins: {
       legend: {
         display: true,
-        position: 'top'
+        position: 'top',
+        labels: {
+          color: this.isDarkMode ? '#ffffff' : '#333333' // Default legend label color
+        }
       }
     },
     scales: {
+      x: {
+        ticks: {
+          color: this.isDarkMode ? '#9ca3af' : '#4b5563'
+        },
+        grid: {
+          color: this.isDarkMode ? '#374151' : '#e5e7eb'
+        }
+      },
       y: {
-        beginAtZero: true
+        beginAtZero: true,
+        ticks: {
+          color: this.isDarkMode ? '#9ca3af' : '#4b5563'
+        },
+        grid: {
+          color: this.isDarkMode ? '#374151' : '#e5e7eb'
+        }
       }
     }
   };
@@ -511,12 +530,29 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       plugins: {
         legend: {
           display: true,
-          position: 'top'
+          position: 'top',
+          labels: {
+            color: this.isDarkMode ? '#ffffff' : '#333333' // Default legend label color
+          }
         }
       },
       scales: {
+        x: {
+          ticks: {
+            color: this.isDarkMode ? '#9ca3af' : '#4b5563'
+          },
+          grid: {
+            color: this.isDarkMode ? '#374151' : '#e5e7eb'
+          }
+        },
         y: {
-          beginAtZero: true
+          beginAtZero: true,
+          ticks: {
+            color: this.isDarkMode ? '#9ca3af' : '#4b5563'
+          },
+          grid: {
+            color: this.isDarkMode ? '#374151' : '#e5e7eb'
+          }
         }
       }
     };
@@ -532,9 +568,23 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   private updateChartOptions(): void {
-    this.initializeChartOptions();
-    // Force chart update
-    this.data = { ...this.data };
+    // Chart.js global options can be updated here
+    // For example, to change font color based on theme:
+    if (this.data && this.options && this.options.scales && this.options.scales.x && this.options.scales.y) {
+      this.options.scales.x.ticks.color = this.isDarkMode ? '#9ca3af' : '#4b5563';
+      this.options.scales.y.ticks.color = this.isDarkMode ? '#9ca3af' : '#4b5563';
+      this.options.scales.x.grid.color = this.isDarkMode ? '#374151' : '#e5e7eb';
+      this.options.scales.y.grid.color = this.isDarkMode ? '#374151' : '#e5e7eb';
+      if (this.options.plugins && this.options.plugins.legend && this.options.plugins.legend.labels) {
+        this.options.plugins.legend.labels.color = this.isDarkMode ? '#ffffff' : '#333333';
+      }
+      // Update chart if it's already rendered
+      // No direct chart update method in PrimeNG Chart component, often requires re-rendering or data/options update
+      // this.chart?.refresh(); // If you have a reference to the Chart.js instance
+    }
+  }
+
+  viewEntrepriseDetails(id: number): void {
+    this.router.navigate(['/entreprise-details', id]);
   }
 }
-

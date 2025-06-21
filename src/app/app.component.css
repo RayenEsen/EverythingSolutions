@@ -56,3 +56,10 @@
 :host-context(.dark-mode) ::ng-deep .p-toast-detail {
   color: white !important;
 }
+
+
+@media print {
+  .payment-overlay {
+    display: none !important;
+  }
+}

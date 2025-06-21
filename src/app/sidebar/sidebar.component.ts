@@ -20,12 +20,17 @@ export class SidebarComponent {
     return this.isCollapsed ? `${this.sidebarWidthCollapsed}px` : `${this.sidebarWidthExpanded}px`;
   }
 
-  toggleSubMenu(event: MouseEvent, index: number): void {
-    const items = document.querySelectorAll('.submenu_item');
-    items.forEach((item, i) => {
-      if (i !== index) item.classList.remove('show_submenu');
+  toggleSubMenu(event: MouseEvent): void {
+    const clickedItem = event.currentTarget as HTMLElement;
+    const allSubmenuItems = document.querySelectorAll('.nav_link.submenu_item');
+
+    allSubmenuItems.forEach(item => {
+      if (item !== clickedItem) {
+        item.classList.remove('show_submenu');
+      }
     });
-    (event.currentTarget as HTMLElement).classList.toggle('show_submenu');
+
+    clickedItem.classList.toggle('show_submenu');
   }
 
   toggleSidebar(): void {

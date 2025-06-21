@@ -64,7 +64,7 @@
                     <h3 class="metric-label">Performance des Articles</h3>
                     <div class="chart-container">
                         <ng-container *ngIf="stock.articles && stock.articles.length > 0; else noData">
-                            <p-chart type="bar" height="300" [data]="salesByDesignationChartData" [options]="salesByDesignationChartOptions" [style]="{'width': '100%'}"></p-chart>
+                        <p-chart type="bar" height="300" [data]="salesByDesignationChartData" [options]="salesByDesignationChartOptions" [style]="{'width': '100%'}"></p-chart>
                         </ng-container>
                         <ng-template #noData>
                             <div class="d-flex flex-column align-items-center justify-content-center" style="height: 300px;">
@@ -82,7 +82,7 @@
                     <h3 class="metric-label">Répartition par TVA</h3>
                     <div class="chart-container">
                         <ng-container *ngIf="stock.articles && stock.articles.length > 0; else noData">
-                            <p-chart type="doughnut" height="300" [data]="articlesByTVAChartData" [options]="articlesByTVAChartOptions" [style]="{'width': '100%'}"></p-chart>
+                        <p-chart type="doughnut" height="300" [data]="articlesByTVAChartData" [options]="articlesByTVAChartOptions" [style]="{'width': '100%'}"></p-chart>
                         </ng-container>
                         <ng-template #noData>
                             <div class="d-flex flex-column align-items-center justify-content-center" style="height: 300px;">
@@ -219,7 +219,7 @@
     <!-- Modal for Create/Edit (from previous conversation) -->
     <p-drawer
         [(visible)]="AddArticleInfo"
-        header="Ajouter un Nouvel Article"
+        [header]="currentMode === 'edit' ? 'Modifier l\'Article' : 'Ajouter un Nouvel Article'"
         position="right"
         [style]="{width: '90vw', maxWidth: '450px'}"
         [baseZIndex]="10000"
@@ -621,8 +621,9 @@
                         </p-cellEditor>
                     </td>
                     <td>
-                        {{ stock.articles.length }}
-                    </td>
+                        {{ stock.articles?.length || 0 }}
+                      </td>
+                      
                     <td style="display: flex">
                         <div class="flex items-center justify-content-center gap-2">
                             <button
