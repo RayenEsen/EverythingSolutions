@@ -1,0 +1,166 @@
+<div [class.dark-mode]="themeService.isDarkMode()">
+  <p-toast />
+  <p-confirmDialog />
+
+  <div class="dashboard-header">
+    <div class="header-content"> 
+      <div class="breadcrumb-nav">
+        <nav class="breadcrumb">
+          <span class="breadcrumb-item">Accueil</span>
+          <span class="breadcrumb-separator">›</span>
+          <span class="breadcrumb-item">Listes</span>
+          <span class="breadcrumb-separator">›</span>
+          <span class="breadcrumb-item active">Banques</span>
+        </nav>
+      </div>
+      
+      <div class="header-main">
+        <h1 class="header-title">
+          <span class="title-gradient">Gestion des Banques</span>
+        </h1>
+        <p class="header-subtitle">Gérez la liste de vos banques, ajoutez, modifiez ou supprimez des informations.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-content">
+        <h3 class="metric-label">Total des Banques</h3>
+        <p class="metric-value">{{ animatedTotalBanques }}</p>
+        <div class="metric-decoration">
+          <i class="pi pi-building" style="color: black;"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="metric-card accent-2">
+      <div class="metric-content">
+        <h3 class="metric-label">Banques Créées ce Mois</h3>
+        <p class="metric-value">{{ animatedBanksThisMonth }}</p>
+        <div class="metric-decoration">
+          <i class="pi pi-calendar" style="color: black;"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="metric-card accent-3">
+      <div class="metric-content">
+        <h3 class="metric-label">Banque la Plus Fréquente</h3>
+        <p class="metric-value metric-value-small">{{ mostFrequentBank }}</p>
+        <div class="metric-decoration">
+          <i class="pi pi-star" style="color: black;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="d-flex align-items-center justify-content-between p-2 bg-light text-dark border rounded mb-3">
+      <p-menubar [model]="items" />
+      <p-iconfield class="d-flex align-items-center">
+        <p-inputicon styleClass="pi pi-search" />
+        <input type="text" pInputText placeholder="Rechercher" class="form-control" [(ngModel)]="searchText" (input)="filterBanques()"/>
+      </p-iconfield>
+    </div>
+
+    <p-contextMenu #cm [model]="items2" [appendTo]="'body'"></p-contextMenu>
+
+    <p-table 
+      #dt1 
+      [value]="banquesData" 
+      dataKey="id" 
+      [rows]="10" 
+      [rowsPerPageOptions]="[10, 25, 50]" 
+      [loading]="loading" 
+      [paginator]="true" 
+      selectionMode="multiple"
+      [(selection)]="SelectedBanques"
+      [contextMenu]="cm"
+      [(contextMenuSelection)]="selectedBanque"
+      [globalFilterFields]="['nom', 'adresse', 'rib']">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem"><p-tableHeaderCheckbox /></th>
+          <th>Nom</th>
+          <th>Adresse</th>
+          <th>RIB</th>
+          <th style="width: 8rem">Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-banque>
+        <tr [pContextMenuRow]="banque">
+          <td><p-tableCheckbox [value]="banque" /></td>
+          <td>{{ banque.nom }}</td>
+          <td>{{ banque.adresse }}</td>
+          <td>
+            <p-tag [severity]="banque.rib ? 'success' : 'danger'" [value]="banque.rib || 'N/A'"></p-tag>
+          </td>
+          <td>
+            <div class="d-flex gap-2">
+              <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-success" (click)="editBanque(banque)"></button>
+              <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteBanque(banque)"></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center">Aucune banque trouvée.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <p-drawer [(visible)]="AddBanqueInfo" header="Ajouter une Nouvelle Banque" position="right" styleClass="custom-drawer" [style]="{width: '34rem'}">
+    <div class="p-4">
+      <div class="mb-3">
+        <label class="form-label">Nom</label>
+        <p-dropdown [options]="bankNames" [(ngModel)]="AddBanque.nom" placeholder="Sélectionner une banque" styleClass="form-control" [filter]="true"></p-dropdown>
+        <div *ngIf="showNomError" class="text-danger small mt-1">Le nom est requis.</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Adresse</label>
+        <input type="text" class="form-control" [(ngModel)]="AddBanque.adresse" placeholder="Adresse de la banque">
+        <div *ngIf="showAdresseError" class="text-danger small mt-1">L'adresse est requise.</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">RIB</label>
+        <input type="text" class="form-control" [(ngModel)]="AddBanque.rib" placeholder="RIB (20 caractères)">
+        <div *ngIf="showRibError" class="text-danger small mt-1">Le RIB est requis et doit contenir 20 caractères.</div>
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <div class="d-flex justify-content-end gap-2 p-3">
+        <button type="button" class="btn btn-outline-secondary" (click)="AddBanqueInfo = false">Annuler</button>
+        <button type="button" class="btn btn-primary" (click)="validateForm()">Enregistrer</button>
+      </div>
+    </ng-template>
+  </p-drawer>
+
+  <p-drawer [(visible)]="ModifyBanqueInfo" header="Modifier la Banque" position="right" styleClass="custom-drawer" [style]="{width: '34rem'}">
+    <div class="p-4" *ngIf="selectedBanque">
+      <div class="mb-3">
+        <label class="form-label">Nom</label>
+        <p-dropdown [options]="bankNames" [(ngModel)]="selectedBanque.nom" placeholder="Sélectionner une banque" styleClass="form-control" [filter]="true"></p-dropdown>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Adresse</label>
+        <input type="text" class="form-control" [(ngModel)]="selectedBanque.adresse">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">RIB</label>
+        <input type="text" class="form-control" [(ngModel)]="selectedBanque.rib">
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <div class="d-flex justify-content-end gap-2 p-3">
+        <button type="button" class="btn btn-outline-secondary" (click)="ModifyBanqueInfo = false">Annuler</button>
+        <button type="button" class="btn btn-primary" (click)="ModifyBanque()">Modifier</button>
+      </div>
+    </ng-template>
+  </p-drawer>
+</div>

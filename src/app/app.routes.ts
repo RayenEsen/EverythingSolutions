@@ -49,6 +49,7 @@ export const routes: Routes = [
         path: 'Banque',
         component: BanqueComponent,
         title: 'Banque',
+        canActivate: [AuthGuard]
       },
       {
         path: 'Trait',
@@ -64,11 +65,13 @@ export const routes: Routes = [
         path: 'Retenue',
         component: RetenueSourceComponent,
         title: 'Retenue a la source',
+        canActivate: [AuthGuard]
       },
       {
         path: 'ImprimerRetenue/:id',
         component: PrintRetenueComponent,
         title: 'Imprimer Retenue a la source',
+        canActivate: [AuthGuard]
       },
       {
         path: 'CommingSoon',
@@ -105,16 +108,19 @@ export const routes: Routes = [
         path: 'ListArticle',
         component: ArticleComponent,
         title: 'Liste Article',
+        canActivate: [AuthGuard]
       },
       {
         path: 'Fournisseur',
         component: FournisseurComponent,
         title: 'Gestion des Fournisseurs',
+        canActivate: [AuthGuard]
       },
       {
         path: 'TVA',
         component: TVAComponent,
         title: 'Gestion TVA',
+        canActivate: [AuthGuard]
       },
       {
         path: 'entreprise-details/:id',
