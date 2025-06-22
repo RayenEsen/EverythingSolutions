@@ -1,0 +1,292 @@
+<div [class.dark-mode]="themeService?.isDarkMode && themeService.isDarkMode()">
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="breadcrumb-nav" style="display: flex; align-items: center; justify-content: space-between;">
+        <nav class="breadcrumb">
+          <span class="breadcrumb-item">Accueil</span>
+          <span class="breadcrumb-separator">›</span>
+          <span class="breadcrumb-item active">Stocks</span>
+        </nav>
+        <img src="https://i.ibb.co/Xfj86PzY/8a2a07a8-b6ca-4342-8173-14564dd9ab4e-removebg-preview-1-1.png" alt="Logo" width="60" height="60" style="margin-left: 12px; height: 50px; width: 50px;">
+      </div>
+      <div class="header-main" style="margin-top: -10px;">
+        <h1 class="header-title">
+          <span class="title-gradient">Gestion des Stocks</span>
+        </h1>
+        <p class="header-subtitle">Visualisez et gérez vos stocks et leurs articles associés.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Row: 4 cards in a row -->
+  <div class="stats-row-4">
+    <div class="metric-card">
+      <div class="metric-content metric-flex">
+        <div>
+          <h3 class="metric-label">Total Stocks</h3>
+          <p class="metric-value">{{ stocks.length }}</p>
+        </div>
+        <div class="metric-decoration metric-icon-right">
+          <i class="pi pi-database"></i>
+        </div>
+      </div>
+    </div>
+    <div class="metric-card accent-2">
+      <div class="metric-content metric-flex">
+        <div>
+          <h3 class="metric-label">Total Articles</h3>
+          <p class="metric-value">{{ getTotalArticles() }}</p>
+        </div>
+        <div class="metric-decoration metric-icon-right">
+          <i class="pi pi-box"></i>
+        </div>
+      </div>
+    </div>
+    <div class="metric-card accent-3">
+      <div class="metric-content metric-flex">
+        <div>
+          <h3 class="metric-label">Stock le plus rempli</h3>
+          <p class="metric-value metric-value-small">{{ getMostPopulatedStock()?.name || 'N/A' }}</p>
+        </div>
+        <div class="metric-decoration metric-icon-right">
+          <i class="pi pi-sort-amount-down"></i>
+        </div>
+      </div>
+    </div>
+    <div class="metric-card accent-4">
+      <div class="metric-content metric-flex">
+        <div>
+          <h3 class="metric-label">Stock le moins rempli</h3>
+          <p class="metric-value metric-value-small">{{ getLeastPopulatedStock()?.name || 'N/A' }}</p>
+        </div>
+        <div class="metric-decoration metric-icon-right">
+          <i class="pi pi-sort-amount-up"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row: 3 charts in a row -->
+  <div class="charts-row-3">
+    <div class="chart-card">
+      <div class="chart-container">
+        <ng-container *ngIf="hasPieData; else noPieData">
+          <p-chart type="pie" height="300" [data]="articlesPieData" [options]="articlesPieOptions" [style]="{'width': '100%'}"></p-chart>
+        </ng-container>
+        <ng-template #noPieData>
+          <div class="d-flex flex-column align-items-center justify-content-center" style="height: 300px;">
+            <i class="pi pi-chart-pie" style="font-size: 3rem; color: #ccc;"></i>
+            <p class="mt-3 text-muted">Aucune donnée disponible pour afficher le graphique</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-container">
+        <ng-container *ngIf="hasBarData; else noBarData">
+          <p-chart type="bar" height="300" [data]="topStocksBarData" [options]="topStocksBarOptions" [style]="{'width': '100%'}"></p-chart>
+        </ng-container>
+        <ng-template #noBarData>
+          <div class="d-flex flex-column align-items-center justify-content-center" style="height: 300px;">
+            <i class="pi pi-chart-bar" style="font-size: 3rem; color: #ccc;"></i>
+            <p class="mt-3 text-muted">Aucune donnée disponible pour afficher le graphique</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-container">
+        <ng-container *ngIf="hasLineData; else noLineData">
+          <p-chart type="line" height="300" [data]="articlesLineData" [options]="articlesLineOptions" [style]="{'width': '100%'}"></p-chart>
+        </ng-container>
+        <ng-template #noLineData>
+          <div class="d-flex flex-column align-items-center justify-content-center" style="height: 300px;">
+            <i class="pi pi-chart-line" style="font-size: 3rem; color: #ccc;"></i>
+            <p class="mt-3 text-muted">Aucune donnée disponible pour afficher le graphique</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Table (full width) -->
+  <div class="table-card">
+    <div class="d-flex align-items-center justify-content-between p-2 bg-light text-dark border rounded mb-3">
+      <p-menubar [model]="menuItems"></p-menubar>
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input
+          type="text"
+          pInputText
+          placeholder="Rechercher"
+          class="form-control"
+          [(ngModel)]="searchText"
+          (input)="filterStocks()"
+        />
+      </span>
+    </div>
+
+    <p-table
+      [value]="filteredStocks"
+      dataKey="id"
+      rowGroupMode="subheader"
+      groupRowsBy="name"
+      [tableStyle]="{'min-width': '70rem'}"
+      sortField="name"
+      sortMode="single"
+      selectionMode="multiple"
+      [(selection)]="selectedStocks"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th>Nom du Stock</th>
+          <th>Code</th>
+          <th>Nombre d'articles</th>
+          <th style="width: 10rem">Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="groupheader" let-stock let-rowIndex="rowIndex" let-expanded="expanded">
+        <tr>
+          <td>
+            <p-tableCheckbox [value]="stock"></p-tableCheckbox>
+          </td>
+          <td>
+            <button
+              pButton
+              [pRowToggler]="stock"
+              [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+              class="p-button-text p-button-rounded"
+            ></button>
+            <span class="font-bold ml-2">{{stock.name}}</span>
+          </td>
+          <td>{{stock.code}}</td>
+          <td>{{stock.articles?.length || 0}}</td>
+          <td>
+            <button pButton icon="pi pi-pencil" class="p-button-text p-button-rounded" (click)="openEditDrawer(stock)" title="Modifier"></button>
+            <button pButton icon="pi pi-trash" class="p-button-text p-button-rounded p-button-danger" (click)="deleteStock(stock)" title="Supprimer"></button>
+            <button pButton icon="pi pi-file-excel" class="p-button-text p-button-rounded p-button-success" (click)="exportStockToExcel(stock)" title="Exporter"></button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="expandedrow" let-stock>
+        <tr>
+          <td colspan="3">
+            <div class="p-3">
+              <h5>Articles du stock "{{stock.name}}"</h5>
+              <p-table *ngIf="stock.articles && stock.articles.length > 0" [value]="stock.articles" [tableStyle]="{'min-width': '60rem'}">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Code</th>
+                    <th>Désignation</th>
+                    <th>Prix Achat HT</th>
+                    <th>Prix Vente HT</th>
+                    <th>TVA</th>
+                    <th>Gouvernerat</th>
+                    <th>Prix Vente TTC</th>
+                    <th>Marge</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-article>
+                  <tr>
+                    <td>{{article.code}}</td>
+                    <td>{{article.designation}}</td>
+                    <td>{{article.prixAchatHT | number:'1.2-2'}}</td>
+                    <td>{{article.prixVenteHT | number:'1.2-2'}}</td>
+                    <td>{{article.tva?.taux}}%</td>
+                    <td>{{article.gouvernerat}}</td>
+                    <td>{{article.prixVenteTTC | number:'1.2-2'}}</td>
+                    <td>{{article.marge | number:'1.2-2'}}</td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="8" class="text-center">Aucun article trouvé pour ce stock.</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+              <div *ngIf="!stock.articles || stock.articles.length === 0" class="text-center">
+                Aucun article trouvé pour ce stock.
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="groupfooter" let-stock>
+        <tr class="p-rowgroup-footer">
+          <td colspan="2" style="text-align: right">Total Articles</td>
+          <td>{{stock.articles.length}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Drawer for adding a new stock -->
+  <p-drawer
+    [(visible)]="addStockDrawer"
+    header="Ajouter un Nouveau Stock"
+    position="right"
+    [style]="{width: '90vw', maxWidth: '450px'}"
+    [baseZIndex]="10000"
+    styleClass="custom-drawer">
+    <div class="p-4">
+      <form (ngSubmit)="onAddStock()">
+        <div class="mb-3">
+          <label for="stockName" class="form-label">Nom du Stock</label>
+          <input type="text" id="stockName" class="form-control" [(ngModel)]="newStock.name" name="name" required />
+        </div>
+        <div class="mb-3">
+          <label for="stockCode" class="form-label">Code du Stock</label>
+          <input type="text" id="stockCode" class="form-control" [(ngModel)]="newStock.code" name="code" required />
+        </div>
+        <div class="d-flex justify-content-end gap-2 p-3">
+          <button type="button" class="btn btn-outline-secondary" (click)="addStockDrawer = false">
+            <i class="pi pi-times me-2"></i>Annuler
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="pi pi-check me-2"></i>Enregistrer
+          </button>
+        </div>
+      </form>
+    </div>
+  </p-drawer>
+
+  <!-- Drawer for editing a stock -->
+  <p-drawer
+    [(visible)]="editStockDrawer"
+    header="Modifier le Stock"
+    position="right"
+    [style]="{width: '90vw', maxWidth: '450px'}"
+    [baseZIndex]="10000"
+    styleClass="custom-drawer">
+    <div class="p-4">
+      <form (ngSubmit)="onEditStock()">
+        <div class="mb-3">
+          <label for="editStockName" class="form-label">Nom du Stock</label>
+          <input type="text" id="editStockName" class="form-control"
+                 [ngModel]="editStock?.name" (ngModelChange)="editStock && (editStock.name = $event)" name="editName" required />
+        </div>
+        <div class="mb-3">
+          <label for="editStockCode" class="form-label">Code du Stock</label>
+          <input type="text" id="editStockCode" class="form-control"
+                 [ngModel]="editStock?.code" (ngModelChange)="editStock && (editStock.code = $event)" name="editCode" required />
+        </div>
+        <div class="d-flex justify-content-end gap-2 p-3">
+          <button type="button" class="btn btn-outline-secondary" (click)="editStockDrawer = false">
+            <i class="pi pi-times me-2"></i>Annuler
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="pi pi-check me-2"></i>Enregistrer
+          </button>
+        </div>
+      </form>
+    </div>
+  </p-drawer>
+</div>

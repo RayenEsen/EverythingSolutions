@@ -57,4 +57,21 @@ export class ThemeService {
       document.body.classList.remove('dark');
     }
   }
+
+  getColor(index: number): string {
+    // Use the same palettes as Article
+    const lightModeColors = [
+      '#7b92e1', // Muted Blue
+      '#3cbfae', // Teal/Green
+      '#ffc00a', // Golden Yellow
+      '#7a9e6d', // Green
+      '#EC407A', // Pink
+      '#78909C'  // Blue Grey
+    ];
+    const darkModeColors = [
+      '#7b92e1', '#3cbfae', '#ffc00a', '#8ec07f', '#F06292', '#90A4AE'
+    ];
+    const palette = this.isDarkMode() ? darkModeColors : lightModeColors;
+    return palette[index % palette.length];
+  }
 }

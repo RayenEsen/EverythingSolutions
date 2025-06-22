@@ -21,6 +21,7 @@ import { ArticleComponent } from './Article/Article.component';
 import { EntrepriseDetailsComponent } from './EntrepriseDetails/EntrepriseDetails.component';
 import { FournisseurComponent } from './Fournisseur/Fournisseur.component';
 import { TVAComponent } from './TVA/TVA.component';
+import { StockComponent } from './Stock/Stock.component';
 
 export const routes: Routes = [
   {
@@ -127,6 +128,10 @@ export const routes: Routes = [
         component: EntrepriseDetailsComponent,
         title: 'Entreprise Details',
         canActivate: [AdminGuard]
+      },
+      {
+        path: 'Stock',
+        component: StockComponent
       }
     ]
   },

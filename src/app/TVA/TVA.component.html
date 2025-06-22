@@ -62,11 +62,27 @@
   <div class="charts-grid">
     <div class="card">
       <h5 class="text-lg font-semibold mb-4">Distribution des Taux de TVA</h5>
-      <p-chart type="bar" [data]="tvaDistributionChartData" [options]="tvaDistributionChartOptions"></p-chart>
+      <ng-container *ngIf="hasBarData; else noBarData">
+        <p-chart type="bar" [data]="tvaDistributionChartData" [options]="tvaDistributionChartOptions"></p-chart>
+      </ng-container>
+      <ng-template #noBarData>
+        <div class="d-flex flex-column align-items-center justify-content-center" style="height: 300px;">
+          <i class="pi pi-chart-bar" style="font-size: 3rem; color: #ccc;"></i>
+          <p class="mt-3 text-muted">Aucune donnée disponible pour afficher le graphique</p>
+        </div>
+      </ng-template>
     </div>
     <div class="card">
       <h5 class="text-lg font-semibold mb-4">Catégorisation des Taux</h5>
-      <p-chart type="doughnut" [data]="tvaCategoryChartData" [options]="tvaCategoryChartOptions"></p-chart>
+      <ng-container *ngIf="hasDoughnutData; else noDoughnutData">
+        <p-chart type="doughnut" [data]="tvaCategoryChartData" [options]="tvaCategoryChartOptions"></p-chart>
+      </ng-container>
+      <ng-template #noDoughnutData>
+        <div class="d-flex flex-column align-items-center justify-content-center" style="height: 300px;">
+          <i class="pi pi-chart-pie" style="font-size: 3rem; color: #ccc;"></i>
+          <p class="mt-3 text-muted">Aucune donnée disponible pour afficher le graphique</p>
+        </div>
+      </ng-template>
     </div>
   </div>
 

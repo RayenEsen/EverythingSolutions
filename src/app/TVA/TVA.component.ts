@@ -493,4 +493,20 @@ export class TVAComponent implements OnInit {
       }
     };
   }
+
+  get hasBarData(): boolean {
+    return !!(this.tvaDistributionChartData &&
+      this.tvaDistributionChartData.datasets &&
+      this.tvaDistributionChartData.datasets[0] &&
+      Array.isArray(this.tvaDistributionChartData.datasets[0].data) &&
+      this.tvaDistributionChartData.datasets[0].data.some((v: number) => v > 0));
+  }
+
+  get hasDoughnutData(): boolean {
+    return !!(this.tvaCategoryChartData &&
+      this.tvaCategoryChartData.datasets &&
+      this.tvaCategoryChartData.datasets[0] &&
+      Array.isArray(this.tvaCategoryChartData.datasets[0].data) &&
+      this.tvaCategoryChartData.datasets[0].data.some((v: number) => v > 0));
+  }
 }
