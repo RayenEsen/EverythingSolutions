@@ -149,20 +149,13 @@ showFournisseurError = false;
 
 onSubmit() {
   // Reset error flags
-  this.showNumeroFactureError = false;
   this.showMontantTTCError = false;
   this.showTypeError = false;
   this.showFournisseurError = false;
 
   let isValid = true;
-  const numeroFactureRegex = /^[0-9]{7}[A-Z]{3}$/;
 
   // Validation checks
-  if (!this.AddRetenue.numeroFacture || !numeroFactureRegex.test(this.AddRetenue.numeroFacture.trim())) {
-    this.showNumeroFactureError = true;
-    isValid = false;
-  }
-
   if (
     this.AddRetenue.montantTTC === null ||
     this.AddRetenue.montantTTC === undefined ||

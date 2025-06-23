@@ -222,20 +222,13 @@
   <div class="p-4">
 <!-- Numéro de Facture -->
 <div class="mb-3">
-  <label for="facture" class="form-label" >Numéro de Retenue</label>
+  <label for="facture" class="form-label" >Numéro de Facture</label>
   <input 
     type="text" 
     class="form-control" 
     id="facture"
     [(ngModel)]="AddRetenue.numeroFacture"
-    placeholder="Ex: 1234567ABC">
-  
-  <div *ngIf="showNumeroFactureError && !AddRetenue.numeroFacture" class="text-danger small mt-1">
-    Le numéro de Retenue est requis
-  </div>
-  <div *ngIf="showNumeroFactureError && AddRetenue.numeroFacture" class="text-danger small mt-1">
-    Format invalide. Utilisez 7 chiffres suivis de 3 lettres majuscules (Ex: 1234567ABC)
-  </div>
+    placeholder="Entrez le numéro de facture">
 </div>
 
 
