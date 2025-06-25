@@ -22,6 +22,7 @@ import { EntrepriseDetailsComponent } from './EntrepriseDetails/EntrepriseDetail
 import { FournisseurComponent } from './Fournisseur/Fournisseur.component';
 import { TVAComponent } from './TVA/TVA.component';
 import { StockComponent } from './Stock/Stock.component';
+import { ClientComponent } from './Client/Client.component';
 
 export const routes: Routes = [
   {
@@ -132,6 +133,12 @@ export const routes: Routes = [
       {
         path: 'Stock',
         component: StockComponent
+      },
+      {
+        path: 'Client',
+        component: ClientComponent,
+        title: 'Gestion des Clients',
+        canActivate: [AuthGuard]
       }
     ]
   },
