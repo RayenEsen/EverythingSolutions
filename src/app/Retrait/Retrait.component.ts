@@ -33,17 +33,26 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ThemeService } from '../Services/theme.service';
+import { ChartModule } from 'primeng/chart';
 
 @Component({
   selector: 'app-Retrait',
   templateUrl: './Retrait.component.html',
   styleUrls: ['./Retrait.component.css'],
   standalone: true,
-  imports: [ ConfirmDialog, SplitButtonModule, DialogModule, AutoCompleteModule, FormsModule, DatePickerModule, InputNumberModule, DrawerModule, ContextMenuModule, MenubarModule, ToastModule, CommonModule, Menubar, TableModule, ButtonModule, InputTextModule, IconFieldModule, InputIconModule, TagModule],
+  imports: [ ConfirmDialog, SplitButtonModule, DialogModule, AutoCompleteModule, FormsModule, DatePickerModule, InputNumberModule, DrawerModule, ContextMenuModule, MenubarModule, ToastModule, CommonModule, Menubar, TableModule, ButtonModule, InputTextModule, IconFieldModule, InputIconModule, TagModule, ChartModule],
   providers: [ConfirmationService, MessageService],
 })
 export class RetraitComponent implements OnInit {
   todayDate: string | undefined;
+
+  // Chart data and options
+  montantFournisseurChartData: any;
+  montantFournisseurChartOptions: any;
+  banqueDistributionChartData: any;
+  banqueDistributionChartOptions: any;
+  traitesPerMonthChartData: any;
+  traitesPerMonthChartOptions: any;
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -54,7 +63,18 @@ export class RetraitComponent implements OnInit {
     private messageService: MessageService,
     private router: Router,
     public themeService: ThemeService
-  ) { }
+  ) {
+    // Subscribe to theme changes to update chart colors
+    this.themeService.darkMode$.subscribe(() => {
+      if (this.retraitesLightData && this.retraitesLightData.length > 0) {
+        this.initCharts();
+        // Force chart re-render by creating new object references
+        this.montantFournisseurChartData = { ...this.montantFournisseurChartData };
+        this.banqueDistributionChartData = { ...this.banqueDistributionChartData };
+        this.traitesPerMonthChartData = { ...this.traitesPerMonthChartData };
+      }
+    });
+  }
 
   AddRetraitInfo : boolean = false;
   AddRetrait : AddRetraiteDTO  = new AddRetraiteDTO();
@@ -226,19 +246,17 @@ export class RetraitComponent implements OnInit {
     // Call the service to create the Retraite
     this.ServiceR.createRetraite(data).subscribe(
       (response) => {
-        this.retraitesLightData.push(response); // Add the new retrait to the list
         // Show success message
         this.messageService.add({
           severity: 'success',
           summary: 'Succès',
           detail: 'Retraite ajoutée avec succès !'
         });
-
         // Reset or close the form
         this.AddRetraitInfo = false;
+        this.loadTraites(); // Update charts/stats
       },
     );
-
     this.AddRetraitInfo = false;
   }
 
@@ -262,7 +280,6 @@ export class RetraitComponent implements OnInit {
     if (this.selectedRetrait?.id == null) {
       return;
     }
-
     this.confirmationService.confirm({
       message: `Êtes-vous sûr de vouloir supprimer la traite ${this.selectedRetrait.numeroCheque} ?`,
       header: 'Confirmation de suppression',
@@ -276,18 +293,15 @@ export class RetraitComponent implements OnInit {
       accept: () => {
         this.ServiceR.deleteRetraite(this.selectedRetrait!.id).subscribe({
           next: () => {
-            // 1) Remove from local list
-            this.retraitesLightData = this.retraitesLightData.filter(r => r.id !== this.selectedRetrait!.id);
-
-            // 2) Show success message
+            // Show success message
             this.messageService.add({
               severity: 'success',
               summary: 'Succès',
               detail: 'Retraite supprimée avec succès'
             });
-            
             // Optionally clear selection
             this.selectedRetrait = new Retraite;
+            this.loadTraites(); // Update charts/stats
           },
           error: err => {
             console.error('Error deleting retraite:', err);
@@ -607,7 +621,6 @@ export class RetraitComponent implements OnInit {
  
   deleteSelectedRetraites(): void {
     const idsToDelete = this.SelectedTraits.map(r => r.id);
-
     if (idsToDelete.length === 0) {
       this.messageService.add({
         severity: 'warn',
@@ -616,7 +629,6 @@ export class RetraitComponent implements OnInit {
       });
       return;
     }
-
     this.confirmationService.confirm({
       message: `Êtes-vous sûr de vouloir supprimer ${idsToDelete.length} traite(s) ?`,
       header: 'Confirmation de suppression',
@@ -635,13 +647,8 @@ export class RetraitComponent implements OnInit {
               summary: 'Suppression réussie',
               detail: 'Les retraites sélectionnées ont été supprimées.'
             });
-
-            // Filter retraites locally
-            this.retraitesLightData = this.retraitesLightData.filter(
-              r => !idsToDelete.includes(r.id)
-            );
-
             this.SelectedTraits = [];
+            this.loadTraites(); // Update charts/stats
           },
           error: () => {
             this.messageService.add({
@@ -854,10 +861,152 @@ export class RetraitComponent implements OnInit {
         this.animateValue('animatedAverageAmount', avgAmount);
         this.animateValue('animatedPendingCount', pending);
         this.animateValue('animatedUniqueBanks', banks);
+
+        this.initCharts();
       },
       error: (err) => {
         console.error('Error fetching retraites:', err);
       }
     });
+  }
+
+  initCharts() {
+    const isDarkMode = this.themeService.isDarkMode();
+    const textColor = isDarkMode ? '#c7c5c5' : '#495057';
+    const textColorSecondary = isDarkMode ? '#c7c5c5' : '#6c757d';
+    const surfaceBorder = isDarkMode ? '#495057' : '#dee2e6';
+
+    // 1. Bar Chart: Montant par Fournisseur
+    const fournisseurMap: { [key: string]: number } = {};
+    this.retraitesLightData.forEach(r => {
+      const key = r.fournisseurNom || 'N/A';
+      fournisseurMap[key] = (fournisseurMap[key] || 0) + (r.montant || 0);
+    });
+    // Sort fournisseurs by montant descending and take top 5
+    let fournisseursSorted = Object.entries(fournisseurMap).sort((a, b) => b[1] - a[1]);
+    let topFournisseurs = fournisseursSorted.slice(0, 5);
+    let autresFournisseurTotal = fournisseursSorted.slice(5).reduce((sum, [, montant]) => sum + montant, 0);
+    let fournisseurs = topFournisseurs.map(([name]) => name);
+    let montants = topFournisseurs.map(([, montant]) => montant);
+    if (fournisseursSorted.length > 5) {
+      fournisseurs.push('Autres');
+      montants.push(autresFournisseurTotal);
+    }
+    // Vibrant color palette
+    const vibrantColors = [
+      '#1860a8', '#fb9332', '#10b981', '#f97316', '#8b5cf6', '#6366f1', '#f472b6', '#f59e0b', '#60a5fa', '#a78bfa', '#34d399', '#fdad5c', '#3386d6', '#b59dfa', '#f583bd', '#fb923c', '#a3a3f7', '#818cf8', '#fbbf24'
+    ];
+    this.montantFournisseurChartData = {
+      labels: fournisseurs,
+      datasets: [
+        {
+          label: 'Montant total par Fournisseur (TND)',
+          backgroundColor: fournisseurs.map((_, i) => vibrantColors[i % vibrantColors.length]),
+          borderColor: fournisseurs.map((_, i) => vibrantColors[i % vibrantColors.length]),
+          data: montants
+        }
+      ]
+    };
+    this.montantFournisseurChartOptions = {
+      maintainAspectRatio: false,
+      aspectRatio: 1.5,
+      plugins: {
+        legend: { labels: { color: textColor } }
+      },
+      scales: {
+        x: {
+          ticks: { color: textColorSecondary, font: { weight: 500 } },
+          grid: { color: surfaceBorder, drawBorder: false }
+        },
+        y: {
+          ticks: { color: textColorSecondary },
+          grid: { color: surfaceBorder, drawBorder: false }
+        }
+      }
+    };
+
+    // 2. Doughnut Chart: Répartition par Banque
+    const banqueMap: { [key: string]: number } = {};
+    this.retraitesLightData.forEach(r => {
+      const key = r.banqueNom || 'N/A';
+      banqueMap[key] = (banqueMap[key] || 0) + 1;
+    });
+    // Sort banques by count descending and take top 5
+    let banquesSorted = Object.entries(banqueMap).sort((a, b) => b[1] - a[1]);
+    let topBanques = banquesSorted.slice(0, 5);
+    let autresBanqueTotal = banquesSorted.slice(5).reduce((sum, [, count]) => sum + count, 0);
+    let banques = topBanques.map(([name]) => name);
+    let banqueCounts = topBanques.map(([, count]) => count);
+    if (banquesSorted.length > 5) {
+      banques.push('Autres');
+      banqueCounts.push(autresBanqueTotal);
+    }
+    // Vibrant palette for doughnut
+    const doughnutColors = [
+      '#fb9332', '#1860a8', '#f97316', '#10b981', '#8b5cf6', '#6366f1', '#f472b6', '#f59e0b', '#60a5fa', '#a78bfa', '#34d399', '#fdad5c', '#3386d6', '#b59dfa', '#f583bd', '#fb923c', '#a3a3f7', '#818cf8', '#fbbf24'
+    ];
+    this.banqueDistributionChartData = {
+      labels: banques,
+      datasets: [
+        {
+          data: banqueCounts,
+          backgroundColor: banques.map((_, i) => doughnutColors[i % doughnutColors.length]),
+          hoverBackgroundColor: banques.map((_, i) => doughnutColors[(i + 1) % doughnutColors.length])
+        }
+      ]
+    };
+    this.banqueDistributionChartOptions = {
+      maintainAspectRatio: false,
+      aspectRatio: 1.5,
+      cutout: '60%',
+      plugins: {
+        legend: { labels: { color: textColor } }
+      }
+    };
+
+    // 3. Line Chart: Evolution par Mois
+    const monthMap: { [key: string]: number } = {};
+    this.retraitesLightData.forEach(r => {
+      const date = r.dateEcheance || r.dateCreation;
+      if (date) {
+        const d = new Date(date);
+        if (!isNaN(d.getTime())) {
+          const key = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}`;
+          monthMap[key] = (monthMap[key] || 0) + 1;
+        }
+      }
+    });
+    const months = Object.keys(monthMap).sort();
+    const traitesPerMonth = months.map(m => monthMap[m]);
+    this.traitesPerMonthChartData = {
+      labels: months,
+      datasets: [
+        {
+          label: 'Traites par Mois',
+          data: traitesPerMonth,
+          fill: false,
+          borderColor: '#fb9332',
+          backgroundColor: '#fb9332',
+          tension: 0.3
+        }
+      ]
+    };
+    this.traitesPerMonthChartOptions = {
+      maintainAspectRatio: false,
+      aspectRatio: 1.5,
+      plugins: {
+        legend: { labels: { color: textColor } }
+      },
+      scales: {
+        x: {
+          ticks: { color: textColorSecondary, font: { weight: 500 } },
+          grid: { color: surfaceBorder, drawBorder: false }
+        },
+        y: {
+          ticks: { color: textColorSecondary },
+          grid: { color: surfaceBorder, drawBorder: false }
+        }
+      }
+    };
   }
 }

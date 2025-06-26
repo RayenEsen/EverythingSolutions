@@ -517,6 +517,12 @@ search(event: any) {
     .map(addr => addr.label);
 }
 
+showWelcome: boolean = true;
+
+goToLogin() {
+  this.showWelcome = false;
+}
+
 
 
 

@@ -1,14 +1,14 @@
 /* ========== ROOT & GLOBAL STYLES ========== */
 :root {
-  --primary-color: #4a6ced;
-  --primary-hover: #5f7deb;
-  --secondary-color: #3cbfae;
+  --primary-color: #1860a8;
+  --primary-hover: #15508a;
+  --secondary-color: #fb9332;
   --text-dark: #2d3748;
   --text-medium: #4a5568;
   --text-light: #e2e8f0;
   --border-color: #e2e8f0;
-  --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  --card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --card-shadow: 0 4px 16px rgba(24, 96, 168, 0.10);
+  --card-shadow-hover: 0 8px 24px rgba(251, 147, 50, 0.13);
   --transition-fast: 0.2s ease;
   --transition-medium: 0.3s ease;
   --bs-light-rgb: 248, 249, 250;
@@ -19,8 +19,8 @@
   --input-bg: #ffffff;
   --input-color: #333333;
   --input-border: #e2e8f0;
-  --input-focus-border: #4a6ced;
-  --input-focus-shadow: rgba(74, 108, 237, 0.25);
+  --input-focus-border: #1860a8;
+  --input-focus-shadow: rgba(24, 96, 168, 0.18);
 }
 
 /* ========== BASE LAYOUT STRUCTURE ========== */
@@ -314,11 +314,11 @@
   border-radius: 4px;
   
   &.p-tag-info {
-    background: var(--primary-color);
-    color: white;
+    background: var(--secondary-color);
+    color: #fff;
     
     &:hover {
-      background: var(--primary-hover);
+      background: #ffb366;
     }
   }
 }
@@ -540,7 +540,7 @@
 }
 
 .title-gradient {
-  background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: linear-gradient(90deg, #1860a8 0%, #fb9332 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -641,17 +641,17 @@
 }
 
 /* Color variants with modern pastel tones */
-.metric-card .metric-decoration { 
-  background-color: #4f46e5;
+.metric-card .metric-decoration {
+  background-color: #1860a8;
 }
-.metric-card.accent-2 .metric-decoration { 
-  background-color: #10b981;
+.metric-card.accent-2 .metric-decoration {
+  background-color: #fb9332;
 }
-.metric-card.accent-3 .metric-decoration { 
-  background-color: #f97316;
+.metric-card.accent-3 .metric-decoration {
+  background-color: #1860a8;
 }
-.metric-card.accent-4 .metric-decoration { 
-  background-color: #8b5cf6;
+.metric-card.accent-4 .metric-decoration {
+  background-color: #fb9332;
 }
 
 /* Hover effects */
@@ -669,21 +669,21 @@
   left: 0;
   width: 4px;
   height: 100%;
-  background: linear-gradient(to bottom, #4f46e5, #8b5cf6);
+  background: linear-gradient(90deg, #1860a8 0%, #fb9332 100%);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
 .metric-card.accent-2::after {
-  background: linear-gradient(to bottom, #10b981, #3cbfae);
+  background: linear-gradient(90deg, #fb9332 0%, #1860a8 100%);
 }
 
 .metric-card.accent-3::after {
-  background: linear-gradient(to bottom, #f97316, #f59e0b);
+  background: linear-gradient(90deg, #1860a8 0%, #fb9332 100%);
 }
 
 .metric-card.accent-4::after {
-  background: linear-gradient(to bottom, #8b5cf6, #6366f1);
+  background: linear-gradient(90deg, #fb9332 0%, #1860a8 100%);
 }
 
 .metric-card:hover::after {

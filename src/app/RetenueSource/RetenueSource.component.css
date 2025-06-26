@@ -460,7 +460,7 @@
 }
 
 .title-gradient {
-  background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: linear-gradient(90deg, #1860a8 0%, #fb9332 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -544,18 +544,18 @@
   
 }
 
-/* Color variants with modern pastel tones */
+/* Color variants with modern vibrant tones */
 .metric-card .metric-decoration { 
-  background-color: #4f46e5;
+  background: linear-gradient(135deg, #1860a8 0%, #3b82f6 100%);
 }
 .metric-card.accent-2 .metric-decoration { 
-  background-color: #10b981;
+  background: linear-gradient(135deg, #fb9332 0%, #f97316 100%);
 }
 .metric-card.accent-3 .metric-decoration { 
-  background-color: #f97316;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
 }
 .metric-card.accent-4 .metric-decoration { 
-  background-color: #8b5cf6;
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
 }
 
 /* Hover effects */
@@ -573,21 +573,21 @@
   left: 0;
   width: 4px;
   height: 100%;
-  background: linear-gradient(to bottom, #4f46e5, #8b5cf6);
+  background: linear-gradient(to bottom, #1860a8, #3b82f6);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
 .metric-card.accent-2::after {
-  background: linear-gradient(to bottom, #10b981, #3cbfae);
+  background: linear-gradient(to bottom, #fb9332, #f97316);
 }
 
 .metric-card.accent-3::after {
-  background: linear-gradient(to bottom, #f97316, #f59e0b);
+  background: linear-gradient(to bottom, #10b981, #059669);
 }
 
 .metric-card.accent-4::after {
-  background: linear-gradient(to bottom, #8b5cf6, #6366f1);
+  background: linear-gradient(to bottom, #8b5cf6, #7c3aed);
 }
 
 .metric-card:hover::after {
@@ -878,6 +878,131 @@
 /* Dark mode style for select label */
 :host-context(.dark-mode) :host ::ng-deep .p-select-label {
   color: #ffffff !important;
+}
+
+/* ========== CHARTS ROW LAYOUT ========== */
+.charts-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  align-items: stretch;
+}
+
+.charts-col {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.charts-col-left, .charts-col-right {
+  height: 100%;
+}
+
+.charts-col .card {
+  flex: 1 1 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  max-height: 400px;
+}
+
+.charts-col .card h5 {
+  margin-bottom: 1rem;
+  flex-shrink: 0;
+}
+
+.charts-col .card .chart-container {
+  flex: 1 1 auto;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
+}
+
+/* Chart responsiveness */
+:host ::ng-deep .charts-col .p-chart {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 250px;
+  overflow: hidden;
+}
+
+:host ::ng-deep .charts-col canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 350px;
+}
+
+/* Handle many data points gracefully */
+:host ::ng-deep .charts-col .p-chart canvas {
+  max-width: none;
+}
+
+/* Ensure chart container can handle overflow */
+.charts-col .card .chart-container {
+  overflow: hidden;
+  position: relative;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 1200px) {
+  .charts-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  
+  .charts-col .card {
+    min-height: 280px;
+    max-height: 350px;
+  }
+  
+  :host ::ng-deep .charts-col canvas {
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 991px) {
+  .charts-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .charts-col .card {
+    min-height: 300px;
+    max-height: 400px;
+  }
+  
+  :host ::ng-deep .charts-col canvas {
+    max-height: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .charts-row {
+    gap: 0.75rem;
+  }
+  
+  .charts-col .card {
+    min-height: 250px;
+    max-height: 320px;
+  }
+  
+  :host ::ng-deep .charts-col canvas {
+    max-height: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .charts-col .card {
+    min-height: 220px;
+    max-height: 280px;
+  }
+  
+  :host ::ng-deep .charts-col canvas {
+    max-height: 240px;
+  }
 }
 
 

@@ -52,13 +52,13 @@
   font-size: 2.25rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  background: linear-gradient(90deg, #7b92e2 0%, #3cbfae 100%);
+  background: linear-gradient(90deg, #1860a8 0%, #fb9332 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .dark-mode .app-title {
-  background: linear-gradient(90deg, #e2e8f0 0%, #ffffff 100%);
+  background: linear-gradient(90deg, #fb9332 0%, #1860a8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -81,7 +81,7 @@
 }
 
 .primary-btn {
-  background-color: #7b92e2;
+  background-color: #1860a8;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -89,29 +89,31 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(123, 146, 226, 0.3);
+  box-shadow: 0 2px 4px rgba(24, 96, 168, 0.18);
 }
 
 .dark-mode .primary-btn {
-  background-color: #60a5fa;
-  box-shadow: 0 2px 4px rgba(96, 165, 250, 0.3);
+  background-color: #1860a8;
+  box-shadow: 0 2px 4px rgba(24, 96, 168, 0.18);
 }
 
 .primary-btn:hover {
-  background-color: #6a83d8;
+  background-color: #fb9332;
+  color: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(123, 146, 226, 0.3);
+  box-shadow: 0 4px 8px rgba(251, 147, 50, 0.18);
 }
 
 .dark-mode .primary-btn:hover {
-  background-color: #3b82f6;
-  box-shadow: 0 4px 8px rgba(96, 165, 250, 0.3);
+  background-color: #fb9332;
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(251, 147, 50, 0.18);
 }
 
 .secondary-btn {
   background-color: white;
-  color: #3cbfae;
-  border: 2px solid #3cbfae;
+  color: #1860a8;
+  border: 2px solid #1860a8;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 500;
@@ -121,18 +123,22 @@
 
 .dark-mode .secondary-btn {
   background-color: transparent;
-  color: #60a5fa;
-  border: 2px solid #60a5fa;
+  color: #fb9332;
+  border: 2px solid #fb9332;
 }
 
 .secondary-btn:hover {
-  background-color: #f0fdfa;
+  background-color: #e6f9fc;
+  color: #fb9332;
+  border-color: #fb9332;
   transform: translateY(-2px);
-  box-shadow: 0 2px 4px rgba(60, 191, 174, 0.2);
+  box-shadow: 0 2px 4px rgba(251, 147, 50, 0.12);
 }
 
 .dark-mode .secondary-btn:hover {
-  background-color: rgba(96, 165, 250, 0.1);
+  background-color: rgba(251, 147, 50, 0.08);
+  color: #fb9332;
+  border-color: #fb9332;
   box-shadow: none;
 }
 

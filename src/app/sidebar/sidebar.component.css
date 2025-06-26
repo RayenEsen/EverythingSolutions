@@ -239,3 +239,15 @@
   padding-bottom: 0;
   padding-left: 40px;
 }
+
+.navlink {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.nav_link .navlink {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}

@@ -2,201 +2,407 @@
   <div class="menu_content">
 
 <ul class="menu_items">
-  <div class="menu_title">Gratuit</div>
+  <div class="menu_title">Gestion commerciale</div>
+  <!-- Traite -->
+  <li class="item">
+    <a class="nav_link submenu_item" href="/Trait">
+      <span class="navlink_icon"><i class="bx bx-money"></i></span>
+      <span class="navlink">Traite</span>
+    </a>
+  </li>
 
-<!-- Traite -->
-<li class="item">
-  <a class="nav_link submenu_item" href="/Trait">
-    <span class="navlink_icon"><i class="bx bx-money"></i></span>
-    <span class="navlink">Traite</span>
-  </a>
-</li>
+  <!-- Retenue à la source -->
+  <li class="item">
+    <a class="nav_link submenu_item" href="/Retenue">
+      <span class="navlink_icon"><i class="bx bx-receipt"></i></span>
+      <span class="navlink">Retenue</span>
+    </a>
+  </li>
 
-<!-- Retenue à la source -->
-<li class="item">
-  <a class="nav_link submenu_item" href="/Retenue">
-    <span class="navlink_icon"><i class="bx bx-receipt"></i></span>
-    <span class="navlink">Retenue</span>
-  </a>
-</li>
-
-<!-- Listes sub-menu -->
-<li class="item">
-  <div class="nav_link submenu_item" (click)="toggleSubMenu($event)">
-    <span class="navlink_icon"><i class="bx bx-list-ul"></i></span>
-    <span class="navlink">Listes</span>
-    <i class="bx bx-chevron-right arrow-left"></i>
-  </div>
-  <ul class="menu_items submenu">
-    <!-- List Article -->
-    <li class="item">
-      <a class="nav_link sublink" href="/ListArticle">
-        <span class="navlink_icon"><i class="bx bx-package"></i></span>
-        <span class="navlink">Articles</span>
-      </a>
-    </li>
-
-    <!-- Stock -->
-    <li class="item">
-      <a class="nav_link sublink" href="/Stock">
-        <span class="navlink_icon"><i class="bx bx-archive"></i></span>
-        <span class="navlink">Stocks</span>
-      </a>
-    </li>
-
-    <!-- Fournisseur -->
-    <li class="item">
-      <a class="nav_link sublink" href="/Fournisseur">
-        <span class="navlink_icon"><i class="bx bx-store"></i></span>
-        <span class="navlink">Fournisseurs</span>
-      </a>
-    </li>
-
-    <!-- Banque -->
-    <li class="item">
-      <a class="nav_link sublink" href="/Banque">
-        <span class="navlink_icon"><i class="bx bx-buildings"></i></span>
-        <span class="navlink">Banques</span>
-      </a>
-    </li>
-
-    <!-- TVA -->
-    <li class="item">
-      <a class="nav_link sublink" href="/TVA">
-        <span class="navlink_icon"><i class="bx bx-calculator"></i></span>
-        <span class="navlink">TVA</span>
-      </a>
-    </li>
-
-    <!-- Client -->
-    <li class="item">
-      <a class="nav_link sublink" href="/Client">
-        <span class="navlink_icon"><i class="bx bx-user"></i></span>
-        <span class="navlink">Clients</span>
-      </a>
-    </li>
-  </ul>
-</li>
-
-</ul>
-
-    
-    <div class="menu_wrapper blocked-section">
-
-    <!-- GESTION COMMERCIALE -->
-    <ul class="menu_items blocked">
-
-      <div class="menu_title">Gestion Commerciale</div>
-
-      <!-- Ventes -->
+  <!-- Listes sub-menu -->
+  <li class="item">
+    <div class="nav_link submenu_item" (click)="toggleSubMenu($event)">
+      <span class="navlink_icon"><i class="bx bx-list-ul"></i></span>
+      <span class="navlink">Listes</span>
+      <i class="bx bx-chevron-right arrow-left"></i>
+    </div>
+    <ul class="menu_items submenu">
       <li class="item">
-        <div class="nav_link submenu_item" (click)="toggleSubMenu($event)">
-          <span class="navlink_icon"><i class="bx bx-cart-alt"></i></span>
-          <span class="navlink">Ventes</span>
-          <i class="bx bx-chevron-right arrow-left"></i>
-        </div>
-        <ul class="menu_items submenu">
-          <a class="nav_link sublink" href="CommingSoon">Top Facture</a>
-          <a class="nav_link sublink" href="CommingSoon">Pièces clients</a>
-          <a class="nav_link sublink" href="CommingSoon">Détail pièces clients</a>
-          <a class="nav_link sublink" href="CommingSoon">Devis/Proforma</a>
-          <a class="nav_link sublink" href="CommingSoon">Commandes</a>
-          <a class="nav_link sublink" href="CommingSoon">Bons de livraison</a>
-          <a class="nav_link sublink" href="CommingSoon">Factures d'acompte</a>
-          <a class="nav_link sublink" href="CommingSoon">Factures</a>
-          <a class="nav_link sublink" href="CommingSoon">Avoirs</a>
-          <a class="nav_link sublink" href="CommingSoon">Règlements</a>
-        </ul>
+        <a class="nav_link sublink" href="/ListArticle">
+          <span class="navlink_icon"><i class="bx bx-package"></i></span>
+          <span class="navlink">Articles</span>
+        </a>
       </li>
-
-      <!-- Achats -->
       <li class="item">
-        <div class="nav_link submenu_item" (click)="toggleSubMenu($event)">
-          <span class="navlink_icon"><i class="bx bx-cart"></i></span>
-          <span class="navlink">Achats</span>
-          <i class="bx bx-chevron-right arrow-left"></i>
-        </div>
-        <ul class="menu_items submenu">
-          <a class="nav_link sublink" href="CommingSoon">Pièces fournisseurs</a>
-          <a class="nav_link sublink" href="CommingSoon">Détail pièces fournisseurs</a>
-          <a class="nav_link sublink" href="CommingSoon">Commandes</a>
-          <a class="nav_link sublink" href="CommingSoon">Bons de réception</a>
-          <a class="nav_link sublink" href="CommingSoon">Factures d'acompte</a>
-          <a class="nav_link sublink" href="CommingSoon">Factures</a>
-          <a class="nav_link sublink" href="CommingSoon">Avoirs</a>
-          <a class="nav_link sublink" href="CommingSoon">Règlements</a>
-        </ul>
+        <a class="nav_link sublink" href="/Stock">
+          <span class="navlink_icon"><i class="bx bx-archive"></i></span>
+          <span class="navlink">Stocks</span>
+        </a>
       </li>
-
-      <!-- Traitements -->
       <li class="item">
-        <div class="nav_link submenu_item" (click)="toggleSubMenu($event)">
-          <span class="navlink_icon"><i class="bx bx-cog"></i></span>
-          <span class="navlink">Traitements</span>
-          <i class="bx bx-chevron-right arrow-left"></i>
-        </div>
-        <ul class="menu_items submenu">
-          <a class="nav_link sublink" href="CommingSoon">Remises en banque</a>
-          <a class="nav_link sublink" href="CommingSoon">Virements fournisseurs</a>
-          <a class="nav_link sublink" href="CommingSoon">Commandes non livrées</a>
-          <a class="nav_link sublink" href="CommingSoon">Commandes articles en rupture</a>
-          <a class="nav_link sublink" href="CommingSoon">Régulation des stocks</a>
-          <a class="nav_link sublink" href="CommingSoon">Purge</a>
-          <a class="nav_link sublink" href="CommingSoon">Fin d'exercice</a>
-        </ul>
+        <a class="nav_link sublink" href="/Fournisseur">
+          <span class="navlink_icon"><i class="bx bx-store"></i></span>
+          <span class="navlink">Fournisseurs</span>
+        </a>
       </li>
-
-      <!-- Etats -->
       <li class="item">
-        <div class="nav_link submenu_item" (click)="toggleSubMenu($event)">
-          <span class="navlink_icon"><i class="bx bx-bar-chart-alt-2"></i></span>
-          <span class="navlink">Etats</span>
-          <i class="bx bx-chevron-right arrow-left"></i>
-        </div>
-        <ul class="menu_items submenu">
-          <a class="nav_link sublink" href="#CommingSoon">Portefeuille des commandes</a>
-          <a class="nav_link sublink" href="CommingSoon">Analyseur commercial ventes</a>
-          <a class="nav_link sublink" href="CommingSoon">Analyseur commercial achats</a>
-          <a class="nav_link sublink" href="CommingSoon">Relevé de comptes</a>
-          <a class="nav_link sublink" href="CommingSoon">Statistiques Gestion</a>
-          <a class="nav_link sublink" href="CommingSoon">Echéancier</a>
-          <a class="nav_link sublink" href="CommingSoon">Objectifs</a>
-          <a class="nav_link sublink" href="CommingSoon">Evolution des ventes</a>
-          <a class="nav_link sublink" href="CommingSoon">Réparation par famille</a>
-          <a class="nav_link sublink" href="CommingSoon">Encours clients</a>
-          <a class="nav_link sublink" href="CommingSoon">Relance client</a>
-          <a class="nav_link sublink" href="CommingSoon">Suivi des stocks</a>
-          <a class="nav_link sublink" href="CommingSoon">Inventaire des articles</a>
-        </ul>
+        <a class="nav_link sublink" href="/Banque">
+          <span class="navlink_icon"><i class="bx bx-buildings"></i></span>
+          <span class="navlink">Banques</span>
+        </a>
       </li>
-
-      <!-- Divers -->
       <li class="item">
-        <div class="nav_link submenu_item" (click)="toggleSubMenu($event)">
-          <span class="navlink_icon"><i class="bx bx-dots-horizontal-rounded"></i></span>
-          <span class="navlink">Divers</span>
-          <i class="bx bx-chevron-right arrow-left"></i>
-        </div>
-        <ul class="menu_items submenu">
-          <a class="nav_link sublink" href="CommingSoon">Lettre de pénalités de retard</a>
-          <a class="nav_link sublink" href="CommingSoon">Menus découverte</a>
-          <a class="nav_link sublink" href="CommingSoon">Messagerie</a>
-          <a class="nav_link sublink" href="CommingSoon">Télécharger Ciel directDéclaration</a>
-          <a class="nav_link sublink" href="CommingSoon">Relations clients</a>
-          <a class="nav_link sublink" href="CommingSoon">Catalogue des articles</a>
-          <a class="nav_link sublink" href="CommingSoon">Nomenclature des articles</a>
-          <a class="nav_link sublink" href="CommingSoon">Capacité de fabrication</a>
-          <a class="nav_link sublink" href="CommingSoon">Etats récapitulatifs</a>
-        </ul>
+        <a class="nav_link sublink" href="/TVA">
+          <span class="navlink_icon"><i class="bx bx-calculator"></i></span>
+          <span class="navlink">TVA</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="/Client">
+          <span class="navlink_icon"><i class="bx bx-user"></i></span>
+          <span class="navlink">Clients</span>
+        </a>
       </li>
     </ul>
-    </div>
+  </li>
 
+  <!-- Ventes -->
+  <li class="item">
+    <div class="nav_link submenu_item" (click)="toggleSubMenu($event)">
+      <span class="navlink_icon"><i class="bx bx-cart-alt"></i></span>
+      <span class="navlink">Ventes</span>
+      <i class="bx bx-chevron-right arrow-left"></i>
+    </div>
+    <ul class="menu_items submenu">
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-receipt"></i></span>
+          <span class="navlink">Top Facture</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-user"></i></span>
+          <span class="navlink">Pièces clients</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-detail"></i></span>
+          <span class="navlink">Détail pièces clients</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-file"></i></span>
+          <span class="navlink">Devis/Proforma</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-cart"></i></span>
+          <span class="navlink">Commandes</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-package"></i></span>
+          <span class="navlink">Bons de livraison</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-receipt"></i></span>
+          <span class="navlink">Factures d'acompte</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-file"></i></span>
+          <span class="navlink">Factures</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-credit-card"></i></span>
+          <span class="navlink">Avoirs</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-money"></i></span>
+          <span class="navlink">Règlements</span>
+        </a>
+      </li>
+    </ul>
+  </li>
+  <!-- Achats -->
+  <li class="item">
+    <div class="nav_link submenu_item" (click)="toggleSubMenu($event)">
+      <span class="navlink_icon"><i class="bx bx-cart"></i></span>
+      <span class="navlink">Achats</span>
+      <i class="bx bx-chevron-right arrow-left"></i>
+    </div>
+    <ul class="menu_items submenu">
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-user"></i></span>
+          <span class="navlink">Pièces fournisseurs</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-detail"></i></span>
+          <span class="navlink">Détail pièces fournisseurs</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-cart"></i></span>
+          <span class="navlink">Commandes</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-package"></i></span>
+          <span class="navlink">Bons de réception</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-receipt"></i></span>
+          <span class="navlink">Factures d'acompte</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-file"></i></span>
+          <span class="navlink">Factures</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-credit-card"></i></span>
+          <span class="navlink">Avoirs</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-money"></i></span>
+          <span class="navlink">Règlements</span>
+        </a>
+      </li>
+    </ul>
+  </li>
+  <!-- Traitements -->
+  <li class="item">
+    <div class="nav_link submenu_item" (click)="toggleSubMenu($event)">
+      <span class="navlink_icon"><i class="bx bx-cog"></i></span>
+      <span class="navlink">Traitements</span>
+      <i class="bx bx-chevron-right arrow-left"></i>
+    </div>
+    <ul class="menu_items submenu">
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-buildings"></i></span>
+          <span class="navlink">Remises en banque</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-transfer"></i></span>
+          <span class="navlink">Virements fournisseurs</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-cart"></i></span>
+          <span class="navlink">Commandes non livrées</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-package"></i></span>
+          <span class="navlink">Commandes articles en rupture</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-archive"></i></span>
+          <span class="navlink">Régulation des stocks</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-trash"></i></span>
+          <span class="navlink">Purge</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-calendar-check"></i></span>
+          <span class="navlink">Fin d'exercice</span>
+        </a>
+      </li>
+    </ul>
+  </li>
+  <!-- Etats -->
+  <li class="item">
+    <div class="nav_link submenu_item" (click)="toggleSubMenu($event)">
+      <span class="navlink_icon"><i class="bx bx-bar-chart-alt-2"></i></span>
+      <span class="navlink">Etats</span>
+      <i class="bx bx-chevron-right arrow-left"></i>
+    </div>
+    <ul class="menu_items submenu">
+      <li class="item">
+        <a class="nav_link sublink" href="#CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-briefcase"></i></span>
+          <span class="navlink">Portefeuille des commandes</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-bar-chart"></i></span>
+          <span class="navlink">Analyseur commercial ventes</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-bar-chart"></i></span>
+          <span class="navlink">Analyseur commercial achats</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-file"></i></span>
+          <span class="navlink">Relevé de comptes</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-bar-chart-alt"></i></span>
+          <span class="navlink">Statistiques Gestion</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-calendar"></i></span>
+          <span class="navlink">Echéancier</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-bullseye"></i></span>
+          <span class="navlink">Objectifs</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-line-chart"></i></span>
+          <span class="navlink">Evolution des ventes</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-pie-chart"></i></span>
+          <span class="navlink">Réparation par famille</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-user"></i></span>
+          <span class="navlink">Encours clients</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-user-voice"></i></span>
+          <span class="navlink">Relance client</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-archive"></i></span>
+          <span class="navlink">Suivi des stocks</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-archive-in"></i></span>
+          <span class="navlink">Inventaire des articles</span>
+        </a>
+      </li>
+    </ul>
+  </li>
+  <!-- Divers -->
+  <li class="item">
+    <div class="nav_link submenu_item" (click)="toggleSubMenu($event)">
+      <span class="navlink_icon"><i class="bx bx-dots-horizontal-rounded"></i></span>
+      <span class="navlink">Divers</span>
+      <i class="bx bx-chevron-right arrow-left"></i>
+    </div>
+    <ul class="menu_items submenu">
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-envelope"></i></span>
+          <span class="navlink">Lettre de pénalités de retard</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-compass"></i></span>
+          <span class="navlink">Menus découverte</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-message"></i></span>
+          <span class="navlink">Messagerie</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-download"></i></span>
+          <span class="navlink">Télécharger Ciel directDéclaration</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-group"></i></span>
+          <span class="navlink">Relations clients</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-book"></i></span>
+          <span class="navlink">Catalogue des articles</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-list-ol"></i></span>
+          <span class="navlink">Nomenclature des articles</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-cube"></i></span>
+          <span class="navlink">Capacité de fabrication</span>
+        </a>
+      </li>
+      <li class="item">
+        <a class="nav_link sublink" href="CommingSoon">
+          <span class="navlink_icon"><i class="bx bx-bar-chart-square"></i></span>
+          <span class="navlink">Etats récapitulatifs</span>
+        </a>
+      </li>
+    </ul>
+  </li>
+</ul>
 
 <!-- ADMINISTRATION -->
 <ul class="menu_items" *ngIf="isAdmin">
   <div class="menu_title">Administration</div>
-
   <li class="item">
     <a class="nav_link" href="Dashboard">
       <span class="navlink_icon"><i class="bx bx-user-circle"></i></span>
@@ -211,11 +417,9 @@
   </li>
 </ul>
 
-
 <!-- Parametre -->
 <ul class="menu_items" >
   <div class="menu_title">Avancée </div>
-
   <li class="item">
     <a class="nav_link" href="CommingSoon">
       <span class="navlink_icon"><i class="bx bx-cog"></i></span>
@@ -223,7 +427,6 @@
     </a>
   </li>
 </ul>
-
 
     <!-- BOTTOM CONTENT -->
     <div class="bottom_content">
