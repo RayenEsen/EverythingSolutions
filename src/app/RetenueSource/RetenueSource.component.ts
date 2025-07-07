@@ -56,12 +56,10 @@ export class RetenueSourceComponent implements OnInit {
   ) {
     // Subscribe to theme changes to update chart colors
     this.themeService.darkMode$.subscribe(() => {
-      if (this.retenues && this.retenues.length > 0) {
-        this.initCharts();
-        // Force chart re-render by creating new object references
-        this.montantFournisseurChartData = { ...this.montantFournisseurChartData };
-        this.typeDistributionChartData = { ...this.typeDistributionChartData };
-      }
+      // Always update charts, even if retenues is empty
+      this.initCharts();
+      this.montantFournisseurChartData = { ...this.montantFournisseurChartData };
+      this.typeDistributionChartData = { ...this.typeDistributionChartData };
     });
   }
 
@@ -346,7 +344,8 @@ export class RetenueSourceComponent implements OnInit {
           });
 
           this.AddRetenueInfo = false;
-          this.fetchRetenues(); // Real-time update
+          this.retenues = [response, ...this.retenues];
+          this.updateStatsAndCharts();
         },
         error: (err) => {
           console.error('Error creating retenue:', err);
@@ -562,13 +561,11 @@ export class RetenueSourceComponent implements OnInit {
 
   deleteSelectedRetenues(): void {
     let idsToDelete: number[] = [];
-
     if (this.SelectedRetenues && this.SelectedRetenues.length > 0) {
       idsToDelete = this.SelectedRetenues.map(r => r.id);
     } else if (this.contextMenuSelection) {
       idsToDelete = [this.contextMenuSelection.id];
     }
-
     if (idsToDelete.length === 0) {
       this.messageService.add({
         severity: 'warn',
@@ -577,7 +574,6 @@ export class RetenueSourceComponent implements OnInit {
       });
       return;
     }
-
     this.confirmationService.confirm({
       message: 'Êtes-vous sûr de vouloir supprimer les retenues sélectionnées ?',
       header: 'Confirmation de suppression',
@@ -590,10 +586,9 @@ export class RetenueSourceComponent implements OnInit {
               summary: 'Suppression réussie',
               detail: 'Les retenues sélectionnées ont été supprimées.'
             });
-
             this.retenues = this.retenues.filter(r => !idsToDelete.includes(r.id));
             this.SelectedRetenues = [];
-            this.fetchRetenues(); // Real-time update
+            this.updateStatsAndCharts();
           },
           error: () => {
             this.messageService.add({
@@ -816,10 +811,11 @@ export class RetenueSourceComponent implements OnInit {
             summary: 'Succès',
             detail: 'Retenue mise à jour avec succès'
           });
-
           this.updateRetenueInfo = false;
           this.selectedRetenue = null;
-          this.fetchRetenues(); // Real-time update
+          // Update in local array
+          this.retenues = this.retenues.map(r => r.id === retenueDto.id ? Object.assign(new RetenueDto(), r, retenueDto) : r);
+          this.updateStatsAndCharts();
         },
         error: (err) => {
           console.error('Error updating retenue:', err);
@@ -831,5 +827,18 @@ export class RetenueSourceComponent implements OnInit {
         }
       });
     }
+  }
+
+  // --- STATS/CHARTS UPDATE ---
+  updateStatsAndCharts() {
+    const totalTTC = this.getTotalTTC(this.retenues);
+    const averageNet = this.getAverageNet(this.retenues);
+    const retenueTotal = this.getRetenueTotal(this.retenues);
+    const retenueAvg = this.getAverageRetenueMontant(this.retenues);
+    this.animateValue('animatedTotalTTC', totalTTC);
+    this.animateValue('animatedAverageNet', averageNet);
+    this.animateValue('animatedRetenueTotal', retenueTotal);
+    this.animateValue('animatedretenueAvg', retenueAvg);
+    this.initCharts();
   }
 }

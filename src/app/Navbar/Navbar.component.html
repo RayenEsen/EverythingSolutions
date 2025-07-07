@@ -7,8 +7,21 @@
     </a>
   </div>
 
-  <div class="search_bar">
-    <input type="text" placeholder="Search">
+  <div class="search_bar" style="position: relative;">
+    <input type="text" placeholder="Search"
+           [(ngModel)]="searchTerm"
+           (input)="onSearchInput($event)"
+           (keydown.enter)="onSearchEnter()"
+           (focus)="onSearchFocus()"
+           (blur)="onSearchBlur()"
+           autocomplete="off"
+           style="width: 350px;" />
+    <ul *ngIf="showSuggestions && searchFocused" class="autocomplete-suggestions" style="position: absolute; left: 0; right: 0; top: 100%; z-index: 2000; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); margin: 0; padding: 0; list-style: none; max-height: 250px; overflow-y: auto;">
+      <li *ngFor="let page of filteredPages" (click)="onSuggestionClick(page)" style="padding: 8px 16px; cursor: pointer;">
+        {{ page.name }}
+      </li>
+      <li *ngIf="filteredPages.length === 0" style="padding: 8px 16px; color: #888;">Aucune page trouvée</li>
+    </ul>
   </div>
 
 <div class="navbar_content">
@@ -17,11 +30,43 @@
     <i class='bx' [class.bx-sun]="!themeService.isDarkMode()" [class.bx-moon]="themeService.isDarkMode()" 
        id="darkLight"></i>
   </div>
-  <i class='bx bx-bell'></i>
+  <div class="notification-wrapper">
+    <i class='bx bx-bell' (click)="toggleNotificationsDropdown()">
+      <span *ngIf="unreadNotificationsCount > 0" class="notification-badge">{{ unreadNotificationsCount }}</span>
+    </i>
+    <div *ngIf="showNotificationsDropdown" #notificationsDropdown class="notifications-dropdown">
+      <ng-container *ngIf="notifications.length > 0; else emptyState">
+        <ul>
+          <li *ngFor="let notif of notifications" class="notification-item" [class.unread]="!notif.read">
+            <div class="notif-icon">
+              <i [class]="notif.icon"></i>
+              <span *ngIf="!notif.read" class="notif-unread-dot"></span>
+            </div>
+            <div class="notif-content">
+              <div class="notif-title">{{ notif.title }}</div>
+              <div class="notif-message">{{ notif.message }}</div>
+              <div class="notif-date">{{ notif.date | date:'short' }}</div>
+            </div>
+          </li>
+        </ul>
+      </ng-container>
+      <ng-template #emptyState>
+        <div class="no-notifications-modern">
+          <i class='bx bx-bell-off'></i>
+          <div>Aucune notification</div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
 
   <div class="profile-container" (click)="toggleProfileMenu()">
-    <img src="https://i.ibb.co/5GzXkw3/user-avatar.png" alt="" class="profile">
+    <img [src]="entrepriseImageUrl" alt="" class="profile">
     <ul class="profile-submenu" [class.show]="isProfileMenuOpen">
+      <li style="padding: 12px 20px; border-bottom: 1px solid #f0f0f0; display: flex; flex-direction: column; align-items: flex-start;">
+        <span style="font-weight: 700; color: #2563eb; font-size: 1.08em;">{{ entrepriseName }}</span>
+        <span style="color: #64748b; font-size: 0.97em;">{{ entrepriseInfo.email }}</span>
+        <span style="color: #64748b; font-size: 0.97em;">{{ entrepriseInfo.telephone }}</span>
+      </li>
       <li><a href="Profil"><i class="bx bx-user"></i> Mon Profil</a></li>
       <li><a href="#"><i class="bx bx-cog"></i> Paramètres</a></li>
       <li (click)="logout()"><a href="#"><i class="bx bx-log-out" ></i> Déconnexion</a></li>

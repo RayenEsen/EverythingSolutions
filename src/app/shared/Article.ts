@@ -1,14 +1,23 @@
 import { TVA } from './TVA';
+import { Stock } from './Stock';
+import { Entreprise } from './Entreprise';
+import { DevisArticle } from './DevisArticle';
+// Removed import { DevisArticle } from './DevisArticle'; because the module cannot be found
 
 export interface Article {
   id: number;
-  code: string; // chiifre majuscule - numero - tiree
-  designation: string;
+  code?: string;
+  designation?: string;
   prixAchatHT: number;
-  tva: TVA; // TVA (objet)
+  tvaId?: number;
+  tva?: TVA;
   prixVenteHT: number;
-  gouvernerat?: string; // New property for Gouvernerat
-  prixVenteTTC?: number; // Calculated automatically
-  marge?: number; // Calculated automatically
-  stockId?: number; // New property to link to a Stock
+  gouvernerat?: string;
+  prixVenteTTC?: number | null; // Calculated automatically
+  marge?: number | null; // Calculated automatically
+  stockId?: number;
+  stock?: Stock;
+  entrepriseId: number;
+  entreprise?: Entreprise;
+  devisArticles?: DevisArticle[];
 } 

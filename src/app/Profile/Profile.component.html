@@ -15,7 +15,6 @@
         <div class="col-lg-7 col-md-10">
           <h1 class="display-2 text-white">Bonjour {{ defaultEntreprise.nomSociete }}</h1>
           <p class="text-white mt-0 mb-5">Ceci est votre page de profil Entreprise. Vous pouvez consulter vos informations et les mettre à jour.</p>
-          <button class="btn btn-info" (click)="enableEdit()" *ngIf="!isEditing">Modifier le profil</button>
         </div>
       </div>
     </div>
@@ -30,16 +29,21 @@
         <div class="card card-profile shadow">
           <div class="row justify-content-center">
             <div class="col-lg-3 order-lg-2">
-              <div class="card-profile-image">
-                <a href="#">
-                  <img src="https://i.ibb.co/5GzXkw3/user-avatar.png" class="rounded-circle" alt="Profile Image">
+              <div class="card-profile-image" style="position: relative; cursor: pointer;">
+                <a href="#" (click)="$event.preventDefault(); triggerLogoUpload();">
+                  <img
+                    [src]="logoPreviewUrl || defaultEntreprise.imageUrl || 'https://i.ibb.co/5GzXkw3/user-avatar.png'"
+                    class="rounded-circle"
+                    alt="Profile Image"
+                    style="object-fit:cover; width:120px; height:120px; border: 2px solid #eee;"
+                  >
                 </a>
+                <input type="file" #logoInput style="display:none" (change)="onLogoSelected($event)" accept="image/*" />
               </div>
             </div>
           </div>
           <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
             <div class="d-flex justify-content-between">
-              <a href="#" class="btn btn-sm btn-info mr-4">Contacter</a>
               <a href="#" class="btn btn-sm btn-default float-right">Message</a>
             </div>
           </div>
@@ -57,7 +61,6 @@
               </div>
               <hr class="my-4">
               <p style="margin-top: -3vh;">Vous pouvez gérer vos informations d'entreprise ici.</p>
-              <a href="#" (click)="enableEdit()" *ngIf="!isEditing">Voir plus</a>
             </div>
           </div>
         </div>
@@ -72,7 +75,7 @@
                 <h3 class="mb-0">Mon Entreprise</h3>
               </div>
               <div class="col-4 text-right">
-                <button class="btn btn-sm btn-primary" (click)="save()" [disabled]="!isEditing">Enregistrer</button>
+                <button class="btn btn-sm btn-primary" (click)="save()" [disabled]="!isFormChanged()">Enregistrer</button>
               </div>
             </div>
           </div>
@@ -84,13 +87,13 @@
                   <div class="col-lg-6">
                     <div class="form-group focused">
                       <label for="nomSociete" class="form-control-label">Nom de la société</label>
-                      <input id="nomSociete" type="text" [(ngModel)]="entreprise.nomSociete" name="nomSociete" class="form-control form-control-alternative" placeholder="Nom de la société" [readonly]="!isEditing">
+                      <input id="nomSociete" type="text" [(ngModel)]="entreprise.nomSociete" name="nomSociete" class="form-control form-control-alternative" placeholder="Nom de la société">
                     </div>
                   </div>
                   <div class="col-lg-6">
                     <div class="form-group">
                       <label for="matriculeFiscale" class="form-control-label">Matricule fiscale</label>
-                      <input id="matriculeFiscale" type="text" [(ngModel)]="entreprise.matriculeFiscale" name="matriculeFiscale" class="form-control form-control-alternative" placeholder="Matricule fiscale" [readonly]="!isEditing">
+                      <input id="matriculeFiscale" type="text" [(ngModel)]="entreprise.matriculeFiscale" name="matriculeFiscale" class="form-control form-control-alternative" placeholder="Matricule fiscale">
                     </div>
                   </div>
                 </div>
@@ -105,7 +108,15 @@
                   <div class="col-lg-6">
                     <div class="form-group">
                       <label for="telephone" class="form-control-label">Téléphone</label>
-                      <input id="telephone" type="text" [(ngModel)]="entreprise.telephone" name="telephone" class="form-control form-control-alternative" placeholder="Téléphone" [readonly]="!isEditing">
+                      <input id="telephone" type="text" [(ngModel)]="entreprise.telephone" name="telephone" class="form-control form-control-alternative" placeholder="Téléphone">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="siteWeb" class="form-control-label">Site web</label>
+                      <input id="siteWeb" type="text" [(ngModel)]="entreprise.siteWeb" name="siteWeb" class="form-control form-control-alternative" placeholder="Site web">
                     </div>
                   </div>
                 </div>
@@ -122,14 +133,13 @@
               <div class="pl-lg-4">
               <div class="form-group focused">
                 <label for="adresseEntreprise" class="form-control-label">Adresse</label>
-                <select id="adresseEntreprise" [(ngModel)]="entreprise.adresseEntreprise" name="adresseEntreprise"
-                        class="form-control form-control-alternative" [disabled]="!isEditing">
+                <select id="adresseEntreprise" [(ngModel)]="entreprise.adresseEntreprise" name="adresseEntreprise" class="form-control form-control-alternative">
                   <option *ngFor="let gov of gouvernorats" [value]="gov">{{ gov }}</option>
                 </select>
               </div>
                 <div class="form-group focused mt-3">
                   <label for="adresseComplete" class="form-control-label">Adresse complète</label>
-                  <input id="adresseComplete" type="text" [(ngModel)]="entreprise.adresseComplete" name="adresseComplete" class="form-control form-control-alternative" placeholder="Adresse complète" [readonly]="!isEditing">
+                  <input id="adresseComplete" type="text" [(ngModel)]="entreprise.adresseComplete" name="adresseComplete" class="form-control form-control-alternative" placeholder="Adresse complète">
                 </div>
               </div>
 
@@ -143,6 +153,10 @@
               </div>
 
             </form>
+            <div class="text-right mt-4">
+              <button class="btn btn-primary" (click)="save()" [disabled]="!isFormChanged()">Enregistrer</button>
+              <button class="btn btn-secondary ml-2" (click)="cancelEdit()" [disabled]="!isFormChanged()">Annuler</button>
+            </div>
           </div>
         </div>
       </div>

@@ -243,18 +243,18 @@ export class RetraitComponent implements OnInit {
 
   submitForm(data: any) {
     data.entrepriseId =  this.stored?.id;
-    // Call the service to create the Retraite
     this.ServiceR.createRetraite(data).subscribe(
       (response) => {
-        // Show success message
         this.messageService.add({
           severity: 'success',
           summary: 'Succès',
           detail: 'Retraite ajoutée avec succès !'
         });
-        // Reset or close the form
         this.AddRetraitInfo = false;
-        this.loadTraites(); // Update charts/stats
+        // Add to local arrays
+        this.retraitesLightData = [response, ...this.retraitesLightData];
+        this.retraitesLightDataOriginal = [response, ...this.retraitesLightDataOriginal];
+        this.updateStatsAndCharts();
       },
     );
     this.AddRetraitInfo = false;
@@ -293,15 +293,16 @@ export class RetraitComponent implements OnInit {
       accept: () => {
         this.ServiceR.deleteRetraite(this.selectedRetrait!.id).subscribe({
           next: () => {
-            // Show success message
             this.messageService.add({
               severity: 'success',
               summary: 'Succès',
               detail: 'Retraite supprimée avec succès'
             });
-            // Optionally clear selection
+            const deletedId = this.selectedRetrait.id;
+            this.retraitesLightData = this.retraitesLightData.filter(r => r.id !== deletedId);
+            this.retraitesLightDataOriginal = this.retraitesLightDataOriginal.filter(r => r.id !== deletedId);
             this.selectedRetrait = new Retraite;
-            this.loadTraites(); // Update charts/stats
+            this.updateStatsAndCharts();
           },
           error: err => {
             console.error('Error deleting retraite:', err);
@@ -647,8 +648,10 @@ export class RetraitComponent implements OnInit {
               summary: 'Suppression réussie',
               detail: 'Les retraites sélectionnées ont été supprimées.'
             });
+            this.retraitesLightData = this.retraitesLightData.filter(r => !idsToDelete.includes(r.id));
+            this.retraitesLightDataOriginal = this.retraitesLightDataOriginal.filter(r => !idsToDelete.includes(r.id));
             this.SelectedTraits = [];
-            this.loadTraites(); // Update charts/stats
+            this.updateStatsAndCharts();
           },
           error: () => {
             this.messageService.add({
@@ -680,9 +683,7 @@ export class RetraitComponent implements OnInit {
   }
 
   ModifyTraite(): void {
-    console.log(this.selectedRetrait)
     if (!this.selectedRetrait || !this.selectedRetrait.id) return;
-
     const updatedRetraite: AddRetraiteDTO = {
       numCheque: this.selectedRetrait.numeroCheque?.trim() || '',
       dateEcheance: this.selectedRetrait.dateEcheance,
@@ -691,12 +692,14 @@ export class RetraitComponent implements OnInit {
       banqueId: this.selectedBank?.id || null,
       entrepriseId: this.stored?.id,
     };
-
     this.ServiceR.updateRetraite(this.selectedRetrait.id, updatedRetraite).subscribe({
-      next: () => {
+      next: (updated) => {
         this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Traite modifiée avec succès', life: 3000 });
         this.ModifyTraiteInfo = false;
-        this.loadTraites();
+        // Update in local arrays
+        this.retraitesLightData = this.retraitesLightData.map(r => r.id === this.selectedRetrait.id ? Object.assign(new RetraiteLightDto(), r, updated) : r);
+        this.retraitesLightDataOriginal = this.retraitesLightDataOriginal.map(r => r.id === this.selectedRetrait.id ? Object.assign(new RetraiteLightDto(), r, updated) : r);
+        this.updateStatsAndCharts();
       },
       error: () => {
         this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Échec de la modification', life: 3000 });
@@ -1008,5 +1011,17 @@ export class RetraitComponent implements OnInit {
         }
       }
     };
+  }
+
+  updateStatsAndCharts() {
+    const totalAmount = this.getTotalAmount(this.retraitesLightData);
+    const avgAmount = this.getAverageAmount(this.retraitesLightData);
+    const pending = this.getPendingCount(this.retraitesLightData);
+    const banks = this.getUniqueBanks(this.retraitesLightData);
+    this.animateValue('animatedTotalAmount', totalAmount);
+    this.animateValue('animatedAverageAmount', avgAmount);
+    this.animateValue('animatedPendingCount', pending);
+    this.animateValue('animatedUniqueBanks', banks);
+    this.initCharts();
   }
 }

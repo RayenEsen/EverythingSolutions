@@ -144,7 +144,9 @@ export class FournisseurComponent implements OnInit {
               detail: 'Fournisseur supprimé avec succès !',
               life: 3000
             });
-            this.loadFournisseurs();
+            this.fournisseurs = this.fournisseurs.filter(f => f.id !== fournisseur.id);
+            this.originalFournisseurs = this.originalFournisseurs.filter(f => f.id !== fournisseur.id);
+            this.calculateStatistics();
           },
           error: (error) => {
             console.error('Error deleting supplier:', error);
@@ -175,7 +177,10 @@ export class FournisseurComponent implements OnInit {
             life: 3000
           });
           this.displayDialog = false;
-          this.loadFournisseurs();
+          const fournisseurWithDate: Fournisseur & { dateCreation: Date } = { ...newFournisseur, dateCreation: new Date() };
+          this.fournisseurs.push(fournisseurWithDate);
+          this.originalFournisseurs.push(fournisseurWithDate);
+          this.calculateStatistics();
         },
         error: (error) => {
           console.error('Error creating supplier:', error);
@@ -197,7 +202,9 @@ export class FournisseurComponent implements OnInit {
             life: 3000
           });
           this.displayDialog = false;
-          this.loadFournisseurs();
+          this.fournisseurs = this.fournisseurs.map(f => f.id === this.fournisseur.id ? { ...f, ...this.fournisseur, dateCreation: (f as any).dateCreation } : f);
+          this.originalFournisseurs = this.originalFournisseurs.map(f => f.id === this.fournisseur.id ? { ...f, ...this.fournisseur, dateCreation: (f as any).dateCreation } : f);
+          this.calculateStatistics();
         },
         error: (error) => {
           console.error('Error updating supplier:', error);

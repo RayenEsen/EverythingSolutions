@@ -9,6 +9,7 @@ import { RegisterRequest } from '../DTO/RegisterRequest';
 import { ResetPasswordRequest } from '../DTO/ResetPasswordRequest';
 import { EntreprisesProgress } from '../DTO/EntreprisesProgress';
 import { EntrepriseDetailsDto } from '../DTO/EntrepriseDetailsDto';
+import { UpdateEntrepriseRequest } from '../DTO/UpdateEntrepriseRequest';
 @Injectable({
   providedIn: 'root'
 })
@@ -170,8 +171,23 @@ getEntrepriseById(entrepriseId: number): Observable<any> {
 }
 
 // Update entreprise by id
-updateEntreprise(entrepriseId: number, data: any): Observable<any> {
-  return this.http.put<any>(`${this.baseUrl}/entreprise/${entrepriseId}`, data, {
+updateEntreprise(entrepriseId: number, data: UpdateEntrepriseRequest | FormData): Observable<any> {
+  let formData: FormData;
+  if (data instanceof FormData) {
+    formData = data;
+  } else {
+    formData = new FormData();
+    formData.append('NomSociete', data.nomSociete);
+    formData.append('MatriculeFiscale', data.matriculeFiscale);
+    formData.append('AdresseEntreprise', data.adresseEntreprise);
+    formData.append('AdresseComplete', data.adresseComplete);
+    formData.append('Telephone', data.telephone);
+    formData.append('SiteWeb', data.siteWeb || '');
+    if (data.logo) {
+      formData.append('Logo', data.logo);
+    }
+  }
+  return this.http.put<any>(`${this.baseUrl}/entreprise/${entrepriseId}`, formData, {
     withCredentials: true
   }).pipe(
     catchError(error => {

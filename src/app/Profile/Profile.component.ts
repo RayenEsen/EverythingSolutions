@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../shared/Auth.service';
 import { MessageService } from 'primeng/api';
@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { Console } from 'console';
 import { ToastModule } from 'primeng/toast';
 import { ThemeService } from '../Services/theme.service';
+import { UpdateEntrepriseRequest } from '../DTO/UpdateEntrepriseRequest';
 
 @Component({
   selector: 'app-profile',
@@ -19,6 +20,7 @@ import { ThemeService } from '../Services/theme.service';
 export class ProfileComponent implements OnInit {
   isEditing = false;
   isDarkMode = false;
+  logoOverlay = false;
 
   entreprise : Entreprise = new Entreprise(); 
 
@@ -75,6 +77,26 @@ enableEdit() {
   this.modifiedEntreprise = JSON.parse(JSON.stringify(this.entreprise));
 }
 
+selectedLogoFile?: File;
+logoPreviewUrl?: string;
+
+// Reference to the file input
+@ViewChild('logoInput') logoInputRef!: ElementRef<HTMLInputElement>;
+
+triggerLogoUpload() {
+  if (this.logoInputRef) {
+    this.logoInputRef.nativeElement.click();
+  }
+}
+
+onLogoSelected(event: any) {
+  const file = event.target.files[0];
+  if (file) {
+    this.selectedLogoFile = file;
+    this.logoPreviewUrl = URL.createObjectURL(file);
+  }
+}
+
 save(): void {
   
   // Validate nomSociete (required, min length 3)
@@ -112,32 +134,54 @@ save(): void {
 
 
 
-  // Prepare data (no email/password changes)
-  const updateData: any = {
-    nomSociete: this.entreprise.nomSociete,
-    matriculeFiscale: this.entreprise.matriculeFiscale,
-    telephone: this.entreprise.telephone,
-    adresseEntreprise: this.entreprise.adresseEntreprise,
-    adresseComplete: this.entreprise.adresseComplete,
-    ribBancaire: this.entreprise.ribBancaire
-  };
-
-
-this.authService.updateEntreprise(this.entreprise.id, updateData).subscribe({
-  next: () => {
-    this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Profil mis à jour avec succès.' });
-    this.isEditing = false;
-
-    // Update local storage and defaultEntreprise
-    localStorage.setItem('entrepriseInfo', JSON.stringify({ ...this.entreprise }));
-    this.defaultEntreprise = { ...this.entreprise }; // <-- update the displayed info
-  },
-  error: err => {
-    console.error('Erreur mise à jour entreprise', err);
-    this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'La mise à jour a échoué. Veuillez réessayer.' });
+  // Build FormData for PascalCase keys (matching backend DTO)
+  const formData = new FormData();
+  formData.append('NomSociete', this.entreprise.nomSociete || '');
+  formData.append('MatriculeFiscale', this.entreprise.matriculeFiscale || '');
+  formData.append('AdresseEntreprise', this.entreprise.adresseEntreprise || '');
+  formData.append('AdresseComplete', this.entreprise.adresseComplete || '');
+  formData.append('Telephone', this.entreprise.telephone || '');
+  formData.append('SiteWeb', this.entreprise.siteWeb || '');
+  if (this.selectedLogoFile) {
+    formData.append('Logo', this.selectedLogoFile);
   }
-});
 
+  // Debug: log all FormData keys/values
+  for (const pair of formData.entries()) {
+    console.log(pair[0]+ ': ' + pair[1]);
+  }
 
+  this.authService.updateEntreprise(Number(this.entreprise.id || 0), formData).subscribe({
+    next: () => {
+      this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Profil mis à jour avec succès.' });
+      this.isEditing = false;
+      this.selectedLogoFile = undefined;
+      this.logoPreviewUrl = undefined;
+      localStorage.setItem('entrepriseInfo', JSON.stringify({ ...this.entreprise }));
+      this.defaultEntreprise = { ...this.entreprise };
+    },
+    error: err => {
+      console.error('Erreur mise à jour entreprise', err);
+      this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'La mise à jour a échoué. Veuillez réessayer.' });
+    }
+  });
+}
+
+isFormChanged(): boolean {
+  // Compare entreprise with defaultEntreprise and check if logo changed
+  return JSON.stringify({
+    ...this.entreprise,
+    imageUrl: undefined // ignore imageUrl for comparison
+  }) !== JSON.stringify({
+    ...this.defaultEntreprise,
+    imageUrl: undefined
+  }) || !!this.selectedLogoFile;
+}
+
+cancelEdit(): void {
+  // Revert all changes
+  this.entreprise = JSON.parse(JSON.stringify(this.defaultEntreprise));
+  this.selectedLogoFile = undefined;
+  this.logoPreviewUrl = undefined;
 }
 }

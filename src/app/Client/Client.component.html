@@ -123,6 +123,10 @@
             Nom Complet
             <p-columnFilter type="text" field="fullName" display="menu" class="ml-auto"/>
           </th>
+          <th style="width: 10rem">
+            Code Client
+            <p-columnFilter type="text" field="clientCode" display="menu" class="ml-auto"/>
+          </th>
           <th style="width: 16rem">
             Email
             <p-columnFilter type="text" field="email" display="menu" class="ml-auto"/>
@@ -150,6 +154,16 @@
               </ng-template>
               <ng-template pTemplate="output">
                 {{ client.fullName }}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText [(ngModel)]="client.clientCode" />
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{ client.clientCode }}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -294,6 +308,16 @@
             [(ngModel)]="AddClient.phoneNumber"
             placeholder="Ex: +216 12 345 678">
         </div>
+        <!-- Client Code Field -->
+        <div class="mb-3">
+          <label for="clientCode" class="form-label">Code Client</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="clientCode"
+            [(ngModel)]="AddClient.clientCode"
+            placeholder="Ex: CLT12345">
+        </div>
         <!-- Address Field -->
         <div class="mb-3">
           <label for="address" class="form-label">Adresse</label>
@@ -315,8 +339,12 @@
           <button 
             type="button" 
             class="btn btn-primary"
-            (click)="validateForm()">
-            <i class="pi pi-check me-2"></i>Enregistrer
+            (click)="validateForm()"
+            [disabled]="isSubmitting"
+          >
+            <i class="pi pi-check me-2"></i>
+            <span *ngIf="!isSubmitting">Enregistrer</span>
+            <span *ngIf="isSubmitting"><i class="pi pi-spin pi-spinner"></i> Veuillez patienter...</span>
           </button>
         </div>
       </div>
@@ -361,6 +389,16 @@
           id="modify-phoneNumber"
           [(ngModel)]="selectedClient.phoneNumber"
           placeholder="Ex: +216 12 345 678">
+      </div>
+      <!-- Client Code Field -->
+      <div class="mb-3">
+        <label for="modify-clientCode" class="form-label">Code Client</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="modify-clientCode"
+          [(ngModel)]="selectedClient.clientCode"
+          placeholder="Ex: CLT12345">
       </div>
       <!-- Address Field -->
       <div class="mb-3">

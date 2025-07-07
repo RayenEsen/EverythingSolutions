@@ -177,3 +177,224 @@ body.dark .dark-mode-toggle:hover {
     column-gap: 10px; /* Further reduce spacing */
   }
 }
+
+/* Modern Notification Dropdown Styles */
+.notification-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.bx.bx-bell {
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.2s;
+  color: #333;
+  position: relative;
+}
+
+.bx.bx-bell:hover {
+  color: #3b82f6;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 2px;
+  right: 0px;
+  background: #ff5252;
+  color: white;
+  border-radius: 50%;
+  font-size: 10px;
+  padding: 2px 6px;
+  min-width: 16px;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 0 0 2px rgba(0,0,0,0.15);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.notifications-dropdown {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  min-width: 320px;
+  max-width: 95vw;
+  z-index: 2000;
+  padding: 0.5rem 0;
+  font-family: 'Poppins', sans-serif;
+  animation: fadeIn 0.2s;
+  overflow: hidden;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.notifications-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 22px 14px 18px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 15px;
+  color: #333;
+  background: #fff;
+  transition: background 0.18s;
+  cursor: pointer;
+  position: relative;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item:hover {
+  background: #f5f8ff;
+}
+
+.notification-item.unread {
+  background: #f0f6ff;
+}
+
+.notif-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  background: #f3f6fa;
+  border-radius: 50%;
+  font-size: 20px;
+}
+
+.notif-unread-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  background: #3b82f6;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 2px #3b82f6;
+}
+
+.notif-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notif-title {
+  font-weight: 600;
+  font-size: 15px;
+  color: #222;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notif-message {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 2px;
+  white-space: normal;
+}
+
+.notif-date {
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+.no-notifications-modern {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 0 28px 0;
+  color: #b0b0b0;
+  font-size: 15px;
+  gap: 8px;
+}
+
+.no-notifications-modern i {
+  font-size: 32px;
+  color: #e0e0e0;
+  margin-bottom: 4px;
+}
+
+/* Responsive: keep bell and dropdown usable on mobile */
+@media screen and (max-width: 768px) {
+  .notifications-dropdown {
+    left: auto;
+    min-width: 220px;
+    max-width: 98vw;
+    margin-left: 8px;
+  }
+  .notification-item {
+    padding: 14px 10px 12px 10px;
+    font-size: 14px;
+  }
+  .notif-title {
+    font-size: 14px;
+  }
+}
+
+/* Dark mode: make bell and notification icons white using :host-context for Angular */
+:host-context(body.dark) .bx.bx-bell {
+  color: #fff;
+}
+:host-context(body.dark) .bx.bx-bell:hover {
+  color: #ffd43b;
+}
+:host-context(body.dark) .notif-icon .bx {
+  color: #fff;
+}
+
+/* Dark mode: notification dropdown and content */
+:host-context(body.dark) .notifications-dropdown {
+  background: #23272f;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+  color: #f3f3f3;
+}
+:host-context(body.dark) .notification-item {
+  background: #23272f;
+  border-bottom: 1px solid #353a45;
+  color: #f3f3f3;
+}
+:host-context(body.dark) .notification-item.unread {
+  background: #232c36;
+}
+:host-context(body.dark) .notification-item:hover {
+  background: #2a2f3a;
+}
+:host-context(body.dark) .notif-title {
+  color: #fff;
+}
+:host-context(body.dark) .notif-message {
+  color: #bfc7d5;
+}
+:host-context(body.dark) .notif-date {
+  color: #8a94a7;
+}
+:host-context(body.dark) .no-notifications-modern {
+  color: #888fa1;
+}
+:host-context(body.dark) .no-notifications-modern i {
+  color: #444b5a;
+}

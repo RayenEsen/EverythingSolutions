@@ -1,0 +1,178 @@
+<div [class.dark-mode]="isDarkMode">
+  <p-toast />
+
+  <div class="devis-header-bar" style="margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
+    <div class="devis-header-title">Nouveau Devis</div>
+    <div class="devis-header-meta">
+      <span class="devis-meta-item"><b>Code:</b> {{ newDevis.code }}</span>
+      <span class="devis-meta-item"><b>Date:</b> {{ today | date:'dd/MM/yyyy' }}</span>
+    </div>
+  </div>
+
+  <div class="card">
+
+    <!-- Client Selection -->
+    <div class="form-group mb-3">
+      <label class="form-label">Client *</label>
+      <div style="position: relative; z-index: 999999;">
+        <p-dropdown
+          [(ngModel)]="selectedClient"
+          [options]="clients"
+          optionLabel="fullName"
+          placeholder="Sélectionner un client"
+          [showClear]="true"
+          [filter]="true"
+          appendTo="body"
+          class="w-100"
+        >
+          <ng-template let-client pTemplate="item">
+            <div class="client-dropdown-item">
+              <div class="client-name">{{ client.fullName }}</div>
+              <div class="client-email">{{ client.email }}</div>
+              <div class="client-phone">{{ client.phoneNumber }}</div>
+              <div class="client-address">{{ client.address }}</div>
+              <div class="client-code" *ngIf="client.clientCode">Code: {{ client.clientCode }}</div>
+            </div>
+          </ng-template>
+          <ng-template let-client pTemplate="selectedItem">
+            <div class="client-dropdown-item">
+              <div class="client-name">{{ client.fullName }}</div>
+              <div class="client-email">{{ client.email }}</div>
+              <div class="client-code" *ngIf="client.clientCode">Code: {{ client.clientCode }}</div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+    </div>
+    <!-- Devis Code -->
+    <div class="form-group mb-3">
+      <label class="form-label">Code du Devis</label>
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="newDevis.code"
+        placeholder="Code du devis"
+        class="w-100"
+      />
+    </div>
+    <!-- Articles Selection -->
+    <div class="form-group mb-3">
+      <label class="form-label">Articles</label>
+      <div class="table-responsive">
+        <p-table [value]="lines" [tableStyle]="{'min-width': '50rem'}" class="devis-articles-table">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Article</th>
+              <th>Quantité</th>
+              <th>Remise (%)</th>
+              <th>Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-line let-i="rowIndex">
+            <tr>
+              <td>
+                <div style="position: relative; z-index: 999999;">
+                  <p-dropdown
+                    [(ngModel)]="line.article"
+                    [options]="getAvailableArticles(i)"
+                    optionLabel="designation"
+                    placeholder="Sélectionnez un article"
+                    appendTo="body"
+                    class="w-100"
+                  >
+                    <ng-template let-art pTemplate="item">
+                      <div class="article-dropdown-item">
+                        <div class="article-name">{{ art.designation }}</div>
+                        <div class="article-code">{{ art.code }}</div>
+                      </div>
+                    </ng-template>
+                    <ng-template let-art pTemplate="selectedItem">
+                      <div class="article-dropdown-item">
+                        <div class="article-name">{{ art.designation }}</div>
+                        <div class="article-code">{{ art.code }}</div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+              </td>
+              <td>
+                <p-inputNumber
+                  [(ngModel)]="line.quantite"
+                  [min]="1"
+                  [showButtons]="false"
+                  (onInput)="syncLinesToDevis()"
+                  class="w-100"
+                />
+              </td>
+              <td>
+                <p-inputNumber
+                  [(ngModel)]="line.remise"
+                  mode="decimal"
+                  [minFractionDigits]="2"
+                  [maxFractionDigits]="2"
+                  [min]="0"
+                  [max]="100"
+                  [showButtons]="false"
+                  (onInput)="syncLinesToDevis()"
+                  class="w-100"
+                />
+              </td>
+              <td>
+                <button
+                  pButton
+                  type="button"
+                  icon="pi pi-trash"
+                  class="p-button-text p-button-sm p-button-danger"
+                  (click)="removeLine(i)"
+                  title="Supprimer"
+                  [disabled]="lines.length === 1"
+                ></button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <button
+        pButton
+        type="button"
+        label="Ajouter un article"
+        icon="pi pi-plus"
+        class="p-button-text p-button-sm mt-2"
+        (click)="addLine()"
+      ></button>
+    </div>
+    <!-- Summary -->
+    <div class="summary-section mt-3 p-3 bg-light rounded" style="margin-bottom: 1.5rem;">
+      <div class="row">
+        <div class="col-md-4">
+          <strong>Articles:</strong> {{ linesWithArticleCount }}
+        </div>
+        <div class="col-md-4">
+          <strong>Quantité totale:</strong> {{ getTotalQuantity() }}
+        </div>
+        <div class="col-md-4">
+          <strong>Total estimé:</strong> {{ getEstimatedTotal() | number:'1.2-2' }} TND
+        </div>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button
+        pButton
+        type="button"
+        label="Annuler"
+        icon="pi pi-times"
+        class="p-button-text"
+        (click)="cancel()"
+        style="color: #fff;"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="Créer le Devis"
+        icon="pi pi-check"
+        class="p-button"
+        (click)="saveDevis()"
+      ></button>
+    </div>
+  </div>
+</div> 

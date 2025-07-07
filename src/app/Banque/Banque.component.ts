@@ -161,7 +161,12 @@ export class BanqueComponent implements OnInit {
           detail: 'Banque ajoutée avec succès !'
         });
         this.AddBanqueInfo = false;
-        this.loadBanques();
+        // Update stats
+        const totalBanques = this.getTotalBanques(this.banquesData);
+        const banksThisMonth = this.getBanksThisMonthCount(this.banquesData);
+        this.mostFrequentBank = this.getMostFrequentBank(this.banquesData);
+        this.animateValue('animatedTotalBanques', totalBanques);
+        this.animateValue('animatedBanksThisMonth', banksThisMonth);
       },
     );
   }
@@ -182,12 +187,18 @@ export class BanqueComponent implements OnInit {
         this.banqueService.delete(banque.id).subscribe({
           next: () => {
             this.banquesData = this.banquesData.filter(r => r.id !== banque.id);
+            this.banquesDataOriginal = this.banquesDataOriginal.filter(r => r.id !== banque.id);
             this.messageService.add({
               severity: 'success',
               summary: 'Succès',
               detail: 'Banque supprimée avec succès'
             });
-            this.loadBanques(); 
+            // Update stats
+            const totalBanques = this.getTotalBanques(this.banquesData);
+            const banksThisMonth = this.getBanksThisMonthCount(this.banquesData);
+            this.mostFrequentBank = this.getMostFrequentBank(this.banquesData);
+            this.animateValue('animatedTotalBanques', totalBanques);
+            this.animateValue('animatedBanksThisMonth', banksThisMonth);
           },
         });
       }
@@ -206,6 +217,7 @@ export class BanqueComponent implements OnInit {
           this.banqueService.delete(id).subscribe({
             next: () => {
               this.banquesData = this.banquesData.filter(r => r.id !== id);
+              this.banquesDataOriginal = this.banquesDataOriginal.filter(r => r.id !== id);
               this.SelectedBanques = this.SelectedBanques.filter(r => r.id !== id);
               if (this.SelectedBanques.length === 0) {
                 this.messageService.add({
@@ -213,7 +225,12 @@ export class BanqueComponent implements OnInit {
                   summary: 'Suppression réussie',
                   detail: 'Les banques sélectionnées ont été supprimées.'
                 });
-                this.loadBanques();
+                // Update stats
+                const totalBanques = this.getTotalBanques(this.banquesData);
+                const banksThisMonth = this.getBanksThisMonthCount(this.banquesData);
+                this.mostFrequentBank = this.getMostFrequentBank(this.banquesData);
+                this.animateValue('animatedTotalBanques', totalBanques);
+                this.animateValue('animatedBanksThisMonth', banksThisMonth);
               }
             }
           });
@@ -236,9 +253,16 @@ export class BanqueComponent implements OnInit {
 
     this.banqueService.update(this.selectedBanque.id, this.selectedBanque).subscribe({
       next: () => {
+        this.banquesData = this.banquesData.map(b => b.id === this.selectedBanque.id ? { ...b, ...this.selectedBanque } : b);
+        this.banquesDataOriginal = this.banquesDataOriginal.map(b => b.id === this.selectedBanque.id ? { ...b, ...this.selectedBanque } : b);
         this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Banque modifiée avec succès', life: 3000 });
         this.ModifyBanqueInfo = false;
-        this.loadBanques();
+        // Update stats
+        const totalBanques = this.getTotalBanques(this.banquesData);
+        const banksThisMonth = this.getBanksThisMonthCount(this.banquesData);
+        this.mostFrequentBank = this.getMostFrequentBank(this.banquesData);
+        this.animateValue('animatedTotalBanques', totalBanques);
+        this.animateValue('animatedBanksThisMonth', banksThisMonth);
       },
       error: () => {
         this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Échec de la modification', life: 3000 });

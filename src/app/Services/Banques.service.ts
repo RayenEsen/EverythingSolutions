@@ -41,4 +41,10 @@ export class BanquesService {
       withCredentials: true
     });
   }
+
+  getFirst(): Observable<Banque> {
+    return this.http.get<Banque>(`${this.baseUrl}/first`, {
+      withCredentials: true
+    });
+  }
 }

@@ -23,6 +23,9 @@ import { FournisseurComponent } from './Fournisseur/Fournisseur.component';
 import { TVAComponent } from './TVA/TVA.component';
 import { StockComponent } from './Stock/Stock.component';
 import { ClientComponent } from './Client/Client.component';
+import { DevisComponent } from './Devis/Devis.component';
+import { ImprimerDevisComponent } from './ImprimerDevis/ImprimerDevis.component';
+import { DevisCreateComponent } from './Devis/DevisCreate.component';
 
 export const routes: Routes = [
   {
@@ -138,6 +141,24 @@ export const routes: Routes = [
         path: 'Client',
         component: ClientComponent,
         title: 'Gestion des Clients',
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'Devis/nouveau',
+        component: DevisCreateComponent,
+        title: 'Créer un Devis',
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'Devis',
+        component: DevisComponent,
+        title: 'Gestion des Devis',
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'ImprimerDevis/:id',
+        component: ImprimerDevisComponent,
+        title: 'Imprimer Devis',
         canActivate: [AuthGuard]
       }
     ]

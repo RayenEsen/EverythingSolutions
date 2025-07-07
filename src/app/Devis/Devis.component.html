@@ -1,0 +1,430 @@
+<div [class.dark-mode]="themeService?.isDarkMode && themeService.isDarkMode()">
+  <p-toast />
+  <div class="dashboard-header">
+    <div class="header-content"> 
+      <div class="breadcrumb-nav" style="display: flex; align-items: center; justify-content: space-between;">
+        <nav class="breadcrumb">
+          <span class="breadcrumb-item">Accueil</span>
+          <span class="breadcrumb-separator">›</span>
+          <span class="breadcrumb-item">Ventes</span>
+          <span class="breadcrumb-separator">›</span>
+          <span class="breadcrumb-item active">Gestion Devis</span>
+        </nav>
+        <img src="https://i.ibb.co/1tkjB7sR/Whats-App-Image-2025-06-25-at-1-14-47-PM-removebg-preview.png" alt="Devis Logo" style="margin-left: 12px; height: 50px; width: 50px;">
+      </div>
+      <div class="header-main" style="margin-top: -10px;">
+        <h1 class="header-title">
+          <span class="title-gradient">Gestion Devis</span>
+        </h1>
+        <p class="header-subtitle">Gérez les devis et proformas de votre entreprise.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-content">
+        <h3 class="metric-label">Total Devis</h3>
+        <p class="metric-value">{{ animatedTotalDevis }} <span class="currency"></span></p>
+        <div class="metric-decoration">
+          <i class="pi pi-file" style="color: black;"></i>
+        </div>
+      </div>
+    </div>
+    <div class="metric-card accent-2">
+      <div class="metric-content">
+        <h3 class="metric-label">Total HT</h3>
+        <p class="metric-value">{{ animatedTotalHT | number:'1.2-2' }} <span class="currency">TND</span></p>
+        <div class="metric-decoration">
+          <i class="pi pi-calculator" style="color: black;"></i>
+        </div>
+      </div>
+    </div>
+    <div class="metric-card accent-3">
+      <div class="metric-content">
+        <h3 class="metric-label">Total TTC</h3>
+        <p class="metric-value">{{ animatedTotalTTC | number:'1.2-2' }} <span class="currency">TND</span></p>
+        <div class="metric-decoration">
+          <i class="pi pi-money-bill" style="color: black;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="d-flex align-items-center justify-content-between p-2 bg-light text-dark border rounded mb-3">
+      <p-menubar [model]="items" />
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input
+          type="text"
+          pInputText
+          placeholder="Rechercher par code, client, date, article..."
+          class="form-control"
+          [(ngModel)]="searchText"
+          (input)="filterDevis()"
+        />
+      </span>
+    </div>
+    <p-contextMenu #cm [model]="contextMenuItems" [appendTo]="'body'"></p-contextMenu>
+    <p-table
+      [value]="filteredDevisList"
+      dataKey="id"
+      [tableStyle]="{'min-width': '70rem'}"
+      selectionMode="multiple"
+      [(selection)]="SelectedDevis"
+      [contextMenu]="cm"
+      [(contextMenuSelection)]="selectedDevis"
+      [loading]="loading"
+      class="devis-table"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 1rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th>ID</th>
+          <th>Code</th>
+          <th>Client</th>
+          <th>Date Création</th>
+          <th>Articles</th>
+          <th>Total HT</th>
+          <th>Total TTC</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-devis>
+        <tr [pContextMenuRow]="devis">
+          <td>
+            <p-tableCheckbox [value]="devis"></p-tableCheckbox>
+          </td>
+          <td>
+            <button
+              pButton
+              [pRowToggler]="devis"
+              [icon]="devis.expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+              class="p-button-text p-button-rounded"
+            ></button>
+            <span class="ml-2">{{ devis.id }}</span>
+          </td>
+          <td>{{ devis.code }}</td>
+          <td>
+            <div class="client-info">
+              <div class="client-name">{{ devis.clientName || 'Client non spécifié' }}</div>
+              <div class="client-id" *ngIf="devis.clientId > 0">ID: {{ devis.clientId }}</div>
+              <div class="client-code" *ngIf="devis.clientCode">Code: {{ devis.clientCode }}</div>
+            </div>
+          </td>
+          <td>{{ devis.dateCreation | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            <div class="articles-info">
+              <span class="articles-count">{{ devis.devisArticles?.length || 0 }} article(s)</span>
+              <div class="articles-preview" *ngIf="devis.devisArticles && devis.devisArticles.length > 0">
+                <small class="text-muted">
+                  {{ devis.devisArticles[0].designation }}
+                  <span *ngIf="devis.devisArticles.length > 1"> +{{ devis.devisArticles.length - 1 }} autre(s)</span>
+                </small>
+              </div>
+            </div>
+          </td>
+          <td>{{ getDevisTotalHT(devis) | number:'1.2-2' }}</td>
+          <td>{{ getDevisTotalTTC(devis) | number:'1.2-2' }}</td>
+          <td>
+            <button pButton type="button" icon="pi pi-eye" class="p-button-text p-button-sm p-button-info" (click)="viewDevis(devis)" title="Voir les détails"></button>
+            <button pButton type="button" icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="editDevis(devis)" title="Modifier"></button>
+            <button pButton type="button" icon="pi pi-trash" class="p-button-text p-button-sm p-button-danger" (click)="confirmDeleteDevis(devis)" title="Supprimer"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="expandedrow" let-devis>
+        <tr>
+          <td colspan="9">
+            <div class="p-3">
+              <div class="row">
+                <div class="col-md-6">
+                  <h5>Informations du devis #{{ devis.id }}</h5>
+                  <div class="devis-details">
+                    <p><strong>Code:</strong> {{ devis.code }}</p>
+                    <p><strong>Date de création:</strong> {{ devis.dateCreation | date:'dd/MM/yyyy HH:mm' }}</p>
+                    <p><strong>Client:</strong> {{ devis.clientName || 'Client non spécifié' }}</p>
+                    <p><strong>Code Client:</strong> {{  devis.clientCode  || 'ClientCode non spécifié' }}</p>
+
+                    <p *ngIf="devis.clientId > 0"><strong>ID Client:</strong> {{ devis.clientId }}</p>
+                    <p><strong>Total HT:</strong> {{ getDevisTotalHT(devis) | number:'1.2-2' }} TND</p>
+                    <p><strong>Total TTC:</strong> {{ getDevisTotalTTC(devis) | number:'1.2-2' }} TND</p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <h5>Résumé des articles</h5>
+                  <div class="articles-summary">
+                    <p><strong>Nombre d'articles:</strong> {{ devis.devisArticles?.length || 0 }}</p>
+                    <p><strong>Quantité totale:</strong> {{ getTotalQuantityForDevis(devis) }}</p>
+                    <p><strong>Remise moyenne:</strong> {{ getAverageRemiseForDevis(devis) | number:'1.1-1' }}%</p>
+                  </div>
+                </div>
+              </div>
+              
+              <h5 class="mt-4">Détail des articles</h5>
+              <p-table *ngIf="devis.devisArticles && devis.devisArticles.length > 0" [value]="devis.devisArticles" [tableStyle]="{'min-width': '60rem'}">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Article ID</th>
+                    <th>Article</th>
+                    <th>Quantité</th>
+                    <th>Remise (%)</th>
+                    <th>Prix Unitaire HT</th>
+                    <th>Montant HT</th>
+                    <th>Montant TTC</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-devisArticle>
+                  <tr>
+                    <td>{{ devisArticle.articleId }}</td>
+                    <td>{{ devisArticle.designation || 'Article ' + devisArticle.articleId }}</td>
+                    <td>{{ devisArticle.quantite }}</td>
+                    <td>{{ devisArticle.remise | number:'1.0-2' }}%</td>
+                    <td>{{ devisArticle.pU_HTVA | number:'1.2-2' }} TND</td>
+                    <td>{{ devisArticle.mT_HTVA | number:'1.2-2' }} TND</td>
+                    <td>{{ (devisArticle.mT_HTVA || 0) * 1.19 | number:'1.2-2' }} TND</td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="7" class="text-center">Aucun article trouvé pour ce devis.</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+              <div *ngIf="!devis.devisArticles || devis.devisArticles.length === 0" class="text-center">
+                Aucun article trouvé pour ce devis.
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Move charts below the table -->
+  <div class="charts-grid">
+    <div class="card">
+      <h5 class="text-lg font-semibold mb-4">Top 10 Devis par Revenue</h5>
+      <ng-container *ngIf="hasBarData; else noBarData">
+        <p-chart type="bar" [data]="devisBarChartData" [options]="devisBarChartOptions"></p-chart>
+      </ng-container>
+      <ng-template #noBarData>
+        <div class="d-flex flex-column align-items-center justify-content-center" style="height: 300px;">
+          <i class="pi pi-chart-bar" style="font-size: 3rem; color: #ccc;"></i>
+          <p class="mt-3 text-muted">Aucune donnée disponible pour afficher le graphique</p>
+        </div>
+      </ng-template>
+    </div>
+    <div class="card">
+      <h5 class="text-lg font-semibold mb-4">Évolution des Revenus dans le Temps</h5>
+      <ng-container *ngIf="hasLineData; else noLineData">
+        <p-chart type="line" [data]="devisLineChartData" [options]="devisLineChartOptions"></p-chart>
+      </ng-container>
+      <ng-template #noLineData>
+        <div class="d-flex flex-column align-items-center justify-content-center" style="height: 300px;">
+          <i class="pi pi-chart-line" style="font-size: 3rem; color: #ccc;"></i>
+          <p class="mt-3 text-muted">Aucune donnée disponible pour afficher le graphique</p>
+        </div>
+      </ng-template>
+    </div>
+    <div class="card">
+      <h5 class="text-lg font-semibold mb-4">Distribution des Revenus par Niveau de Remise</h5>
+      <ng-container *ngIf="hasPolarData; else noPolarData">
+        <p-chart type="polarArea" [data]="devisPolarChartData" [options]="devisPolarChartOptions"></p-chart>
+      </ng-container>
+      <ng-template #noPolarData>
+        <div class="d-flex flex-column align-items-center justify-content-center" style="height: 300px;">
+          <i class="pi pi-chart-pie" style="font-size: 3rem; color: #ccc;"></i>
+          <p class="mt-3 text-muted">Aucune donnée disponible pour afficher le graphique</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Edit Devis Dialog -->
+  <p-dialog 
+    [(visible)]="addDialog" 
+    header="Modifier le Devis"
+    [modal]="true" 
+    [style]="{ width: '90vw', maxWidth: '1200px' }" 
+    [contentStyle]="{ 'max-height': '80vh', 'overflow': 'auto' }"
+    [draggable]="false"
+    [resizable]="false"
+    class="devis-dialog"
+  >
+    <div class="dialog-content">
+      <!-- Client Selection -->
+      <div class="form-group mb-3">
+        <label class="form-label">Client *</label>
+        <div style="position: relative; z-index: 999999;">
+          <p-select 
+            [(ngModel)]="selectedClient" 
+            [options]="clients" 
+            optionLabel="fullName" 
+            placeholder="Sélectionnez un client"
+            [showClear]="true"
+            appendTo="body"
+            class="w-100"
+          >
+          <ng-template pTemplate="selectedItem" let-client>
+            <div class="client-dropdown-item">
+              <div class="client-name">{{ client.fullName }}</div>
+              <div class="client-email">{{ client.email }}</div>
+            </div>
+          </ng-template>
+                      <ng-template pTemplate="item" let-client>
+              <div class="client-dropdown-item">
+                <div class="client-name">{{ client.fullName }}</div>
+                <div class="client-email">{{ client.email }}</div>
+              </div>
+            </ng-template>
+          </p-select>
+          </div>
+        </div>
+
+      <!-- Devis Code -->
+      <div class="form-group mb-3">
+        <label class="form-label">Code du Devis</label>
+        <input 
+          type="text" 
+          pInputText 
+          [(ngModel)]="newDevis.code" 
+          placeholder="Code du devis"
+          class="w-100"
+        />
+      </div>
+
+      <!-- Articles Selection -->
+      <div class="form-group mb-3">
+        <label class="form-label">Articles</label>
+        <div class="table-responsive">
+          <p-table [value]="selectedArticles" [tableStyle]="{'min-width': '50rem'}" class="devis-articles-table">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Article</th>
+                <th>Quantité</th>
+                <th>Remise (%)</th>
+                <th>Actions</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-article let-i="rowIndex">
+              <tr>
+                <td>
+                  <div style="position: relative; z-index: 999999;">
+                    <p-select 
+                      [(ngModel)]="article.article" 
+                      [options]="articles" 
+                      optionLabel="designation" 
+                      placeholder="Sélectionnez un article"
+                      appendTo="body"
+                      class="w-100"
+                      [style.position]="'relative'"
+                      [style.z-index]="999999"
+                    >
+                    <ng-template pTemplate="selectedItem" let-art>
+                      <div class="article-dropdown-item">
+                        <div class="article-name">{{ art.designation }}</div>
+                        <div class="article-code">{{ art.code }}</div>
+                      </div>
+                    </ng-template>
+                    <ng-template pTemplate="item" let-art>
+                      <div class="article-dropdown-item">
+                        <div class="article-name">{{ art.designation }}</div>
+                        <div class="article-code">{{ art.code }}</div>
+                      </div>
+                    </ng-template>
+                  </p-select>
+                  </div>
+                </td>
+                <td>
+                  <p-inputNumber 
+                    [(ngModel)]="article.quantite" 
+                    [min]="1" 
+                    [showButtons]="false" 
+                    (onInput)="onArticleQtyChange(article.article, article.quantite)"
+                    class="w-100"
+                  />
+                </td>
+                <td>
+                  <p-inputNumber 
+                    [(ngModel)]="article.remise" 
+                    mode="decimal" 
+                    [minFractionDigits]="2" 
+                    [maxFractionDigits]="2" 
+                    [min]="0" 
+                    [max]="100" 
+                    [showButtons]="false" 
+                    (onInput)="onArticleRemiseChange(article.article, article.remise)"
+                    class="w-100"
+                  />
+                </td>
+                <td>
+                  <button 
+                    pButton 
+                    type="button" 
+                    icon="pi pi-trash" 
+                    class="p-button-text p-button-sm p-button-danger" 
+                    (click)="removeArticle(i)"
+                    title="Supprimer"
+                  ></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        <button 
+          pButton 
+          type="button" 
+          label="Ajouter un article" 
+          icon="pi pi-plus" 
+          class="p-button-text p-button-sm mt-2"
+          (click)="addNewArticleLine()"
+        ></button>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary-section mt-3 p-3 bg-light rounded">
+        <h6>Résumé</h6>
+        <div class="row">
+          <div class="col-md-4">
+            <strong>Articles:</strong> {{ getSelectedArticlesCount() }}
+          </div>
+          <div class="col-md-4">
+            <strong>Quantité totale:</strong> {{ getTotalQuantity() }}
+          </div>
+          <div class="col-md-4">
+            <strong>Total estimé:</strong> {{ getEstimatedTotal() | number:'1.2-2' }} TND
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="dialog-footer">
+        <button 
+          pButton 
+          type="button" 
+          label="Annuler" 
+          icon="pi pi-times" 
+          class="p-button-text" 
+          (click)="addDialog = false"
+        ></button>
+        <button 
+          pButton 
+          type="button" 
+          label="Modifier"
+          icon="pi pi-check" 
+          class="p-button" 
+          (click)="saveDevis()"
+        ></button>
+      </div>
+    </ng-template>
+  </p-dialog>
+
+  <p-confirmDialog></p-confirmDialog>
+  
+
+</div>

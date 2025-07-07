@@ -1,0 +1,158 @@
+.imprimer-devis-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 24px;
+  background: #fff;
+  font-family: 'Arial', sans-serif;
+  border: 1.5px solid #bbb;
+  color: #222;
+}
+
+body.dark .imprimer-devis-container {
+  background: #23272f !important;
+  color: #f1f1f1 !important;
+  border-color: #444 !important;
+}
+
+body.dark .imprimer-devis-container table,
+body.dark .imprimer-devis-container th,
+body.dark .imprimer-devis-container td {
+  border-color: #444 !important;
+}
+
+body.dark .imprimer-devis-container th {
+  background: #2d3748 !important;
+  color: #f1f1f1 !important;
+}
+
+body.dark .imprimer-devis-container .imprimer-devis-signature-block {
+  border-color: #444 !important;
+}
+
+:host-context(body.dark) .imprimer-devis-container thead,
+:host-context(body.dark) .imprimer-devis-container th,
+:host-context(body.dark) .imprimer-devis-container td {
+  background: #222 !important;
+  color: #f1f1f1 !important;
+  border-color: #f1f1f1 !important;
+}
+:host-context(body.dark) .imprimer-devis-container table {
+  border-color: #f1f1f1 !important;
+}
+
+@media print {
+  button {
+    display: none !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .imprimer-devis-container {
+    padding: 2px;
+    font-size: 12px;
+    max-width: 100vw;
+  }
+  .imprimer-devis-container > div,
+  .imprimer-devis-container > table {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .imprimer-devis-container > div[style*='display:flex'] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px;
+  }
+  .imprimer-devis-container table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    box-sizing: border-box;
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+  .imprimer-devis-container th,
+  .imprimer-devis-container td {
+    white-space: nowrap;
+    font-size: 11px;
+    padding: 4px 4px !important;
+  }
+  .imprimer-devis-container [style*='min-height:160px'] {
+    min-height: 80px !important;
+    margin-bottom: 8px;
+  }
+  .imprimer-devis-container [style*='display:flex'][style*='justify-content:space-between'][style*='margin-top:32px;'] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px;
+  }
+  .imprimer-devis-container table {
+    margin-bottom: 8px;
+  }
+  .imprimer-devis-container .totals-mobile {
+    width: 100% !important;
+    background: #f8f8f8;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    margin: 8px 0;
+    font-size: 13px;
+    padding: 8px 0;
+  }
+  .imprimer-devis-container .totals-mobile tr {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding: 4px 0;
+  }
+  .imprimer-devis-container .totals-mobile td {
+    border: none !important;
+    padding: 4px 12px !important;
+    font-size: 13px;
+    flex: 1 1 50%;
+    text-align: right;
+  }
+  .imprimer-devis-container .totals-mobile td:first-child {
+    text-align: left;
+    font-weight: 600;
+  }
+  .imprimer-devis-container .totals-tva-wrapper {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0;
+  }
+  .imprimer-devis-container .totals-tva-wrapper > table {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-bottom: 8px;
+  }
+  .imprimer-devis-container .totals-tva-wrapper > table,
+  .imprimer-devis-container .totals-mobile {
+    font-size: 10px !important;
+    margin-bottom: 4px !important;
+    background: none !important;
+    border-radius: 0 !important;
+    border: 1px solid #ddd !important;
+    padding: 0 !important;
+  }
+  .imprimer-devis-container .totals-mobile tr,
+  .imprimer-devis-container .totals-tva-wrapper > table tr {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding: 2px 0;
+  }
+  .imprimer-devis-container .totals-mobile td,
+  .imprimer-devis-container .totals-tva-wrapper > table td,
+  .imprimer-devis-container .totals-tva-wrapper > table th {
+    border: none !important;
+    padding: 2px 6px !important;
+    font-size: 10px !important;
+    flex: 1 1 50%;
+    text-align: right;
+  }
+  .imprimer-devis-container .totals-mobile td:first-child,
+  .imprimer-devis-container .totals-tva-wrapper > table td:first-child,
+  .imprimer-devis-container .totals-tva-wrapper > table th:first-child {
+    text-align: left;
+    font-weight: 600;
+  }
+}

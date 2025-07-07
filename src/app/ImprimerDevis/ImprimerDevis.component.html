@@ -1,0 +1,128 @@
+<div *ngIf="isLoading" style="text-align:center;padding:40px;font-size:18px;">Chargement du devis...</div>
+<div *ngIf="error" style="color:red;text-align:center;padding:40px;font-size:18px;">{{ error }}</div>
+<div *ngIf="!isLoading && !error && devis" 
+  class="imprimer-devis-container"
+  [style.background]="isDarkMode ? '#23272f' : '#fff'"
+  [style.color]="isDarkMode ? '#f1f1f1' : '#222'"
+>
+  <div style="display:flex;align-items:center;justify-content:space-between;">
+    <img [src]="companyImageUrl" [alt]="devis?.nomSociete || 'Logo'" style="height:60px;">
+    <div style="text-align:right;font-size:13px;">
+      <b>Société <span style="color:#e30613;">{{ devis?.nomSociete }}</span>,<br>SARL</b> au capital de 50.000 TND<br>
+      Adresse: {{ devis?.adresseEntreprise }}<br>
+      Identifiant Unique: {{ devis?.matriculeFiscale }}<br>
+      RIB: {{ banque?.rib || '—' }} - {{ banque?.nom || 'Banque non spécifiée' }}<br>
+
+    </div>
+  </div>
+  <hr style="margin:16px 0 8px 0;">
+  <div style="display:flex;align-items:center;justify-content:center;">
+    <h2 style="margin:0;font-size:2rem;letter-spacing:2px;">Devis</h2>
+  </div>
+  <table style="width:100%;margin:16px 0 8px 0;font-size:14px;border:1px solid #222;border-collapse:collapse;">
+    <tr>
+      <td style="border:1px solid #222;padding:6px 12px;width:16%;">
+        <b>Numéro</b><br>{{ devis?.code }}
+      </td>
+      <td style="border:1px solid #222;padding:6px 12px;width:16%;">
+        <b>Date</b><br>{{ devis?.dateCreation | date:'dd/MM/yyyy' }}
+      </td>
+      <td style="border:1px solid #222;padding:6px 12px;width:16%;">
+        <b>B. Commande</b><br>&nbsp;
+      </td>
+      <td style="border:1px solid #222;padding:6px 12px;width:16%;">
+        <b>Page</b><br>1/1
+      </td>
+      <td style="border:1px solid #222;padding:6px 12px;vertical-align:top;" colspan="2">
+        <div style="font-weight:bold;">Doit : <span style="font-weight:600;">{{ devis?.client?.fullName }}</span></div>
+        <div *ngIf="devis?.client?.clientCode" style="font-size:13px;margin-bottom:2px;">Code client : {{ devis?.client?.clientCode }}</div>
+        <div>{{ devis?.client?.address || 'Adresse non spécifiée' }}</div>
+        <div>Téléphone : {{ devis?.client?.phoneNumber || 'Non spécifié' }}</div>
+        <div>Email : {{ devis?.client?.email || 'Non spécifié' }}</div>
+      </td>
+    </tr>
+  </table>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px;border:1px solid #222;">
+    <thead>
+      <tr style="background:#f5f5f5;">
+        <th style="border:1px solid #222;padding:6px 4px;width:12%;">REF</th>
+        <th style="border:1px solid #222;padding:6px 4px;">DESIGNATION</th>
+        <th style="border:1px solid #222;padding:6px 4px;width:8%;">QTE</th>
+        <th style="border:1px solid #222;padding:6px 4px;width:14%;">PU. HTVA</th>
+        <th style="border:1px solid #222;padding:6px 4px;width:10%;">%REM</th>
+        <th style="border:1px solid #222;padding:6px 4px;width:14%;">MT. HTVA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let article of devis?.articles">
+        <td style="border:1px solid #222;padding:6px 4px;">{{ article?.codeArticle }}</td>
+        <td style="border:1px solid #222;padding:6px 4px;">{{ article?.designation }}</td>
+        <td style="border:1px solid #222;padding:6px 4px;text-align:right;">{{ article?.quantite }}</td>
+        <td style="border:1px solid #222;padding:6px 4px;text-align:right;">{{ article?.prixUnitaireHT | number:'1.3-3' }}</td>
+        <td style="border:1px solid #222;padding:6px 4px;text-align:right;">{{ article?.remise | number:'1.2-2' }}</td>
+        <td style="border:1px solid #222;padding:6px 4px;text-align:right;">{{ article?.montantHT | number:'1.3-3' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="totals-tva-wrapper" style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:12px;flex-wrap:wrap;">
+    <!-- TVA Table -->
+    <table style="font-size:13px;border-collapse:collapse;min-width:320px;border:1px solid #222;">
+      <thead>
+        <tr style="background:#f5f5f5;">
+          <th style="border:1px solid #222;padding:4px 8px;">Code</th>
+          <th style="border:1px solid #222;padding:4px 8px;">Base HT</th>
+          <th style="border:1px solid #222;padding:4px 8px;">Taux TVA</th>
+          <th style="border:1px solid #222;padding:4px 8px;">Montant TVA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border:1px solid #222;padding:4px 8px;">{{ devis?.code }}</td>
+          <td style="border:1px solid #222;padding:4px 8px;text-align:right;">{{ devis?.totalHT | number:'1.3-3' }}</td>
+          <td style="border:1px solid #222;padding:4px 8px;text-align:right;">{{ tauxTVA }}</td>
+          <td style="border:1px solid #222;padding:4px 8px;text-align:right;">{{ devis?.totalTVA | number:'1.3-3' }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- Totals Table -->
+    <table class="totals-mobile" style="font-size:13px;border-collapse:collapse;min-width:260px;border:1px solid #222;margin-top:8px;">
+      <tbody>
+        <tr><td style="border:none;padding:2px 8px;">Total HT</td><td style="border:none;padding:2px 8px;text-align:right;">{{ devis?.totalHT | number:'1.3-3' }}</td></tr>
+        <tr><td style="border:none;padding:2px 8px;">Remise</td><td style="border:none;padding:2px 8px;text-align:right;">{{ totalRemise | number:'1.3-3' }}</td></tr>
+        <tr><td style="border:none;padding:2px 8px;">Total Net</td><td style="border:none;padding:2px 8px;text-align:right;">{{ totalNet | number:'1.3-3' }}</td></tr>
+        <tr><td style="border:none;padding:2px 8px;">Total TVA</td><td style="border:none;padding:2px 8px;text-align:right;">{{ devis?.totalTVA | number:'1.3-3' }}</td></tr>
+        <tr><td style="border:none;padding:2px 8px;font-weight:bold;">Total TTC</td><td style="border:none;padding:2px 8px;text-align:right;font-weight:bold;">{{ devis?.totalTTC | number:'1.3-3' }}</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="margin-top:18px;font-size:13px;">
+    Arrêté le présent Devis à la somme de : <b>{{ devis?.totalTTC! | numberToWordsFrench }}</b>
+  </div>
+  <div style="display:flex;justify-content:space-between;margin-top:32px;">
+    <div style="border:1px solid #222;width:45%;padding:12px 8px;min-height:160px;text-align:center;">
+      <div style="margin-bottom:8px;">Signature et Cachet</div>
+      <!-- Removed cachet image for human signature -->
+    </div>
+    <div style="border:1px solid #222;width:45%;padding:12px 8px;min-height:160px;text-align:center;">
+      <div style="margin-bottom:8px;">Signature et Cachet Client</div>
+    </div>
+  </div>
+  <div style="margin-top:18px;font-size:13px;display:flex;justify-content:space-between;">
+    <span>E-mail: {{ devis?.email }}</span>
+    <span *ngIf="devis?.siteWeb">site web: {{ devis.siteWeb }}</span>
+  </div>
+  <!-- Print Button -->
+  <div style="display:flex;justify-content:center;margin-top:40px;margin-bottom:20px;">
+    <button 
+      (click)="printDevis()"
+      [style.background]="isDarkMode ? '#4a5568' : '#4a6ced'"
+      [style.color]="isDarkMode ? '#ffffff' : '#ffffff'"
+      [style.border]="isDarkMode ? '1px solid #718096' : '1px solid #4a6ced'"
+      style="padding:16px 32px;border-radius:12px;font-weight:600;font-size:16px;cursor:pointer;box-shadow:0 4px 6px rgba(0,0,0,0.1);transition:all 0.3s ease;"
+      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 12px rgba(0,0,0,0.15)'"
+      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)'"
+    >
+      🖨️ Imprimer le Devis
+    </button>
+  </div>
+</div>

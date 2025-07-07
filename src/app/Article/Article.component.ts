@@ -84,6 +84,7 @@ export class ArticleComponent implements OnInit {
     tva: { id: 0, code: '', taux: 0 },
     prixVenteHT: 0,
     gouvernerat: '',
+    entrepriseId: 0,
   };
 
   tvaOptions: TVA[] = [];
@@ -247,10 +248,10 @@ export class ArticleComponent implements OnInit {
     const text = this.searchText?.toLowerCase() || '';
     this.stock.articles = this.stock.articles.filter((article) =>
       Object.values(article).some((value) =>
-        String(value).toLowerCase().includes(text)
+        String(value ?? '').toLowerCase().includes(text)
       ) ||
-      article.tva.code.toLowerCase().includes(text)
-      || article.gouvernerat?.toLowerCase().includes(text)
+      (article.tva?.code?.toLowerCase().includes(text) ?? false)
+      || (article.gouvernerat?.toLowerCase().includes(text) ?? false)
     );
   }
   
@@ -267,8 +268,8 @@ export class ArticleComponent implements OnInit {
     this.showNewStockIdError = false;
 
     if (mode === 'edit' && article) {
-      this.currentArticle = { ...article };
-      this.selectedTVA = this.tvaOptions.find(t => t.id === article.tva.id) || null;
+      this.currentArticle = { ...article, entrepriseId: article.entrepriseId ?? 0 };
+      this.selectedTVA = article.tva ? this.tvaOptions.find(t => t.id === article.tva!.id) || null : null;
       this.selectedStock = this.stockOptions.find(s => s.id === article.stockId) || null;
     } else {
       this.currentArticle = {
@@ -280,6 +281,7 @@ export class ArticleComponent implements OnInit {
         prixVenteHT: 0,
         gouvernerat: '',
         stockId: undefined,
+        entrepriseId: 0,
       };
       this.selectedTVA = this.tvaOptions.length > 0 ? this.tvaOptions[0] : null;
       this.selectedStock = this.stockOptions.length > 0 ? this.stockOptions[0] : null;
@@ -311,7 +313,7 @@ export class ArticleComponent implements OnInit {
   }
 
   saveArticle() {
-    this.showCodeError = !this.currentArticle.code.trim();
+    this.showCodeError = !this.currentArticle.code?.trim();
     this.showDesignationError = !this.currentArticle.designation;
     this.showPrixAchatHTError = this.currentArticle.prixAchatHT === 0 || this.currentArticle.prixAchatHT === null || this.currentArticle.prixAchatHT === undefined;
     this.showPrixVenteHTError = this.currentArticle.prixVenteHT === 0 || this.currentArticle.prixVenteHT === null || this.currentArticle.prixVenteHT === undefined;
@@ -337,8 +339,8 @@ export class ArticleComponent implements OnInit {
     }
 
     const addArticle: AddArticle = {
-      code: this.currentArticle.code,
-      designation: this.currentArticle.designation,
+      code: this.currentArticle.code ?? '',
+      designation: this.currentArticle.designation ?? '',
       prixAchatHT: this.currentArticle.prixAchatHT,
       tvaId: this.selectedTVA ? this.selectedTVA.id : null,
       prixVenteHT: this.currentArticle.prixVenteHT,
@@ -355,7 +357,10 @@ export class ArticleComponent implements OnInit {
             summary: 'Succès',
             detail: 'Article mis à jour avec succès',
           });
-          this.loadInitialData();
+          // Update locally
+          this.stock.articles = this.stock.articles.map(a => a.id === this.currentArticle.id ? { ...a, ...addArticle, tva: this.selectedTVA!, stockId: this.selectedStock?.id, tvaId: this.selectedTVA ? this.selectedTVA.id : null } as Article : a);
+          this.calculateStats();
+          this.initCharts();
           this.AddArticleInfo = false;
         },
         error: (error: HttpErrorResponse) => {
@@ -370,13 +375,16 @@ export class ArticleComponent implements OnInit {
     } else {
       // Add new article
       this.articleService.addArticle(addArticle).subscribe({
-        next: () => {
+        next: (created: Article) => {
           this.messageService.add({
             severity: 'success',
             summary: 'Succès',
             detail: 'Article ajouté avec succès',
           });
-          this.loadInitialData();
+          // Add locally
+          this.stock.articles.push({ ...created, tva: this.selectedTVA!, stockId: this.selectedStock?.id, tvaId: this.selectedTVA ? this.selectedTVA.id : null } as Article);
+          this.calculateStats();
+          this.initCharts();
           this.AddArticleInfo = false;
         },
         error: (error: HttpErrorResponse) => {
@@ -410,7 +418,10 @@ export class ArticleComponent implements OnInit {
               summary: 'Succès',
               detail: 'Article supprimé avec succès!',
             });
-            this.loadInitialData(); // Reload articles after deletion
+            // Remove locally
+            this.stock.articles = this.stock.articles.filter(a => a.id !== article.id);
+            this.calculateStats();
+            this.initCharts();
           },
           error: (error: HttpErrorResponse) => {
             console.error('Error deleting article:', error);
@@ -460,7 +471,11 @@ export class ArticleComponent implements OnInit {
               summary: 'Succès',
               detail: 'Articles sélectionnés supprimés avec succès!',
             });
-            this.loadInitialData(); // Reload articles after all deletions
+            // Remove locally
+            const idsToDelete = this.SelectedArticles.map(a => a.id);
+            this.stock.articles = this.stock.articles.filter(a => !idsToDelete.includes(a.id));
+            this.calculateStats();
+            this.initCharts();
           },
           error: (error: HttpErrorResponse) => {
             console.error('Error deleting selected articles:', error);
@@ -497,7 +512,7 @@ export class ArticleComponent implements OnInit {
     // Data for Sales by Designation (Bar Chart)
     const salesByDesignationMap = new Map<string, number>();
     this.stock.articles.forEach(article => {
-      salesByDesignationMap.set(article.designation, (salesByDesignationMap.get(article.designation) || 0) + article.prixVenteHT);
+      salesByDesignationMap.set(article.designation ?? '', (salesByDesignationMap.get(article.designation ?? '') || 0) + article.prixVenteHT);
     });
     const salesByDesignationLabels = Array.from(salesByDesignationMap.keys());
     const salesByDesignationValues = Array.from(salesByDesignationMap.values());
@@ -551,7 +566,7 @@ export class ArticleComponent implements OnInit {
     // Data for Articles by TVA (Bar Chart)
     const articlesByTVAMap = new Map<string, number>();
     this.stock.articles.forEach(article => {
-      articlesByTVAMap.set(article.tva.code, (articlesByTVAMap.get(article.tva.code) || 0) + 1);
+      articlesByTVAMap.set(article.tva?.code ?? '', (articlesByTVAMap.get(article.tva?.code ?? '') || 0) + 1);
     });
     const articlesByTVALabels = Array.from(articlesByTVAMap.keys());
     const articlesByTVAValues = Array.from(articlesByTVAMap.values());

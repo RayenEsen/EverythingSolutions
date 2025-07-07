@@ -146,8 +146,10 @@ export class StockComponent implements OnInit {
       next: (created) => {
         this.addStockDrawer = false;
         this.newStock = { name: '', code: '' };
+        this.stocks.push({ ...created, articles: [] });
+        this.filteredStocks = this.stocks;
+        this.updateCharts();
         this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Stock ajouté avec succès.' });
-        this.fetchStocks();
       },
       error: () => {
         this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de l\'ajout du stock.' });
@@ -169,8 +171,10 @@ export class StockComponent implements OnInit {
     this.stockService.putStock(this.editStock.id, this.editStock).subscribe({
       next: () => {
         this.editStockDrawer = false;
+        this.stocks = this.stocks.map(s => s.id === this.editStock!.id ? { ...s, ...this.editStock } : s);
+        this.filteredStocks = this.stocks;
+        this.updateCharts();
         this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Stock modifié avec succès.' });
-        this.fetchStocks();
       },
       error: () => {
         this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la modification du stock.' });
@@ -187,8 +191,10 @@ export class StockComponent implements OnInit {
       accept: () => {
         this.stockService.deleteStock(stock.id).subscribe({
           next: () => {
+            this.stocks = this.stocks.filter(s => s.id !== stock.id);
+            this.filteredStocks = this.stocks;
+            this.updateCharts();
             this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Stock supprimé avec succès.' });
-            this.fetchStocks();
           },
           error: () => {
             this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la suppression du stock.' });
@@ -209,9 +215,6 @@ export class StockComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         const ids = this.selectedStocks.map(s => s.id);
-        // Assume a batch delete endpoint, otherwise delete one by one
-        // this.stockService.deleteStocks(ids).subscribe(...)
-        // For now, delete one by one:
         let deleted = 0;
         ids.forEach(id => {
           this.stockService.deleteStock(id).subscribe({
@@ -221,6 +224,7 @@ export class StockComponent implements OnInit {
               deleted++;
               if (deleted === ids.length) {
                 this.selectedStocks = [];
+                this.updateCharts();
                 this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Stocks supprimés avec succès.' });
               }
             },

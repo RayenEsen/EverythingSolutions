@@ -36,4 +36,9 @@ export class ClientService {
   deleteClient(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { withCredentials: true });
   }
+
+  // Get clients by entreprise
+  getClientsByEntreprise(entrepriseId: number): Observable<Client[]> {
+    return this.http.get<Client[]>(`${this.apiUrl}?entrepriseId=${entrepriseId}`, { withCredentials: true });
+  }
 } 

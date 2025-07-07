@@ -41,6 +41,13 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+.bg-dark {
+  --bs-bg-opacity: 1;
+  background-color: #f8f9fa !important; /* Light background for light mode */
+  color: #222;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 :host-context(body.dark) {
   background-color: #1a202c;
   color: #ffffff;
@@ -252,6 +259,11 @@
       box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
     }
   }
+
+  .bg-dark {
+    background-color: #1e293b !important; /* Dark background for dark mode */
+    color: #e2e8f0;
+  }
 }
 
 .main-content {
@@ -268,13 +280,14 @@
 
 /* ========== CARD COMPONENT ========== */
 .card {
-  background: white;
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: var(--card-shadow);
   display: flex;
   flex-direction: column;
   transition: all var(--transition-medium);
+  background: white;
+  margin: 0;
 }
 
 .card:hover {
@@ -438,8 +451,8 @@
   }
   
   .card {
-    margin: 0.5rem;
-    border-radius: 0;
+    padding: 1rem;
+    border-radius: 10px;
   }
   
   .breadcrumb-header {
@@ -1365,46 +1378,69 @@
 }
 
 /* ========== CHARTS ROW LAYOUT ========== */
-.charts-row {
+.charts-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 1.5rem;
-  margin-bottom: 2.5rem;
-  align-items: stretch;
+  margin-bottom: 1.5rem;
 }
-.charts-col {
+
+@media (min-width: 992px) {
+  .charts-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Remove old .charts-row, .charts-row-responsive, .charts-col, .chart-responsive */
+.charts-row, .charts-row-responsive, .charts-col, .chart-responsive {
+  display: unset !important;
+  grid-template-columns: unset !important;
+  gap: unset !important;
+  margin-bottom: unset !important;
+  padding: unset !important;
+  min-width: unset !important;
+  min-height: unset !important;
+  height: unset !important;
+  width: unset !important;
+}
+
+.card {
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
   display: flex;
   flex-direction: column;
-  height: 100%;
+  transition: all var(--transition-medium);
+  background: white;
+  margin: 0;
 }
-.charts-col .card {
-  flex: 1 1 auto;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+
+@media (max-width: 768px) {
+  .card {
+    padding: 1rem;
+    border-radius: 10px;
+  }
 }
-.charts-col .p-chart {
-  flex: 1 1 auto;
+
+.p-chart {
   width: 100% !important;
-  height: 100% !important;
+  height: 220px !important;
+  max-width: 100%;
 }
 
-@media (max-width: 991px) {
-  .charts-row {
-    grid-template-columns: 1fr;
+@media (max-width: 768px) {
+  .p-chart {
+    height: 160px !important;
   }
-  .charts-col .card {
-    min-height: 250px;
+}
+@media (max-width: 480px) {
+  .p-chart {
+    height: 120px !important;
   }
 }
 
-@media (max-width: 600px) {
-  .charts-row {
-    gap: 0.75rem;
-  }
-  .charts-col .card {
-    min-height: 180px;
-  }
+.metrics-grid-responsive {
+  /* Extra tweaks for mobile if needed */
 }
 
 

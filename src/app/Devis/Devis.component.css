@@ -1,0 +1,3054 @@
+/* ========== ROOT & GLOBAL STYLES ========== */
+:root {
+    --primary-color: #4a6ced;
+    --primary-hover: #5f7deb;
+    --secondary-color: #3cbfae;
+    --text-dark: #2d3748;
+    --text-medium: #4a5568;
+    --text-light: #e2e8f0;
+    --border-color: #e2e8f0;
+    --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    --card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.2);
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.3s ease;
+    --bs-light-rgb: 248, 249, 250;
+    --bs-bg-opacity: 1;
+    --bs-border-width: 1px;
+    --bs-border-style: solid;
+    --bs-border-color: #dee2e6;
+    --input-bg: #ffffff;
+    --input-color: #333333;
+    --input-border: #e2e8f0;
+    --input-focus-border: #4a6ced;
+    --input-focus-shadow: rgba(74, 108, 237, 0.25);
+  }
+  
+  /* ========== BASE LAYOUT STRUCTURE ========== */
+  :host {
+    display: flex;
+    padding: 30px;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f3f4f6;
+    color: #333;
+  }
+  
+  /* Light mode bg-light */
+  .bg-light {
+    --bs-bg-opacity: 1;
+    background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  :host-context(body.dark) {
+    background-color: #1a202c;
+    color: #ffffff;
+  
+    /* Force text-muted to be white in dark mode */
+    :host ::ng-deep .text-muted {
+      color: #b0b0b0 !important;
+    }
+  
+    /* Override bg-light in dark mode */
+    .bg-light {
+      --bs-light-rgb: 30, 41, 59;
+      background-color: #1e293b !important;
+      color: #e2e8f0;
+      border-color: #4a5568;
+    }
+  
+    /* Additional bg-light child element styles */
+    .bg-light {
+      .text-dark {
+        color: #e2e8f0 !important;
+      }
+  
+      .btn-outline-secondary {
+        color: #e2e8f0;
+        border-color: #4a5568;
+        background-color: transparent;
+  
+        &:hover {
+          background-color: #4a5568;
+          color: #ffffff;
+        }
+      }
+  
+      .btn-primary {
+        background-color: #3b82f6;
+        border-color: #3b82f6;
+        color: #ffffff;
+  
+        &:hover {
+          background-color: #2563eb;
+          border-color: #2563eb;
+        }
+      }
+  
+      /* Form elements within bg-light */
+      .form-control,
+      .p-inputtext {
+        background-color: #2d3748;
+        border-color: #dee2e6;
+        color: #ffffff;
+  
+        &::placeholder {
+          color: #9ca3af;
+        }
+  
+        &:focus {
+          border-color: #60a5fa;
+          box-shadow: 0 0 0 0.2rem rgba(96, 165, 250, 0.25);
+        }
+      }
+  
+      /* Links within bg-light */
+      a {
+        color: #60a5fa;
+  
+        &:hover {
+          color: #93c5fd;
+        }
+      }
+  
+      /* Headers within bg-light */
+      h1, h2, h3, h4, h5, h6 {
+        color: #ffffff;
+      }
+  
+      /* Borders within bg-light */
+      .border,
+      .border-top,
+      .border-bottom,
+      .border-start,
+      .border-end {
+        border-color: #4a5568 !important;
+      }
+    }
+  
+    /* Update form control variables for dark mode */
+    --input-bg: #2d3748;
+    --input-color: #ffffff;
+    --input-border: #dee2e6;
+    --input-focus-border: #60a5fa;
+    --input-focus-shadow: rgba(96, 165, 250, 0.25);
+  
+    /* Form controls in dark mode */
+    .form-control,
+    .p-inputtext {
+      background-color: var(--input-bg);
+      color: var(--input-color);
+      border-color: #dee2e6;
+  
+      &:focus {
+        border-color: var(--input-focus-border);
+        box-shadow: 0 0 0 0.2rem var(--input-focus-shadow);
+      }
+  
+      &::placeholder {
+        color: #9ca3af;
+      }
+  
+      &:disabled {
+        background-color: #374151;
+        color: #9ca3af;
+        border-color: #dee2e6;
+      }
+    }
+  
+    /* Border styles for dark mode */
+    --bs-border-color: #4a5568;
+    
+    .border {
+      border-color: #4a5568 !important;
+    }
+  
+    .border-top {
+      border-top-color: #4a5568 !important;
+    }
+  
+    .border-bottom {
+      border-bottom-color: #4a5568 !important;
+    }
+  
+    .border-start {
+      border-start-color: #4a5568 !important;
+    }
+  
+    .border-end {
+      border-end-color: #4a5568 !important;
+    }
+  
+    /* Rounded border styles */
+    .border.rounded,
+    .border.rounded-1,
+    .border.rounded-2,
+    .border.rounded-3 {
+      border-color: #4a5568 !important;
+    }
+  
+    /* Style text in bg-light elements */
+    .bg-light .text-dark {
+      color: #ffffff !important;
+    }
+  
+    /* Style buttons in bg-light elements */
+    .bg-light .btn-outline-secondary {
+      color: #e2e8f0;
+      border-color: #4a5568;
+    }
+  
+    .bg-light .btn-outline-secondary:hover {
+      background-color: #4a5568;
+      color: #ffffff;
+    }
+  
+    .bg-light .btn-primary {
+      background-color: #3b82f6;
+      border-color: #3b82f6;
+    }
+  
+    .bg-light .btn-primary:hover {
+      background-color: #2563eb;
+      border-color: #2563eb;
+    }
+  
+    /* Input groups in dark mode */
+    .input-group {
+      .input-group-text {
+        background-color: #374151;
+        border-color: #4a5568;
+        color: #ffffff;
+      }
+    }
+  
+    /* Form labels in dark mode */
+    .form-label {
+      color: #ffffff !important;
+    }
+  
+    /* Form validation states */
+    .form-control.is-invalid,
+    .p-inputtext.is-invalid {
+      border-color: #ef4444;
+      background-color: rgba(239, 68, 68, 0.1);
+  
+      &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(239, 68, 68, 0.25);
+      }
+    }
+  
+    .form-control.is-valid,
+    .p-inputtext.is-valid {
+      border-color: #10b981;
+      background-color: rgba(16, 185, 129, 0.1);
+  
+      &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
+      }
+    }
+  }
+  
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 260px;
+    transition: margin-left 0.3s ease;
+  }
+  
+  .main-content.collapsed {
+    margin-left: 80px;
+  }
+  
+  /* ========== CARD COMPONENT ========== */
+  .card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    flex-direction: column;
+    transition: all var(--transition-medium);
+  }
+  
+  .card:hover {
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-2px);
+  }
+  
+  /* ========== TABLE STYLES ========== */
+  .p-table-container {
+    flex: 1;
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 1rem;
+  }
+  
+  .p-table {
+    width: 100%;
+    min-width: 0;
+    
+    th, td {
+      padding: 0.75rem 1rem;
+      white-space: nowrap;
+    }
+    
+    th {
+      background-color: #f8f9fa;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+  }
+  
+  /* ========== UTILITY COMPONENTS ========== */
+  .p-tag {
+    padding: 0.15rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    
+    &.p-tag-info {
+      background: var(--primary-color);
+      color: white;
+      
+      &:hover {
+        background: var(--primary-hover);
+      }
+    }
+  }
+  
+  /* ========== FORM ELEMENTS ========== */
+  .form-control, .p-inputtext {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    width: 100%;
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    color: var(--input-color);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .form-control:focus,
+  .p-inputtext:focus {
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 0.2rem var(--input-focus-shadow);
+    outline: none;
+  }
+  
+  .form-control::placeholder,
+  .p-inputtext::placeholder {
+    color: var(--text-medium);
+    opacity: 0.7;
+  }
+  
+  /* ========== MODAL DIALOG STYLES ========== */
+  :host ::ng-deep .devis-dialog {
+    .p-dialog {
+      width: 900px !important;
+      max-height: 90vh !important;
+    }
+  
+    .p-dialog-header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+      color: white;
+      padding: 1.5rem 2rem;
+      border-bottom: none;
+      position: relative;
+  
+      .p-dialog-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: white;
+      }
+  
+      .p-dialog-header-icon {
+        color: white;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+  
+        &:hover {
+          background: rgba(255, 255, 255, 0.3);
+          transform: scale(1.1);
+        }
+      }
+    }
+  
+    .p-dialog-content {
+      max-height: 70vh;
+      min-height: 400px;
+      overflow-y: auto;
+    }
+  
+    .p-dialog-footer {
+      background: #f8f9fa;
+      padding: 1.5rem 2rem;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+  }
+  
+  /* Ensure multiselect dropdown appears above modal */
+  :host ::ng-deep .p-multiselect-panel {
+    z-index: 10000 !important;
+  }
+  
+  :host ::ng-deep .p-multiselect-items-wrapper {
+    z-index: 10000 !important;
+  }
+  
+  @keyframes modalSlideIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.9) translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  
+  /* Dialog content styles */
+  .dialog-content {
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+  
+    .form-label {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      display: block;
+      font-size: 0.95rem;
+    }
+  
+    .table-responsive {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  
+    .table {
+      margin-bottom: 0;
+      
+      th {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid var(--border-color);
+        font-weight: 600;
+        color: var(--text-dark);
+        padding: 0.75rem;
+        font-size: 0.9rem;
+      }
+      
+      td {
+        padding: 0.75rem;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border-color);
+      }
+      
+      tbody tr:hover {
+        background-color: #f8f9fa;
+      }
+    }
+  }
+  
+  .dialog-footer {
+    .p-button {
+      min-width: 120px;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      
+      &.p-button-text {
+        color: var(--text-medium);
+        
+        &:hover {
+          background-color: #f1f5f9;
+          color: var(--text-dark);
+        }
+      }
+      
+      &.p-button {
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+        
+        &:hover {
+          background: var(--primary-hover);
+          border-color: var(--primary-hover);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(74, 108, 237, 0.3);
+        }
+      }
+    }
+  }
+  
+  /* Dark mode for modal */
+  :host-context(body.dark) ::ng-deep .devis-dialog {
+    .p-dialog {
+      background: #1e293b;
+      border: 1px solid #4a5568;
+    }
+  
+    .p-dialog-header {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    }
+  
+    .p-dialog-content {
+      background: #1e293b;
+      color: white;
+    }
+  
+    .p-dialog-footer {
+      background: #374151;
+      border-top-color: #4a5568;
+    }
+  
+    .dialog-content {
+      .form-label {
+        color: #e2e8f0;
+      }
+  
+      .table {
+        th {
+          background-color: #374151;
+          color: #e2e8f0;
+          border-bottom-color: #4a5568;
+        }
+        
+        td {
+          border-bottom-color: #4a5568;
+          color: #e2e8f0;
+        }
+        
+        tbody tr:hover {
+          background-color: #374151;
+        }
+      }
+    }
+  
+    .dialog-footer {
+      .p-button-text {
+        color: #e2e8f0;
+        
+        &:hover {
+          background-color: #4a5568;
+          color: white;
+        }
+      }
+    }
+  }
+  
+  /* ========== BREADCRUMB & HEADER ========== */
+  .breadcrumb-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+  
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #888;
+    
+    .separator {
+      margin: 0 6px;
+    }
+    
+    .current {
+      font-weight: 600;
+      color: #333;
+    }
+  }
+  
+  /* ========== STATS GRID ========== */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 1.5rem;
+    padding: 0 1rem;
+  }
+  
+  .stat-card {
+    background: white;
+    padding: 1.25rem;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    text-align: center;
+    
+    h3 {
+      margin-bottom: 0.5rem;
+      font-size: 16px;
+      color: #555;
+    }
+    
+    p {
+      font-size: 20px;
+      font-weight: 600;
+      color: #222;
+    }
+  }
+  
+  /* ========== RESPONSIVE ADJUSTMENTS ========== */
+  @media (max-width: 992px) {
+    .p-table {
+      th, td {
+        white-space: normal;
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .main-content {
+      margin-left: 0 !important;
+    }
+    
+    .card {
+      margin: 0.5rem;
+      border-radius: 0;
+    }
+    
+    .breadcrumb-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    :host ::ng-deep .devis-dialog {
+      .p-dialog {
+        width: 95vw !important;
+        margin: 1rem;
+      }
+      
+      .p-dialog-content {
+        padding: 1rem;
+        max-height: 60vh;
+      }
+      
+      .p-dialog-footer {
+        padding: 1rem;
+        flex-direction: column;
+        
+        .p-button {
+          width: 100%;
+          margin-bottom: 0.5rem;
+        }
+      }
+    }
+  }
+  
+  /* ========== ANIMATIONS & UTILITIES ========== */
+  .fade-in {
+    animation: fadeSlide 0.3s ease-out;
+  }
+  
+  @keyframes fadeSlide {
+    0% { opacity: 0; transform: translateY(-5px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  .empty-state {
+    padding: 2rem;
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    iframe {
+      max-width: 200px;
+      height: auto;
+    }
+  }
+  
+  /* ========== CONTEXT MENU ========== */
+  .p-contextmenu {
+    width: 250px;
+    max-width: 100%;
+  }
+  
+  /* ========== DASHBOARD HEADER ========== */
+  .dashboard-header {
+    padding: 1.5rem 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+  }
+  
+  .header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .breadcrumb-nav {
+    margin-bottom: 0.5rem;
+  }
+  
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+  }
+  
+  .breadcrumb-item {
+    color: var(--text-medium);
+    transition: color 0.2s ease;
+  }
+  
+  .breadcrumb-item:hover {
+    color: var(--primary-color);
+  }
+  
+  .breadcrumb-item.active {
+    color: var(--text-dark);
+    font-weight: 600;
+  }
+  
+  .breadcrumb-separator {
+    margin: 0 0.5rem;
+    color: black;
+  }
+  
+  .header-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .header-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .title-gradient {
+    background: linear-gradient(90deg, #1860a8 0%, #fb9332 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .header-subtitle {
+    color: var(--text-medium);
+    font-size: 1rem;
+    margin: 0;
+  }
+  
+  /* ========== METRICS GRID ========== */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  
+  .metric-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+  }
+  
+  .metric-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+  
+  .metric-content {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .metric-label {
+    font-size: 0.95rem;
+    color: var(--text-medium);
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+  
+  .metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0;
+    line-height: 1.2;
+    font-feature-settings: "tnum";
+  }
+  
+  .currency {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-medium);
+    margin-left: 2px;
+  }
+  
+  .metric-decoration {
+    position: absolute;
+    bottom: 0rem;
+    right: 0rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: bottom right;
+  }
+  
+  .metric-decoration i {
+    font-size: 2rem;
+  }
+  
+  /* Color variants with modern pastel tones */
+  .metric-card .metric-decoration { 
+    background-color: #4f46e5;
+  }
+  .metric-card.accent-2 .metric-decoration { 
+    background-color: #10b981;
+  }
+  .metric-card.accent-3 .metric-decoration { 
+    background-color: #f97316;
+  }
+  .metric-card.accent-4 .metric-decoration { 
+    background-color: #8b5cf6;
+  }
+  
+  /* Hover effects */
+  .metric-card:hover .metric-decoration {
+    opacity: 0.7;
+    transform: scale(1.1);
+    border-radius: 24px;
+  }
+  
+  /* Gradient accents for modern touch */
+  .metric-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, #4f46e5, #8b5cf6);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .metric-card.accent-2::after {
+    background: linear-gradient(to bottom, #10b981, #3cbfae);
+  }
+  
+  .metric-card.accent-3::after {
+    background: linear-gradient(to bottom, #f97316, #f59e0b);
+  }
+  
+  .metric-card.accent-4::after {
+    background: linear-gradient(to bottom, #8b5cf6, #6366f1);
+  }
+  
+  .metric-card:hover::after {
+    opacity: 1;
+  }
+  
+  /* ========== DARK MODE STYLES ========== */
+  :host-context(body.dark) .dark-mode {
+    background-color: #1a202c;
+    color: #ffffff;
+  
+    .dashboard-header {
+      background: #2d3748;
+      color: #ffffff;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+  
+    .breadcrumb-item {
+      color: #e2e8f0;
+    }
+  
+    .breadcrumb-item.active {
+      color: #ffffff;
+    }
+  
+    .header-subtitle {
+      color: #e2e8f0;
+    }
+  
+    .card {
+      background: #2d3748;
+      color: #ffffff;
+      border-color: #4a5568;
+    }
+  
+    .metric-card {
+      background: #2d3748;
+      border-color: #4a5568;
+    }
+  
+    .metric-label {
+      color: #e2e8f0;
+    }
+  
+    .metric-value {
+      color: #ffffff;
+    }
+  
+    .metric-decoration {
+      opacity: 0.7;
+    }
+  
+    .metric-decoration i {
+      color: #e2e8f0 !important;
+    }
+  
+    /* PrimeNG component styles */
+    .p-datatable {
+      background-color: #2d3748;
+      
+      .p-datatable-header {
+        background-color: #2d3748;
+        color: #ffffff;
+        border-color: #4a5568;
+      }
+  
+      .p-datatable-tbody > tr {
+        background-color: #2d3748;
+        color: #ffffff;
+  
+        &:hover {
+          background-color: #374151 !important;
+        }
+      }
+  
+      .p-datatable-tbody > tr > td {
+        border-color: #4a5568;
+      }
+  
+      .p-column-header-content {
+        color: #ffffff;
+      }
+    }
+  
+    .p-inputtext {
+      background-color: #374151;
+      color: #ffffff;
+      border-color: #4a5568;
+  
+      &:enabled:hover {
+        border-color: var(--primary-color);
+      }
+  
+      &::placeholder {
+        color: #9ca3af;
+      }
+    }
+  
+    .p-button {
+      &.p-button-secondary {
+        background-color: #4a5568;
+        border-color: #4a5568;
+        color: #ffffff;
+  
+        &:hover {
+          background-color: #374151;
+          border-color: #374151;
+        }
+      }
+    }
+  
+    .p-tag {
+      &.p-tag-info {
+        background-color: #3b82f6;
+        color: #ffffff;
+      }
+    }
+  }
+  
+  /* ========== RESPONSIVE STYLES ========== */
+  @media (max-width: 992px) {
+    .main-content {
+      margin-left: 80px;
+    }
+    
+    .main-content.collapsed {
+      margin-left: 80px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .metrics-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    
+    .metric-card {
+      padding: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .metrics-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .metric-value {
+      font-size: 1.75rem;
+    }
+    
+    .metric-decoration {
+      width: 60px;
+      height: 60px;
+    }
+  }
+  
+  /* Action buttons container */
+  .d-flex.justify-content-end.gap-2.p-3.bg-light {
+    transition: all 0.3s ease;
+  }
+  
+  :host-context(body.dark) {
+    /* Action buttons container in dark mode */
+    .d-flex.justify-content-end.gap-2.p-3.bg-light {
+      background-color: #1e293b !important;
+      border-top: 1px solid #4a5568;
+    }
+  
+    /* Outline button in dark mode */
+    .btn-outline-secondary {
+      color: #e2e8f0;
+      border-color: #4a5568;
+      background-color: transparent;
+  
+      &:hover {
+        background-color: #4a5568;
+        color: #ffffff;
+      }
+    }
+  
+    /* Primary button in dark mode */
+    .btn-primary {
+      background-color: #3b82f6;
+      border-color: #3b82f6;
+      color: #ffffff;
+  
+      &:hover {
+        background-color: #2563eb;
+        border-color: #2563eb;
+      }
+    }
+  }
+  
+  /* ========== RESPONSIVE MENUBAR STYLES ========== */
+  :host ::ng-deep {
+    .p-menubar {
+      padding: 0.5rem;
+      
+      @media screen and (max-width: 960px) {
+        position: relative;
+        
+        .p-menubar-button {
+          display: flex;
+          width: 2rem;
+          height: 2rem;
+          color: var(--text-color);
+          border-radius: 50%;
+          transition: background-color 0.2s;
+  
+          &:hover {
+            background-color: var(--surface-hover);
+          }
+        }
+  
+        .p-menubar-root-list {
+          position: absolute;
+          display: none;
+          background: var(--surface-overlay);
+          padding: 0.5rem;
+          box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+          border-radius: 4px;
+          width: 100%;
+        }
+  
+        &.p-menubar-mobile-active {
+          .p-menubar-root-list {
+            display: flex;
+            flex-direction: column;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+            width: 100%;
+            
+            .p-menuitem {
+              width: 100%;
+              margin: 0;
+              
+              .p-menuitem-link {
+                padding: 1rem;
+                width: 100%;
+                justify-content: flex-start;
+                border-radius: 0;
+                
+                &:hover {
+                  background-color: var(--surface-hover);
+                }
+  
+                .p-menuitem-text {
+                  color: var(--text-color);
+                }
+  
+                .p-menuitem-icon {
+                  color: var(--text-color);
+                  margin-right: 0.5rem;
+                }
+              }
+            }
+  
+            .p-submenu-list {
+              width: 100%;
+              position: static;
+              box-shadow: none;
+              border: none;
+              padding: 0 1rem;
+              
+              .p-menuitem-link {
+                padding: 0.75rem 1rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  
+    /* Dark mode adjustments for menubar */
+    :host-context(body.dark) .p-menubar {
+      background-color: var(--dark-bg);
+      border-color: var(--dark-border);
+  
+      .p-menubar-button {
+        color: #ffffff;
+  
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+  
+      &.p-menubar-mobile-active {
+        .p-menubar-root-list {
+          background-color: var(--dark-bg);
+          border: 1px solid var(--dark-border);
+  
+          .p-menuitem-link {
+            &:hover {
+              background-color: rgba(255, 255, 255, 0.1);
+            }
+  
+            .p-menuitem-text,
+            .p-menuitem-icon {
+              color: #ffffff;
+            }
+          }
+  
+          .p-submenu-list {
+            background-color: var(--dark-bg);
+            border-color: var(--dark-border);
+          }
+        }
+      }
+    }
+  }
+  
+  /* Dark mode datatable hover styles */
+  :host-context(body.dark) {
+    .p-datatable.p-datatable-hoverable .p-datatable-tbody > tr:not(.p-highlight):not(.p-datatable-row-selected):hover {
+      background-color: #374151 !important;
+      color: #ffffff !important;
+    }
+  }
+  
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+  }
+  
+  .charts-grid .card {
+    min-height: 500px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px 0 rgba(30, 41, 59, 0.10);
+    border: 1.5px solid #e5e7eb;
+    background: linear-gradient(135deg, #f8fafc 80%, #e0e7ff 100%);
+    transition: box-shadow 0.2s, border-color 0.2s;
+    overflow: hidden;
+  }
+  
+  .charts-grid .card:hover {
+    box-shadow: 0 12px 40px 0 rgba(30, 41, 59, 0.13);
+    border-color: #c7d2fe;
+  }
+  
+  .charts-grid .card h5 {
+    margin: 0;
+    flex-shrink: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    padding: 1.5rem 2rem 1rem 2rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+    border-bottom: 1px solid rgba(96, 165, 250, 0.1);
+  }
+  
+  .charts-grid .card p-chart {
+    flex: 1;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 0;
+    min-height: 0;
+  }
+  
+  .charts-grid .card p-chart ::ng-deep {
+    width: 100% !important;
+    height: 100% !important;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .charts-grid .card p-chart ::ng-deep canvas {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
+  }
+
+  /* Additional chart optimizations for better space utilization */
+  .charts-grid .card p-chart ::ng-deep .chartjs-render-monitor {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .charts-grid .card p-chart ::ng-deep .chartjs-chart {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Ensure chart containers take full available space */
+  .charts-grid .card p-chart ::ng-deep > div {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  /* Dark mode for charts */
+  .dark-mode .charts-grid .card {
+    background: linear-gradient(135deg, #23272f 80%, #232946 100%);
+    border-color: #232946;
+    box-shadow: 0 4px 24px 0 rgba(0,0,0,0.25);
+  }
+  
+  .dark-mode .charts-grid .card:hover {
+    box-shadow: 0 12px 40px 0 rgba(0,0,0,0.32);
+    border-color: #6366f1;
+  }
+  
+  .dark-mode .charts-grid .card h5 {
+    color: #a5b4fc;
+  }
+  
+  @media (min-width: 768px) {
+    .charts-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .charts-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .charts-grid {
+      margin-top: 2rem;
+      gap: 1.5rem;
+    }
+    
+    .charts-grid .card {
+      min-height: 450px;
+      height: 450px;
+    }
+    
+    .charts-grid .card h5 {
+      font-size: 1.1rem;
+      padding: 1rem 1.5rem 0.5rem 1.5rem;
+    }
+    
+    .charts-grid .card p-chart {
+      padding: 0;
+    }
+
+    /* Mobile chart optimizations */
+    .charts-grid .card p-chart ::ng-deep canvas {
+      max-width: 95% !important;
+      max-height: 95% !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .charts-grid .card {
+      min-height: 400px;
+      height: 400px;
+    }
+    
+    .charts-grid .card h5 {
+      font-size: 1rem;
+      padding: 0.75rem 1rem 0.25rem 1rem;
+    }
+  }
+  
+  /* --- SEARCH BAR FLEX ALIGNMENT (like TVA) --- */
+  .p-input-icon-left {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 240px;
+    background: transparent;
+  }
+  .p-input-icon-left i.pi {
+    position: absolute;
+    left: 12px;
+    color: #b0b0b0;
+    font-size: 1.1rem;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .p-input-icon-left input[type="text"],
+  .p-input-icon-left .p-inputtext {
+    padding-left: 2.2rem !important;
+    height: 38px;
+    border-radius: 8px;
+    border: 1px solid var(--input-border);
+    background: var(--input-bg);
+    color: var(--input-color);
+    font-size: 1rem;
+    box-shadow: none;
+    transition: border-color 0.2s;
+  }
+  .p-input-icon-left input[type="text"]:focus,
+  .p-input-icon-left .p-inputtext:focus {
+    border-color: var(--primary-color);
+    outline: none;
+  }
+  
+  @media (max-width: 600px) {
+    .p-input-icon-left {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 1000px) {
+    :host ::ng-deep .devis-dialog .p-dialog {
+      width: 98vw !important;
+      min-width: 0 !important;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    :host ::ng-deep .devis-dialog .p-dialog {
+      width: 100vw !important;
+      margin: 0;
+    }
+    :host ::ng-deep .devis-dialog .p-dialog-content {
+      max-height: 60vh;
+      min-height: 200px;
+      padding: 0.5rem;
+    }
+  }
+  
+  /* ========== MODERN MODAL DIALOG STYLES ========== */
+  :host ::ng-deep .modern-devis-dialog {
+    .p-dialog {
+      width: 1000px !important;
+      max-height: 95vh !important;
+      border-radius: 20px !important;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+      border: none !important;
+      overflow: hidden !important;
+    }
+  
+    .p-dialog-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      color: white !important;
+      padding: 0 !important;
+      border-bottom: none !important;
+      position: relative !important;
+      min-height: 80px !important;
+  
+      .p-dialog-title {
+        font-size: 1.5rem !important;
+        font-weight: 700 !important;
+        color: white !important;
+        margin: 0 !important;
+        padding: 1.5rem 2rem !important;
+      }
+  
+      .p-dialog-header-icon {
+        color: white !important;
+        background: rgba(255, 255, 255, 0.2) !important;
+        border: none !important;
+        border-radius: 50% !important;
+        width: 40px !important;
+        height: 40px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        margin: 1.5rem 2rem !important;
+  
+        &:hover {
+          background: rgba(255, 255, 255, 0.3) !important;
+          transform: scale(1.1) rotate(90deg) !important;
+        }
+      }
+    }
+  
+    .p-dialog-content {
+      max-height: calc(95vh - 160px) !important;
+      min-height: 500px !important;
+      overflow-y: auto !important;
+      padding: 0 !important;
+      background: #f8fafc !important;
+    }
+  
+    .p-dialog-footer {
+      background: white !important;
+      padding: 1.5rem 2rem !important;
+      border-top: 1px solid #e2e8f0 !important;
+      display: flex !important;
+      justify-content: flex-end !important;
+      gap: 1rem !important;
+      box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+    }
+  }
+
+
+
+  /* Header Section */
+  .dialog-header-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dialog-header-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .header-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-icon i {
+    font-size: 1.8rem;
+    color: white;
+  }
+
+  .header-text {
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-text h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .header-text p {
+    font-size: 1rem;
+    margin: 0;
+    opacity: 0.9;
+    font-weight: 400;
+  }
+
+  /* Form Sections */
+  .form-sections {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .form-section {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .form-section:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .section-header {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .section-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+
+  .section-icon i {
+    font-size: 1.2rem;
+  }
+
+  .section-header h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+  }
+
+  .section-subtitle {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-left: auto;
+  }
+
+  .article-count {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-left: auto;
+  }
+
+  .section-content {
+    padding: 2rem;
+  }
+
+  /* Modern Form Groups */
+  .modern-form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .modern-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .modern-label i {
+    color: #667eea;
+    font-size: 1rem;
+  }
+
+  .input-wrapper {
+    position: relative;
+  }
+
+  .modern-input {
+    width: 100% !important;
+    padding: 0.875rem 1rem !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    font-size: 1rem !important;
+    background: white !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .modern-input:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    outline: none !important;
+  }
+
+  .input-decoration {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .modern-input:focus + .input-decoration {
+    width: 100%;
+  }
+
+  /* Dropdown Styling */
+  .dropdown-wrapper {
+    position: relative;
+  }
+
+  :host ::ng-deep .modern-dropdown {
+    width: 100% !important;
+  }
+
+  :host ::ng-deep .modern-dropdown .p-dropdown {
+    border: 2px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    background: white !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+  }
+
+  :host ::ng-deep .modern-dropdown .p-dropdown:not(.p-disabled):hover {
+    border-color: #667eea !important;
+  }
+
+  :host ::ng-deep .modern-dropdown .p-dropdown:not(.p-disabled).p-focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+  }
+
+  :host ::ng-deep .modern-dropdown .p-dropdown-panel {
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+    border: 1px solid #e5e7eb !important;
+    z-index: 10000 !important;
+  }
+
+  .dropdown-item-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+  }
+
+  .article-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .article-name {
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .article-code {
+    font-size: 0.875rem;
+    color: #64748b;
+  }
+
+  .article-price {
+    font-weight: 600;
+    color: #059669;
+    font-size: 0.875rem;
+  }
+
+  /* Articles Container */
+  .articles-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .article-card {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .article-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .article-card:hover {
+    background: white;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .article-card:hover::before {
+    opacity: 1;
+  }
+
+  .article-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+  }
+
+  .article-main-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+  }
+
+  .article-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+
+  .article-icon i {
+    font-size: 1.2rem;
+  }
+
+  .article-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .article-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+  }
+
+  .article-code {
+    font-size: 0.875rem;
+    color: #64748b;
+  }
+
+  .article-price-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+  }
+
+  .price-label {
+    font-size: 0.875rem;
+    color: #64748b;
+  }
+
+  .price-value {
+    font-weight: 600;
+    color: #059669;
+    font-size: 1rem;
+  }
+
+  .remove-btn {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  .remove-btn:hover {
+    transform: scale(1.1) !important;
+    background: #ef4444 !important;
+    color: white !important;
+  }
+
+  /* Article Controls */
+  .article-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem;
+    align-items: end;
+  }
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .control-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.9rem;
+  }
+
+  .control-label i {
+    color: #667eea;
+    font-size: 0.875rem;
+  }
+
+  .number-input-wrapper {
+    position: relative;
+  }
+
+  :host ::ng-deep .modern-number-input {
+    width: 100% !important;
+  }
+
+  :host ::ng-deep .modern-number-input .p-inputnumber-input {
+    border: 2px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem !important;
+    background: white !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  :host ::ng-deep .modern-number-input .p-inputnumber-input:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+  }
+
+  :host ::ng-deep .modern-number-input .p-inputnumber-button {
+    background: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #64748b !important;
+    transition: all 0.2s ease !important;
+  }
+
+  :host ::ng-deep .modern-number-input .p-inputnumber-button:hover {
+    background: #667eea !important;
+    color: white !important;
+  }
+
+  .total-group {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid #bae6fd;
+  }
+
+  .line-total {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #059669;
+    text-align: center;
+    padding: 0.5rem;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #d1fae5;
+  }
+
+  /* Summary Section */
+  .summary-section {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+    border: 1px solid #f59e0b !important;
+  }
+
+  .summary-section .section-header {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+    color: white !important;
+  }
+
+  .summary-section .section-icon {
+    background: white !important;
+    color: #f59e0b !important;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #fde68a;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .summary-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+
+  .summary-label {
+    font-weight: 600;
+    color: #92400e;
+    font-size: 0.95rem;
+  }
+
+  .summary-value {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 1.1rem;
+  }
+
+  .total-item {
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important;
+    border-color: #22c55e !important;
+  }
+
+  .total-item .summary-label {
+    color: #166534 !important;
+  }
+
+  .total-value {
+    color: #059669 !important;
+    font-size: 1.25rem !important;
+  }
+
+  /* Modern Dialog Footer */
+  .modern-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+  }
+
+  .cancel-btn {
+    border: 2px solid #e5e7eb !important;
+    color: #64748b !important;
+    background: white !important;
+    border-radius: 12px !important;
+    padding: 0.75rem 1.5rem !important;
+    font-weight: 600 !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  .cancel-btn:hover {
+    border-color: #64748b !important;
+    background: #f1f5f9 !important;
+    transform: translateY(-1px) !important;
+  }
+
+  .save-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border: none !important;
+    color: white !important;
+    border-radius: 12px !important;
+    padding: 0.75rem 1.5rem !important;
+    font-weight: 600 !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 4px 6px -1px rgba(102, 126, 234, 0.3) !important;
+  }
+
+  .save-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 10px 15px -3px rgba(102, 126, 234, 0.4) !important;
+  }
+
+  /* --- MODERN, BALANCED, BEAUTIFUL DESIGN --- */
+  body {
+    background: linear-gradient(120deg, #f0f4ff 0%, #f9fafb 100%);
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    color: #222;
+  }
+  .devis-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    background: linear-gradient(90deg, #e0e7ff 0%, #f0f4ff 100%);
+    border-bottom: none;
+    padding: 2rem 3rem 1.2rem 3rem;
+      font-size: 1.5rem;
+    font-weight: 800;
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 2px 12px 0 rgba(30, 41, 59, 0.06);
+    margin-bottom: 1.5rem;
+  }
+  .devis-header-title {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #1e3a8a;
+    letter-spacing: 0.01em;
+  }
+  .devis-header-meta {
+    display: flex;
+    gap: 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #334155;
+  }
+  .devis-main-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px 0 rgba(30, 41, 59, 0.10);
+    padding: 2.5rem 2.5rem 1.5rem 2.5rem;
+    margin: 0 0 2.5rem 0;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    border: none;
+  }
+  .devis-table-container {
+    position: relative;
+    background: transparent;
+    border-radius: 14px;
+    box-shadow: none;
+    padding: 0.5rem 0 0.5rem 0;
+    margin-bottom: 1.5rem;
+    width: 100%;
+  }
+  .devis-article-table .p-datatable-thead > tr > th,
+  .devis-article-table .p-datatable-tbody > tr > td {
+    border: none !important;
+    background: transparent !important;
+    font-size: 1.08rem !important;
+    padding: 0.7rem 0.9rem !important;
+    color: #222 !important;
+  }
+  .devis-article-table .p-datatable-thead > tr > th {
+    font-weight: 800;
+    text-transform: none;
+    letter-spacing: 0.01em;
+    background: #e0e7ff !important;
+    color: #1e3a8a !important;
+    font-size: 1.13rem !important;
+    border-bottom: 2px solid #c7d2fe !important;
+    border-radius: 10px 10px 0 0;
+  }
+  .devis-article-table .p-datatable-tbody > tr:nth-child(even) {
+    background: #f3f6fd !important;
+  }
+  .devis-article-table .p-datatable-tbody > tr:hover {
+    background: #e0e7ff !important;
+    transition: background 0.18s;
+  }
+  .devis-article-table .p-dropdown,
+  .devis-article-table .p-inputnumber {
+    min-height: 36px !important;
+    font-size: 1.08rem !important;
+    border-radius: 8px !important;
+    background: #f3f6fd !important;
+    border: 1.5px solid #c7d2fe !important;
+    box-shadow: 0 1px 4px 0 rgba(30, 41, 59, 0.04) !important;
+    padding: 0 !important;
+  }
+  .devis-article-table .p-inputnumber-input,
+  .devis-article-table .p-dropdown-label {
+    padding: 0.25rem 0.7rem !important;
+    font-size: 1.08rem !important;
+    min-height: 32px !important;
+    background: #f3f6fd !important;
+    border-radius: 8px !important;
+  }
+  .devis-article-table .p-button {
+    min-height: 32px !important;
+    font-size: 1.08rem !important;
+    padding: 0.1rem 0.7rem !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    color: #1e3a8a !important;
+    border: none !important;
+    box-shadow: none !important;
+    transition: background 0.15s, color 0.15s;
+  }
+  .devis-article-table .p-button:focus {
+    outline: 2px solid #60a5fa !important;
+  }
+  .devis-article-table .p-button-danger {
+    color: #e11d48 !important;
+  }
+  .devis-article-table .p-button-danger:hover {
+    background: #fef2f2 !important;
+    color: #b91c1c !important;
+  }
+  .devis-input .p-inputnumber-input {
+    width: 80px !important;
+    min-width: 60px !important;
+    max-width: 100px !important;
+    padding: 0.25rem 0.7rem !important;
+    font-size: 1.08rem !important;
+    background: #f3f6fd !important;
+    border-radius: 8px !important;
+  }
+  .devis-line-total {
+    font-weight: 700;
+    color: #2563eb;
+    font-size: 1.13rem;
+  }
+  .devis-fab {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 1.2rem;
+    z-index: 10;
+    background: linear-gradient(135deg, #2563eb 60%, #60a5fa 100%) !important;
+    color: #fff !important;
+    border-radius: 50% !important;
+    width: 48px !important;
+    height: 48px !important;
+    box-shadow: 0 4px 16px 0 rgba(37,99,235,0.18);
+    font-size: 1.5rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none !important;
+    transition: background 0.18s, box-shadow 0.18s;
+  }
+  .devis-fab:hover {
+    background: linear-gradient(135deg, #1d4ed8 60%, #38bdf8 100%) !important;
+    box-shadow: 0 6px 24px 0 rgba(37,99,235,0.22);
+  }
+  .devis-summary-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2.5rem;
+    background: linear-gradient(90deg, #e0e7ff 0%, #f0f4ff 100%);
+    border-radius: 0 0 14px 14px;
+    padding: 1.1rem 1.5rem 1.1rem 0.7rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    border-top: none;
+    margin-top: -0.5rem;
+    box-shadow: 0 1px 4px 0 rgba(30, 41, 59, 0.04);
+    width: 100%;
+  }
+  .devis-action-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+      gap: 1.5rem;
+    background: transparent;
+    padding: 1.5rem 2.5rem 1.2rem 2.5rem;
+    border: none;
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
+  }
+  .devis-cancel-btn {
+    background: #fff !important;
+    color: #64748b !important;
+    border: 1.5px solid #e0e7ef !important;
+    font-weight: 600;
+    border-radius: 8px !important;
+    padding: 0.6rem 1.5rem !important;
+    font-size: 1.13rem !important;
+    transition: background 0.15s, color 0.15s;
+  }
+  .devis-cancel-btn:hover {
+    background: #f3f4f6 !important;
+    color: #1e293b !important;
+  }
+  .devis-save-btn {
+    background: linear-gradient(135deg, #2563eb 60%, #60a5fa 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    font-weight: 800;
+    border-radius: 8px !important;
+    padding: 0.6rem 1.7rem !important;
+    font-size: 1.13rem !important;
+    box-shadow: 0 2px 8px 0 rgba(37,99,235,0.10);
+    transition: background 0.15s;
+  }
+  .devis-save-btn:hover {
+    background: linear-gradient(135deg, #1d4ed8 60%, #38bdf8 100%) !important;
+  }
+  @media (max-width: 900px) {
+    .devis-header-bar, .devis-main-card, .devis-action-bar {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+  @media (max-width: 600px) {
+    .devis-header-bar, .devis-main-card, .devis-action-bar {
+      padding-left: 0.3rem;
+      padding-right: 0.3rem;
+    }
+    .devis-header-bar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.7rem;
+      font-size: 1.1rem;
+    }
+    .devis-header-title {
+      font-size: 1.2rem;
+    }
+    .devis-main-card {
+      padding: 1rem 0.3rem 0.7rem 0.3rem;
+    }
+    .devis-summary-bar {
+      font-size: 1rem;
+      padding: 0.7rem 0.5rem 0.7rem 0.2rem;
+    }
+  }
+  
+  .dark-mode .devis-main-card {
+    background: #23272f;
+    color: #f3f4f6;
+    box-shadow: 0 4px 24px 0 rgba(0,0,0,0.25);
+  }
+  .dark-mode .devis-header-bar {
+    background: linear-gradient(90deg, #232946 0%, #2a2d3a 100%);
+    color: #f3f4f6;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
+  }
+  .dark-mode .devis-header-title {
+    color: #a5b4fc;
+  }
+  .dark-mode .devis-header-meta {
+    color: #cbd5e1;
+  }
+  .dark-mode .devis-summary-bar {
+    background: linear-gradient(90deg, #232946 0%, #2a2d3a 100%);
+    color: #a5b4fc;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.18);
+  }
+  .dark-mode .devis-article-table .p-datatable-thead > tr > th,
+  .dark-mode .devis-article-table .p-datatable-tbody > tr > td {
+    background: #23272f !important;
+    color: #f3f4f6 !important;
+    border-color: #374151 !important;
+  }
+  .dark-mode .devis-article-table .p-datatable-thead > tr > th {
+    background: #232946 !important;
+    color: #a5b4fc !important;
+    border-bottom: 2px solid #374151 !important;
+  }
+  .dark-mode .devis-article-table .p-datatable-tbody > tr:nth-child(even) {
+    background: #232946 !important;
+  }
+  .dark-mode .devis-article-table .p-datatable-tbody > tr:hover {
+    background: #2a2d3a !important;
+  }
+  .dark-mode .devis-fab {
+    background: linear-gradient(135deg, #6366f1 60%, #60a5fa 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 16px 0 rgba(102,102,241,0.18);
+  }
+  .dark-mode .devis-fab:hover {
+    background: linear-gradient(135deg, #4338ca 60%, #38bdf8 100%) !important;
+  }
+  .dark-mode .devis-cancel-btn {
+    background: #23272f !important;
+    color: #cbd5e1 !important;
+    border: 1.5px solid #374151 !important;
+  }
+  .dark-mode .devis-cancel-btn:hover {
+    background: #2a2d3a !important;
+    color: #fff !important;
+  }
+  .dark-mode .devis-save-btn {
+    background: linear-gradient(135deg, #6366f1 60%, #60a5fa 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 2px 8px 0 rgba(102,102,241,0.10);
+  }
+  .dark-mode .devis-save-btn:hover {
+    background: linear-gradient(135deg, #4338ca 60%, #38bdf8 100%) !important;
+  }
+  .dark-mode .p-dropdown,
+  .dark-mode .p-inputnumber,
+  .dark-mode .p-inputtext {
+    background: #23272f !important;
+    color: #f3f4f6 !important;
+    border: 1.5px solid #374151 !important;
+  }
+  .dark-mode .p-dropdown-label,
+  .dark-mode .p-inputnumber-input {
+    background: #23272f !important;
+    color: #f3f4f6 !important;
+  }
+  .dark-mode .dropdown-item-content span {
+    color: #f3f4f6 !important;
+  }
+  .dark-mode .client-name,
+  .dark-mode .article-designation {
+    color: #a5b4fc !important;
+  }
+  .dark-mode .client-email,
+  .dark-mode .client-address,
+  .dark-mode .article-code,
+  .dark-mode .article-gouv {
+    color: #cbd5e1 !important;
+  }
+  .dark-mode .client-phone,
+  .dark-mode .article-prix {
+    color: #60a5fa !important;
+  }
+  
+
+  
+  /* --- DESIGN POLISH & MODERNIZATION --- */
+  .devis-main-card {
+    border: 1.5px solid #e5e7eb;
+    border-radius: 22px;
+    box-shadow: 0 6px 32px 0 rgba(30, 41, 59, 0.10), 0 1.5px 0 #e0e7ff;
+    background: linear-gradient(135deg, #f8fafc 80%, #e0e7ff 100%);
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+  .devis-main-card:hover {
+    box-shadow: 0 12px 40px 0 rgba(30, 41, 59, 0.13), 0 2px 0 #c7d2fe;
+    border-color: #c7d2fe;
+  }
+  .devis-header-bar {
+    border-bottom: 2.5px solid #e0e7ff;
+    border-radius: 0 0 22px 22px;
+    box-shadow: 0 4px 24px 0 rgba(30, 41, 59, 0.07);
+    background: linear-gradient(90deg, #e0e7ff 0%, #f8fafc 100%);
+    transition: box-shadow 0.2s, border-radius 0.2s;
+  }
+  .devis-header-title {
+    font-size: 2.2rem;
+    font-weight: 900;
+    letter-spacing: 0.01em;
+  }
+  .devis-summary-bar {
+    font-size: 1.22rem;
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 2px 8px 0 rgba(30, 41, 59, 0.06);
+    background: linear-gradient(90deg, #e0e7ff 0%, #f8fafc 100%);
+  }
+  .devis-article-table .p-datatable-thead > tr > th,
+  .devis-article-table .p-datatable-tbody > tr > td {
+    border-radius: 10px;
+    transition: background 0.18s, color 0.18s;
+  }
+  .devis-article-table .p-datatable-tbody > tr:hover {
+    background: #e0e7ff !important;
+    color: #1e3a8a !important;
+  }
+  .devis-fab {
+    box-shadow: 0 6px 24px 0 rgba(37,99,235,0.22);
+    border: 2.5px solid #e0e7ff !important;
+    background: linear-gradient(135deg, #2563eb 60%, #60a5fa 100%) !important;
+    transition: box-shadow 0.18s, border-color 0.18s, background 0.18s;
+  }
+  .devis-fab:hover {
+    box-shadow: 0 10px 32px 0 rgba(37,99,235,0.28);
+    border-color: #60a5fa !important;
+    background: linear-gradient(135deg, #1d4ed8 60%, #38bdf8 100%) !important;
+  }
+
+  /* --- DARK MODE POLISH --- */
+  .dark-mode .devis-main-card {
+    border: 1.5px solid #232946;
+    border-radius: 22px;
+    box-shadow: 0 6px 32px 0 rgba(0,0,0,0.25), 0 1.5px 0 #232946;
+    background: linear-gradient(135deg, #23272f 80%, #232946 100%);
+  }
+  .dark-mode .devis-main-card:hover {
+    box-shadow: 0 12px 40px 0 rgba(0,0,0,0.32), 0 2px 0 #6366f1;
+    border-color: #6366f1;
+  }
+  .dark-mode .devis-header-bar {
+    border-bottom: 2.5px solid #232946;
+    border-radius: 0 0 22px 22px;
+    box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18);
+    background: linear-gradient(90deg, #232946 0%, #23272f 100%);
+  }
+  .dark-mode .devis-header-title {
+    font-size: 2.2rem;
+    color: #a5b4fc;
+  }
+  .dark-mode .devis-summary-bar {
+    font-size: 1.22rem;
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.18);
+    background: linear-gradient(90deg, #232946 0%, #23272f 100%);
+  }
+  .dark-mode .devis-article-table .p-datatable-thead > tr > th,
+  .dark-mode .devis-article-table .p-datatable-tbody > tr > td {
+    border-radius: 10px;
+  }
+  .dark-mode .devis-article-table .p-datatable-tbody > tr:hover {
+    background: #2a2d3a !important;
+    color: #a5b4fc !important;
+  }
+  .dark-mode .devis-fab {
+    box-shadow: 0 6px 24px 0 rgba(102,102,241,0.22);
+    border: 2.5px solid #232946 !important;
+    background: linear-gradient(135deg, #6366f1 60%, #60a5fa 100%) !important;
+  }
+  .dark-mode .devis-fab:hover {
+    box-shadow: 0 10px 32px 0 rgba(102,102,241,0.28);
+    border-color: #60a5fa !important;
+    background: linear-gradient(135deg, #4338ca 60%, #38bdf8 100%) !important;
+  }
+
+/* Client Information Styles */
+.client-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.client-name {
+  font-weight: 600;
+  color: var(--primary-color);
+  font-size: 0.9rem;
+}
+
+.client-id {
+  font-size: 0.75rem;
+  color: var(--text-medium);
+  opacity: 0.8;
+}
+
+/* Articles Information Styles */
+.articles-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.articles-count {
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+}
+
+.articles-preview {
+  font-size: 0.75rem;
+}
+
+.articles-preview small {
+  color: var(--text-medium);
+  font-style: italic;
+}
+
+/* Devis Details in Expanded Row */
+.devis-details {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-color);
+}
+
+.devis-details p {
+  margin: 0.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.devis-details strong {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+/* Articles Summary in Expanded Row */
+.articles-summary {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--secondary-color);
+}
+
+.articles-summary p {
+  margin: 0.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.articles-summary strong {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+/* Dark Mode Styles for Client and Articles */
+:host-context(body.dark) .client-name {
+  color: #60a5fa;
+}
+
+:host-context(body.dark) .client-id {
+  color: #9ca3af;
+}
+
+:host-context(body.dark) .articles-count {
+  color: #e2e8f0;
+}
+
+:host-context(body.dark) .articles-preview small {
+  color: #9ca3af;
+}
+
+:host-context(body.dark) .devis-details {
+  background: linear-gradient(135deg, #1e293b, #334155);
+  border-left-color: #60a5fa;
+}
+
+:host-context(body.dark) .devis-details strong {
+  color: #e2e8f0;
+}
+
+:host-context(body.dark) .articles-summary {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border-left-color: #3cbfae;
+}
+
+:host-context(body.dark) .articles-summary strong {
+  color: #e2e8f0;
+}
+
+/* Dialog Styles for Client and Article Selection */
+.client-dropdown-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.client-dropdown-item .client-name {
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+}
+
+.client-dropdown-item .client-email {
+  font-size: 0.75rem;
+  color: var(--text-medium);
+  opacity: 0.8;
+}
+
+.article-dropdown-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.article-dropdown-item .article-name {
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+}
+
+.article-dropdown-item .article-code {
+  font-size: 0.75rem;
+  color: var(--text-medium);
+  opacity: 0.8;
+}
+
+.summary-section {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-left: 4px solid var(--primary-color);
+}
+
+.summary-section h6 {
+  color: var(--text-dark);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Specific fix for dialog dropdowns in tables */
+:host ::ng-deep .p-dialog .p-dropdown-panel {
+  z-index: 999999 !important;
+}
+
+:host ::ng-deep .p-dialog .p-dropdown-items-wrapper {
+  z-index: 999999 !important;
+}
+
+:host ::ng-deep .p-dialog .p-dropdown-items {
+  z-index: 999999 !important;
+}
+
+:host ::ng-deep .p-dialog .p-dropdown-item {
+  z-index: 999999 !important;
+}
+
+/* Force dialog table to have low z-index */
+:host ::ng-deep .p-dialog .p-datatable {
+  z-index: 1 !important;
+}
+
+:host ::ng-deep .p-dialog .p-datatable-wrapper {
+  z-index: 1 !important;
+}
+
+:host ::ng-deep .p-dialog .p-datatable-table {
+  z-index: 1 !important;
+}
+
+/* Ensure dialog itself has proper z-index */
+:host ::ng-deep .p-dialog {
+  z-index: 999998 !important;
+}
+
+:host ::ng-deep .p-dialog-mask {
+  z-index: 999997 !important;
+}
+
+/* Global dropdown fix as fallback */
+::ng-deep .p-dropdown-panel {
+  z-index: 999999 !important;
+}
+
+::ng-deep .p-dropdown-items-wrapper {
+  z-index: 999999 !important;
+}
+
+/* Force table inside dialog to have very low z-index */
+:host ::ng-deep .p-dialog .table-responsive .p-datatable {
+  z-index: 1 !important;
+  position: relative !important;
+}
+
+:host ::ng-deep .p-dialog .table-responsive .p-datatable-wrapper {
+  z-index: 1 !important;
+  position: relative !important;
+}
+
+:host ::ng-deep .p-dialog .table-responsive .p-datatable-table {
+  z-index: 1 !important;
+  position: relative !important;
+}
+
+/* Force dropdown panels to be absolutely positioned and above everything */
+:host ::ng-deep .p-dialog .p-dropdown-panel {
+  position: absolute !important;
+  z-index: 9999999 !important;
+  top: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+
+/* Additional aggressive fix */
+:host ::ng-deep .p-dialog .p-dropdown {
+  position: relative !important;
+  z-index: 999999 !important;
+}
+
+:host ::ng-deep .p-dialog .p-dropdown .p-dropdown-panel {
+  position: absolute !important;
+  z-index: 9999999 !important;
+}
+
+/* Force dropdown panels to be above everything */
+:host ::ng-deep .p-dropdown-panel {
+  position: fixed !important;
+  z-index: 99999999 !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+}
+
+/* Ensure dropdown items are also above everything */
+:host ::ng-deep .p-dropdown-items {
+  z-index: 99999999 !important;
+}
+
+:host ::ng-deep .p-dropdown-item {
+  z-index: 99999999 !important;
+}
+
+/* Force all dropdown elements to be above everything */
+:host ::ng-deep .p-dropdown-items-wrapper {
+  z-index: 99999999 !important;
+}
+
+:host ::ng-deep .p-dropdown-list {
+  z-index: 99999999 !important;
+}
+
+/* Override any PrimeNG positioning */
+:host ::ng-deep .p-dropdown-panel.p-component {
+  position: fixed !important;
+  z-index: 99999999 !important;
+}
+
+/* Fix table overflow issue - allow dropdowns to be visible */
+:host ::ng-deep .p-datatable .p-datatable-wrapper {
+  overflow: visible !important;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-table {
+  overflow: visible !important;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-thead {
+  overflow: visible !important;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody {
+  overflow: visible !important;
+}
+
+/* Fix table header overflow */
+:host ::ng-deep .p-datatable .p-datatable-header {
+  overflow: visible !important;
+}
+
+/* Ensure table cells don't clip dropdowns */
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th,
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  overflow: visible !important;
+}
+
+/* Fix sticky positioning issues with dropdowns - from Stack Overflow solution */
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  position: relative !important;
+  z-index: 1 !important;
+  white-space: nowrap !important;
+}
+
+/* Remove any sticky positioning that might interfere with dropdowns */
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th[style*="position: sticky"],
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td[style*="position: sticky"] {
+  position: relative !important;
+}
+
+/* Force dropdown panels to be absolutely positioned and above everything */
+:host ::ng-deep .p-dropdown-panel {
+  position: fixed !important;
+  z-index: 999999999 !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  overflow: visible !important;
+}
+
+/* Force ALL dropdown elements to be above everything */
+:host ::ng-deep .p-dropdown-items-wrapper {
+  z-index: 999999999 !important;
+  position: relative !important;
+}
+
+:host ::ng-deep .p-dropdown-items {
+  z-index: 999999999 !important;
+  position: relative !important;
+}
+
+:host ::ng-deep .p-dropdown-item {
+  z-index: 999999999 !important;
+  position: relative !important;
+}
+
+/* Force p-select dropdowns to be above everything */
+:host ::ng-deep .p-select-panel {
+  position: fixed !important;
+  z-index: 999999999 !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  overflow: visible !important;
+}
+
+:host ::ng-deep .p-select-items-wrapper {
+  z-index: 999999999 !important;
+  position: relative !important;
+}
+
+:host ::ng-deep .p-select-items {
+  z-index: 999999999 !important;
+  position: relative !important;
+}
+
+:host ::ng-deep .p-select-item {
+  z-index: 999999999 !important;
+  position: relative !important;
+}
+
+/* Force any overlay or panel to be above everything */
+:host ::ng-deep .p-component-overlay {
+  z-index: 999999999 !important;
+}
+
+:host ::ng-deep .p-overlay {
+  z-index: 999999999 !important;
+}
+
+/* Force dialog dropdowns to be above everything */
+:host ::ng-deep .p-dialog .p-dropdown-panel,
+:host ::ng-deep .p-dialog .p-select-panel {
+  position: fixed !important;
+  z-index: 999999999 !important;
+}
+
+/* Global override for any PrimeNG dropdown */
+:host ::ng-deep [class*="p-dropdown"],
+:host ::ng-deep [class*="p-select"] {
+  position: relative !important;
+}
+
+:host ::ng-deep [class*="p-dropdown-panel"],
+:host ::ng-deep [class*="p-select-panel"] {
+  position: fixed !important;
+  z-index: 999999999 !important;
+}
+
+/* Ensure dropdown containers have proper positioning */
+:host ::ng-deep .p-dropdown {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Force dropdown items to be visible */
+:host ::ng-deep .p-dropdown-items-wrapper {
+  overflow: visible !important;
+  z-index: 99999999 !important;
+}
+
+:host ::ng-deep .p-dropdown-items {
+  overflow: visible !important;
+  z-index: 99999999 !important;
+}
+
+/* Force table to have very low z-index */
+:host ::ng-deep .p-datatable {
+  z-index: 1 !important;
+  position: relative !important;
+}
+
+:host ::ng-deep .p-datatable-wrapper {
+  z-index: 1 !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+:host ::ng-deep .p-datatable-table {
+  z-index: 1 !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Ensure table container doesn't clip dropdowns */
+:host ::ng-deep .table-responsive {
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* Additional aggressive fix for dialog dropdowns */
+:host ::ng-deep .p-dialog .p-dropdown-panel {
+  position: fixed !important;
+  z-index: 999999999 !important;
+}
+
+:host ::ng-deep .p-dialog .p-dropdown-items-wrapper {
+  z-index: 999999999 !important;
+}
+
+:host ::ng-deep .p-dialog .p-dropdown-items {
+  z-index: 999999999 !important;
+}
+
+/* Specific fix for the devis articles table */
+:host ::ng-deep .devis-articles-table {
+  z-index: 1 !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+:host ::ng-deep .devis-articles-table .p-datatable-wrapper {
+  z-index: 1 !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+:host ::ng-deep .devis-articles-table .p-datatable-table {
+  z-index: 1 !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+:host ::ng-deep .devis-articles-table .p-datatable-thead {
+  z-index: 1 !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+:host ::ng-deep .devis-articles-table .p-datatable-tbody {
+  z-index: 1 !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Remove any sticky positioning from table cells in the dialog */
+:host ::ng-deep .devis-articles-table .p-datatable-thead > tr > th,
+:host ::ng-deep .devis-articles-table .p-datatable-tbody > tr > td {
+  position: relative !important;
+  z-index: 1 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+}
+
+/* Force dropdowns inside this table to be above everything */
+:host ::ng-deep .devis-articles-table .p-dropdown-panel {
+  position: fixed !important;
+  z-index: 999999999 !important;
+}
+
+:host ::ng-deep .devis-articles-table .p-dropdown-items-wrapper {
+  z-index: 999999999 !important;
+}
+
+:host ::ng-deep .devis-articles-table .p-dropdown-items {
+  z-index: 999999999 !important;
+}
+
+/* Dark Mode Styles for Dialog */
+:host-context(body.dark) .client-dropdown-item .client-name,
+:host-context(body.dark) .article-dropdown-item .article-name {
+  color: #e2e8f0;
+}
+
+:host-context(body.dark) .client-dropdown-item .client-email,
+:host-context(body.dark) .article-dropdown-item .article-code {
+  color: #9ca3af;
+}
+
+:host-context(body.dark) .summary-section {
+  background: linear-gradient(135deg, #1e293b, #334155) !important;
+  border-left-color: #60a5fa !important;
+  color: #f3f4f6 !important;
+  border-color: #fff !important;
+}
+
+:host-context(body.dark) .summary-section h6 {
+  color: #e2e8f0;
+}
+
+
+    /* Ensure dialog has proper stacking context */
+    .p-dialog {
+      z-index: 1000 !important;
+    }
+    
+    .p-dialog-content {
+      overflow: visible !important;
+      z-index: 1000 !important;
+    }
+    
+    /* Force dialog to have lower z-index than dropdowns */
+    :host ::ng-deep .p-dialog {
+      z-index: 1000 !important;
+    }
+    
+    :host ::ng-deep .p-dialog-mask {
+      z-index: 999 !important;
+    }
+    
+    :host ::ng-deep .p-dialog-content {
+      z-index: 1000 !important;
+    }
+    
+    /* Force dropdown panels to appear above everything in dialog */
+    .p-dropdown-panel {
+      z-index: 999999 !important;
+      position: absolute !important;
+    }
+    
+    /* Ensure table doesn't interfere with dropdowns */
+    .devis-articles-table {
+      z-index: 1 !important;
+      position: relative !important;
+    }
+    
+    .devis-articles-table .p-datatable-wrapper {
+      z-index: 1 !important;
+      overflow: visible !important;
+    }
+    
+    .devis-articles-table .p-datatable-table {
+      z-index: 1 !important;
+    }
+    
+    /* Override any table overflow that might clip dropdowns */
+    .table-responsive {
+      overflow: visible !important;
+    }
+    
+    /* Ensure dropdown items are visible */
+    .p-dropdown-items-wrapper,
+    .p-dropdown-items,
+    .p-dropdown-item {
+      z-index: 999999 !important;
+    }
+    
+    /* Specific targeting for dropdowns inside the dialog table */
+    .p-dialog .p-dropdown-panel {
+      z-index: 999999 !important;
+    }
+
+:host-context(.dark-mode) .charts-grid .card h5 {
+  color: #a5b4fc !important;
+  background: linear-gradient(135deg, #23272f 0%, #232946 100%) !important;
+  border-bottom: 1px solid #374151 !important;
+}

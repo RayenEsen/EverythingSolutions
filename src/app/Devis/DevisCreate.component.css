@@ -1,0 +1,40 @@
+/* --- Z-INDEX FIX FOR PRIME DROPDOWN PANEL --- */
+.modern-article-table .p-dropdown-panel,
+.p-dropdown-panel {
+  z-index: 9999 !important;
+}
+
+.p-button-text:hover, .p-button:hover {
+  background: inherit !important;
+  color: inherit !important;
+  border: inherit !important;
+}
+
+.dark-mode .card {
+  background: #23272f !important;
+  color: #f3f4f6 !important;
+  border-color: #374151 !important;
+}
+.dark-mode .p-button {
+  background: #6366f1 !important;
+  color: #fff !important;
+  border: none !important;
+}
+.dark-mode .p-button-text {
+  background: transparent !important;
+  color: #a5b4fc !important;
+  border: none !important;
+}
+.dark-mode .p-button:hover, .dark-mode .p-button:focus, .dark-mode .p-button:active,
+.dark-mode .p-button-text:hover, .dark-mode .p-button-text:focus, .dark-mode .p-button-text:active {
+  background: #4338ca !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+:host-context(.dark-mode) .summary-section {
+  background: #23272f !important;
+  color: #f3f4f6 !important;
+  border-color: #374151 !important;
+} 
